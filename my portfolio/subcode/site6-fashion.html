@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VŌID — Fashion Editorial</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Figtree:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--black:#050505;--dark:#0c0c0c;--grey:#161616;--mid:#222;--border:#2d2d2d;--white:#f0f0f0;--red:#e8202f;--dim:rgba(240,240,240,.4);--dimmer:rgba(240,240,240,.2);}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Figtree',sans-serif;overflow-x:hidden;cursor:none;}
+@media(max-width:768px){body{cursor:auto;}}
+.cur{position:fixed;width:8px;height:8px;background:var(--red);border-radius:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cur-ring{position:fixed;width:40px;height:40px;border:1px solid var(--white);border-radius:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) rotate(45deg);transition:all .2s;opacity:.2;mix-blend-mode:difference;}
+@media(max-width:768px){.cur,.cur-ring{display:none;}}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:var(--black);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Anton',sans-serif;font-size:26px;letter-spacing:6px;}
+.nav-logo span{color:var(--red);}
+.nav-issue{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--dim);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--white);}
+.nav-sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:10px 24px;border:1px solid var(--border);color:var(--white);text-decoration:none;border-radius:100px;transition:all .3s;}
+.nav-sub:hover{background:var(--white);color:var(--black);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hamburger span{width:22px;height:2px;background:var(--white);display:block;border-radius:2px;}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(5,5,5,.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:24px;}
+.mob-menu.open{display:flex;}
+.mob-menu a{font-family:'Anton',sans-serif;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:var(--white);text-decoration:none;opacity:.5;transition:opacity .3s;}
+.mob-menu a:hover{opacity:1;}
+.mob-close{position:absolute;top:24px;right:24px;font-size:28px;color:var(--white);cursor:pointer;background:none;border:none;opacity:.4;}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.hero-left{display:flex;flex-direction:column;justify-content:flex-end;padding:100px 48px 64px;background:var(--dark);position:relative;overflow:hidden;}
+.hero-left::before{content:'VŌID';font-family:'Anton',sans-serif;font-size:clamp(160px,20vw,280px);color:rgba(255,255,255,.02);position:absolute;bottom:-20px;left:-10px;line-height:1;pointer-events:none;}
+.hero-issue{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:28px;display:flex;align-items:center;gap:14px;animation:fadeUp .6s ease .1s both;}
+.hero-issue::before{content:'';width:28px;height:1px;background:var(--red);}
+.hero-title{font-family:'Anton',sans-serif;font-size:clamp(52px,7vw,108px);letter-spacing:-1px;line-height:.92;margin-bottom:28px;animation:fadeUp .6s ease .3s both;}
+.hero-sub{font-size:14px;font-weight:300;font-style:italic;color:var(--dim);line-height:1.7;max-width:340px;margin-bottom:36px;animation:fadeUp .6s ease .5s both;}
+.hero-meta{display:flex;align-items:center;gap:24px;flex-wrap:wrap;animation:fadeUp .6s ease .7s both;}
+.hero-category{font-size:10px;letter-spacing:4px;text-transform:uppercase;padding:8px 20px;border:1px solid var(--border);color:var(--dim);border-radius:100px;}
+.hero-read{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none;padding:8px 22px;border:1px solid var(--white);border-radius:100px;transition:all .3s;}
+.hero-read:hover{background:var(--white);color:var(--black);}
+.hero-right{position:relative;overflow:hidden;}
+.hero-right img{width:100%;height:100%;object-fit:cover;filter:brightness(.5) contrast(1.1) saturate(.5);transition:transform 8s ease,filter 1s;display:block;}
+.hero-right:hover img{transform:scale(1.03);filter:brightness(.4) contrast(1.2) saturate(.6);}
+.hero-credit{position:absolute;bottom:20px;right:20px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dimmer);}
+
+/* MARQUEE */
+.marquee{padding:14px 0;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--red);}
+.marquee-track{display:flex;animation:ticker 15s linear infinite;}
+.m-item{font-family:'Anton',sans-serif;font-size:15px;letter-spacing:4px;text-transform:uppercase;padding:0 40px;color:var(--black);white-space:nowrap;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* GRID */
+.editorial-grid{padding:60px 48px;}
+.grid-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px;}
+.grid-title{font-family:'Anton',sans-serif;font-size:clamp(40px,6vw,52px);letter-spacing:-1px;line-height:.9;}
+.grid-title span{color:var(--red);}
+.view-all{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--dim);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .3s;padding:8px 20px;border:1px solid var(--border);border-radius:100px;}
+.view-all:hover{color:var(--white);border-color:var(--white);}
+.view-all::after{content:'→';}
+.grid-layout{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;}
+.g1{grid-column:span 7;grid-row:span 2;}
+.g2{grid-column:span 5;}
+.g3{grid-column:span 5;}
+.g4{grid-column:span 4;}
+.g5{grid-column:span 4;}
+.g6{grid-column:span 4;}
+.g-item{position:relative;overflow:hidden;background:var(--dark);border-radius:10px;}
+.g-img{width:100%;min-height:240px;object-fit:cover;filter:brightness(.4) saturate(.4);transition:all .6s;display:block;}
+.g-item:hover .g-img{filter:brightness(.3) saturate(.6) contrast(1.1);transform:scale(1.04);}
+.g-info{position:absolute;bottom:0;left:0;right:0;padding:24px 20px;background:linear-gradient(to top,rgba(5,5,5,.98),transparent 100%);}
+.g-cat{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--red);margin-bottom:7px;}
+.g-title{font-family:'DM Serif Display',serif;font-size:clamp(16px,2vw,20px);line-height:1.2;}
+.g1 .g-title{font-size:clamp(20px,3vw,32px);}
+.g-date{font-size:10px;color:var(--dim);margin-top:6px;}
+
+/* FEATURE */
+.feature{display:grid;grid-template-columns:1fr 1fr;min-height:600px;}
+.feat-visual{position:relative;overflow:hidden;}
+.feat-visual img{width:100%;height:100%;object-fit:cover;filter:brightness(.3) saturate(.3);display:block;}
+.feat-visual::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,transparent 50%,var(--black) 100%);}
+.feat-vol{position:absolute;top:40px;left:40px;font-family:'Anton',sans-serif;font-size:clamp(100px,14vw,180px);color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.04);line-height:1;}
+.feat-content{padding:72px 60px;display:flex;flex-direction:column;justify-content:center;background:var(--black);}
+.feat-tag{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.feat-tag::before{content:'';width:16px;height:1px;background:var(--red);}
+.feat-title{font-family:'Anton',sans-serif;font-size:clamp(40px,5vw,64px);letter-spacing:-1px;line-height:.92;margin-bottom:20px;}
+.feat-body{font-size:14px;font-weight:300;font-style:italic;color:var(--dim);line-height:1.85;margin-bottom:32px;}
+.feat-cta{display:inline-flex;align-items:center;gap:10px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none;padding:12px 28px;border:1px solid var(--border);border-radius:100px;transition:all .3s;}
+.feat-cta:hover{border-color:var(--red);background:rgba(232,32,47,.1);color:var(--red);}
+.feat-author{display:flex;align-items:center;gap:14px;margin-top:32px;padding-top:24px;border-top:1px solid var(--border);}
+.feat-ava{width:38px;height:38px;object-fit:cover;filter:brightness(.5);border-radius:50%;flex-shrink:0;}
+.feat-author-name{font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;}
+.feat-author-role{font-size:11px;color:var(--dim);font-style:italic;}
+
+/* TOPICS */
+.topics{padding:60px 48px;border-top:1px solid var(--border);}
+.topics-title{font-family:'Anton',sans-serif;font-size:clamp(36px,5vw,48px);margin-bottom:40px;}
+.topics-title span{color:var(--red);}
+.topics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.topic{background:var(--dark);padding:36px 28px;position:relative;overflow:hidden;transition:background .4s;border-radius:10px;}
+.topic::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--red);transition:width .4s;}
+.topic:hover::after{width:100%;}
+.topic:hover{background:var(--grey);}
+.topic-num{font-family:'Anton',sans-serif;font-size:48px;color:var(--border);line-height:1;margin-bottom:14px;}
+.topic-name{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:8px;}
+.topic-count{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);}
+
+/* SUBSCRIBE */
+.subscribe{padding:80px 48px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;border-top:1px solid var(--border);}
+.sub-issue{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:18px;}
+.sub-title{font-family:'Anton',sans-serif;font-size:clamp(44px,6vw,72px);letter-spacing:-2px;line-height:.92;margin-bottom:18px;}
+.sub-desc{font-size:14px;font-weight:300;color:var(--dim);line-height:1.7;}
+.sub-options{display:flex;flex-direction:column;gap:2px;margin-bottom:24px;}
+.sub-opt{padding:22px 24px;background:var(--dark);display:flex;justify-content:space-between;align-items:center;border:1px solid transparent;cursor:pointer;transition:all .3s;border-radius:12px;margin-bottom:8px;}
+.sub-opt:hover,.sub-opt.active{background:var(--grey);border-color:var(--border);}
+.sub-opt-name{font-size:14px;font-weight:500;}
+.sub-opt-desc{font-size:12px;color:var(--dim);margin-top:2px;}
+.sub-opt-price{font-family:'Anton',sans-serif;font-size:22px;}
+.sub-btn{display:block;text-align:center;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;padding:16px;background:var(--white);color:var(--black);text-decoration:none;border-radius:100px;transition:all .3s;}
+.sub-btn:hover{background:var(--red);color:var(--white);}
+
+/* FOOTER */
+footer{padding:48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:32px;}
+.f-logo{font-family:'Anton',sans-serif;font-size:clamp(36px,6vw,52px);letter-spacing:4px;line-height:1;}
+.f-logo span{color:var(--red);}
+.f-tagline{font-size:12px;font-style:italic;color:var(--dim);margin-top:4px;}
+.f-right{text-align:right;}
+.f-links{display:flex;gap:28px;list-style:none;justify-content:flex-end;margin-bottom:20px;flex-wrap:wrap;}
+.f-links a{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--dimmer);text-decoration:none;transition:color .3s;}
+.f-links a:hover{color:var(--white);}
+.f-copy{font-size:11px;color:var(--dimmer);}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .grid-layout{grid-template-columns:1fr 1fr;}
+  .g1,.g2,.g3,.g4,.g5,.g6{grid-column:auto;grid-row:auto;}
+  .feature{grid-template-columns:1fr;}
+  .feat-visual{height:320px;}
+  .feat-visual::after{background:linear-gradient(to top,var(--black),transparent 50%);}
+  .subscribe{grid-template-columns:1fr;gap:48px;}
+}
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .nav-links,.nav-issue,.nav-sub{display:none;}
+  .hamburger{display:flex;}
+  .hero{grid-template-columns:1fr;min-height:auto;}
+  .hero-right{height:56vw;}
+  .hero-left{padding:72px 20px 48px;}
+  .editorial-grid{padding:48px 20px;}
+  .grid-layout{grid-template-columns:1fr;}
+  .g1,.g2,.g3,.g4,.g5,.g6{grid-column:auto;}
+  .feat-content{padding:44px 20px;}
+  .topics{padding:48px 20px;}
+  .topics-grid{grid-template-columns:1fr 1fr;}
+  .subscribe{padding:60px 20px;}
+  footer{padding:36px 20px;flex-direction:column;align-items:flex-start;}
+  .f-right{text-align:left;}
+  .f-links{justify-content:flex-start;}
+}
+@media(max-width:480px){
+  .topics-grid{grid-template-columns:1fr;}
+  .hero-right{height:70vw;}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div><div class="cur-ring" id="curRing"></div>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" id="mobClose">✕</button>
+  <a href="#">Editorial</a><a href="#">Fashion</a><a href="#">Culture</a><a href="#">Beauty</a><a href="#">Archive</a>
+  <a href="#" style="margin-top:16px;padding:12px 32px;border:1px solid var(--white);border-radius:100px;color:var(--white);">Subscribe</a>
+</div>
+<nav>
+  <div class="nav-logo">VŌ<span>I</span>D</div>
+  <div class="nav-issue">Issue 31 · Spring '26</div>
+  <ul class="nav-links"><li><a href="#">Editorial</a></li><li><a href="#">Fashion</a></li><li><a href="#">Culture</a></li><li><a href="#">Beauty</a></li><li><a href="#">Archive</a></li></ul>
+  <a href="#" class="nav-sub">Subscribe</a>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-issue">Issue 31 · Fashion</div>
+    <h1 class="hero-title">POST-<br/>HUMAN<br/>DRESS</h1>
+    <p class="hero-sub">When fashion stops being about the body and starts being about its absence — a study in dissolution, armour, and the politics of the silhouette.</p>
+    <div class="hero-meta"><span class="hero-category">Cover Story</span><a href="#" class="hero-read">Read Now</a></div>
+  </div>
+  <div class="hero-right"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Fashion"/><div class="hero-credit">Ph. Elsa Moreau</div></div>
+</section>
+<div class="marquee"><div class="marquee-track"><span class="m-item">Spring Issue '26</span><span class="m-item">✦</span><span class="m-item">Post-Human Dress</span><span class="m-item">✦</span><span class="m-item">New Minimalism</span><span class="m-item">✦</span><span class="m-item">The Dark Romantic</span><span class="m-item">✦</span><span class="m-item">Spring Issue '26</span><span class="m-item">✦</span><span class="m-item">Post-Human Dress</span><span class="m-item">✦</span><span class="m-item">New Minimalism</span><span class="m-item">✦</span><span class="m-item">The Dark Romantic</span><span class="m-item">✦</span></div></div>
+<section class="editorial-grid">
+  <div class="grid-header"><h2 class="grid-title">This <span>Issue</span></h2><a href="#" class="view-all">All Stories</a></div>
+  <div class="grid-layout">
+    <div class="g-item g1"><img class="g-img" src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=900&q=80" alt="F1" style="min-height:400px;"/><div class="g-info"><div class="g-cat">Culture</div><div class="g-title">The Collapse of the It-Bag: What Luxury Lost When It Found the Algorithm</div><div class="g-date">March 10, 2026 · 12 min read</div></div></div>
+    <div class="g-item g2"><img class="g-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80" alt="F2"/><div class="g-info"><div class="g-cat">Fashion</div><div class="g-title">In Praise of the Anti-Silhouette</div><div class="g-date">March 8, 2026</div></div></div>
+    <div class="g-item g3"><img class="g-img" src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80" alt="F3"/><div class="g-info"><div class="g-cat">Beauty</div><div class="g-title">The New Skin: Biomimetic Beauty in 2026</div><div class="g-date">March 5, 2026</div></div></div>
+    <div class="g-item g4"><img class="g-img" src="https://images.unsplash.com/photo-1529139574466-a303027614b2?w=500&q=80" alt="F4"/><div class="g-info"><div class="g-cat">Editorial</div><div class="g-title">Tokyo Black: A City Uniform</div></div></div>
+    <div class="g-item g5"><img class="g-img" src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=500&q=80" alt="F5"/><div class="g-info"><div class="g-cat">Interview</div><div class="g-title">Raf Simons on Silence</div></div></div>
+    <div class="g-item g6"><img class="g-img" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500&q=80" alt="F6"/><div class="g-info"><div class="g-cat">Shopping</div><div class="g-title">The 12 Pieces Worth Buying Now</div></div></div>
+  </div>
+</section>
+<div class="feature">
+  <div class="feat-visual"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80" alt="Feature"/><div class="feat-vol">31</div></div>
+  <div class="feat-content">
+    <div class="feat-tag">Long Read</div>
+    <h2 class="feat-title">THE NEW<br/>DARK<br/>ROMANTIC</h2>
+    <p class="feat-body">A generation of designers raised on Tumblr darkness and Baroque excess is rewriting the rules of what desire looks like in fabric. VŌID spent a season inside their ateliers.</p>
+    <a href="#" class="feat-cta">Read The Story →</a>
+    <div class="feat-author">
+      <img class="feat-ava" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=80" alt="Author"/>
+      <div><div class="feat-author-name">Luna Park</div><div class="feat-author-role">Fashion Director</div></div>
+    </div>
+  </div>
+</div>
+<section class="topics">
+  <h2 class="topics-title">Browse by <span>Topic</span></h2>
+  <div class="topics-grid">
+    <div class="topic"><div class="topic-num">01</div><div class="topic-name">Runway</div><div class="topic-count">84 Stories</div></div>
+    <div class="topic"><div class="topic-num">02</div><div class="topic-name">Beauty</div><div class="topic-count">62 Stories</div></div>
+    <div class="topic"><div class="topic-num">03</div><div class="topic-name">Culture</div><div class="topic-count">110 Stories</div></div>
+    <div class="topic"><div class="topic-num">04</div><div class="topic-name">Shopping</div><div class="topic-count">47 Stories</div></div>
+  </div>
+</section>
+<section class="subscribe">
+  <div><div class="sub-issue">Don't Miss an Issue</div><h2 class="sub-title">JOIN THE<br/>INNER<br/>CIRCLE</h2><p class="sub-desc">Four issues a year, printed on 130gsm uncoated stock, plus exclusive digital access to the full archive.</p></div>
+  <div>
+    <div class="sub-options">
+      <div class="sub-opt active"><div><div class="sub-opt-name">Digital</div><div class="sub-opt-desc">Full archive · Early access</div></div><div class="sub-opt-price">$8<span style="font-size:13px;font-family:'Figtree',sans-serif;color:var(--dim)">/mo</span></div></div>
+      <div class="sub-opt"><div><div class="sub-opt-name">Print + Digital</div><div class="sub-opt-desc">4 issues/year · Free shipping</div></div><div class="sub-opt-price">$96<span style="font-size:13px;font-family:'Figtree',sans-serif;color:var(--dim)">/yr</span></div></div>
+    </div>
+    <a href="#" class="sub-btn">Subscribe Now</a>
+  </div>
+</section>
+<footer>
+  <div><div class="f-logo">VŌ<span>I</span>D</div><div class="f-tagline">Fashion · Culture · Editorial · Since 2019</div></div>
+  <div class="f-right">
+    <ul class="f-links"><li><a href="#">Editorial</a></li><li><a href="#">Fashion</a></li><li><a href="#">Archive</a></li><li><a href="#">Advertise</a></li><li><a href="#">Contact</a></li></ul>
+    <div class="f-copy">© 2026 VŌID Magazine. All rights reserved.</div>
+  </div>
+</footer>
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+function ar(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar);}ar();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{ring.style.width='60px';ring.style.height='60px';ring.style.opacity='.4';});el.addEventListener('mouseleave',()=>{ring.style.width='40px';ring.style.height='40px';ring.style.opacity='.2';});});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobMenu').classList.add('open'));
+document.getElementById('mobClose').addEventListener('click',()=>document.getElementById('mobMenu').classList.remove('open'));
+document.querySelectorAll('.sub-opt').forEach(opt=>{opt.addEventListener('click',()=>{document.querySelectorAll('.sub-opt').forEach(o=>o.classList.remove('active'));opt.classList.add('active');});});
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.style.animation='fadeUp .6s ease forwards';}),{threshold:.1});
+document.querySelectorAll('.g-item,.topic').forEach(el=>{el.style.opacity='0';obs.observe(el);});
+</script>
+</body>
+</html>

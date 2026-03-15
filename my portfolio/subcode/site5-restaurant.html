@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OBSIDIAN — Fine Dining</title>
+<link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Cinzel:wght@400;500;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--black:#030303;--deep:#080806;--charcoal:#111110;--warm:#1a1915;--border:rgba(212,179,100,.1);--gold:#d4b364;--gold-light:#e8d4a0;--cream:#f5f0e4;--ivory:#faf6ed;--dim:rgba(245,240,228,.45);--dimmer:rgba(245,240,228,.25);}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--cream);font-family:'Tenor Sans',sans-serif;overflow-x:hidden;cursor:none;}
+@media(max-width:768px){body{cursor:auto;}}
+.cur{position:fixed;width:6px;height:6px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+.cur-ring{position:fixed;width:30px;height:30px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .2s;opacity:.3;}
+@media(max-width:768px){.cur,.cur-ring{display:none;}}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:24px 60px;background:rgba(3,3,3,.85);backdrop-filter:blur(16px);}
+.nav-logo{text-align:center;}
+.nav-logo-name{font-family:'Cinzel',serif;font-size:20px;font-weight:500;letter-spacing:10px;}
+.nav-logo-sub{font-family:'Crimson Pro',serif;font-size:11px;font-style:italic;letter-spacing:4px;color:var(--gold);margin-top:2px;}
+.nav-links{display:flex;gap:40px;list-style:none;}
+.nav-links a{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--cream);text-decoration:none;opacity:.4;transition:opacity .3s;}
+.nav-links a:hover{opacity:1;}
+.nav-reserve{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:11px 28px;border:1px solid rgba(212,179,100,.4);color:var(--gold);text-decoration:none;border-radius:100px;transition:all .4s;}
+.nav-reserve:hover{background:var(--gold);color:var(--black);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hamburger span{width:22px;height:1px;background:var(--cream);display:block;}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(3,3,3,.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.mob-menu.open{display:flex;}
+.mob-menu a{font-family:'Cinzel',serif;font-size:16px;letter-spacing:4px;text-transform:uppercase;color:var(--cream);text-decoration:none;opacity:.6;transition:opacity .3s;}
+.mob-menu a:hover{opacity:1;}
+.mob-close{position:absolute;top:24px;right:24px;font-size:28px;color:var(--cream);cursor:pointer;background:none;border:none;opacity:.4;}
+
+/* HERO */
+.hero{height:100vh;min-height:580px;position:relative;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;}
+.hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.2) saturate(.5);}
+.hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(3,3,3,.4),var(--black) 80%);}
+.hero-content{position:relative;z-index:1;padding:0 24px;}
+.hero-ornament{font-size:18px;color:var(--gold);opacity:.6;letter-spacing:8px;margin-bottom:28px;display:block;animation:fadeUp .8s ease .1s both;}
+.hero-eyebrow{font-family:'Crimson Pro',serif;font-size:13px;font-style:italic;letter-spacing:4px;color:var(--gold);margin-bottom:20px;opacity:.8;animation:fadeUp .8s ease .2s both;}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(44px,8vw,108px);font-weight:400;letter-spacing:clamp(4px,2vw,12px);line-height:1;margin-bottom:20px;animation:fadeUp .8s ease .4s both;}
+.hero-tagline{font-family:'Crimson Pro',serif;font-size:clamp(15px,2vw,18px);font-style:italic;font-weight:300;color:var(--dim);letter-spacing:2px;margin-bottom:48px;max-width:440px;margin-left:auto;margin-right:auto;animation:fadeUp .8s ease .6s both;}
+.hero-ctas{display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap;animation:fadeUp .8s ease .8s both;}
+.btn-gold{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;padding:15px 44px;background:var(--gold);color:var(--black);text-decoration:none;border-radius:100px;transition:all .4s;}
+.btn-gold:hover{background:var(--gold-light);box-shadow:0 0 40px rgba(212,179,100,.3);transform:translateY(-2px);}
+.btn-ghost-gold{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;padding:15px 44px;border:1px solid rgba(212,179,100,.3);color:var(--gold);text-decoration:none;border-radius:100px;transition:all .4s;}
+.btn-ghost-gold:hover{border-color:var(--gold);background:rgba(212,179,100,.07);}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;}
+.scroll-line-v{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollFade 2s ease-in-out infinite;}
+@keyframes scrollFade{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+
+/* INTRO */
+.intro{padding:100px 60px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.orn-line-wrap{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.orn-line{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+.orn-sym{color:var(--gold);font-size:12px;letter-spacing:4px;}
+.orn-line-r{flex:1;height:1px;background:linear-gradient(to left,transparent,var(--gold));}
+.intro-tag{font-family:'Crimson Pro',serif;font-size:13px;font-style:italic;letter-spacing:3px;color:var(--gold);margin-bottom:20px;}
+.intro-title{font-family:'Cinzel',serif;font-size:clamp(28px,3.5vw,48px);font-weight:400;letter-spacing:2px;line-height:1.15;margin-bottom:24px;}
+.intro-body{font-family:'Crimson Pro',serif;font-size:16px;font-weight:300;line-height:1.95;color:var(--dim);margin-bottom:32px;}
+.intro-sig{font-family:'Crimson Pro',serif;font-style:italic;font-size:20px;color:var(--gold);padding-top:24px;border-top:1px solid var(--border);}
+.intro-sig span{font-size:12px;letter-spacing:2px;font-style:normal;color:var(--dimmer);display:block;margin-top:4px;}
+.intro-visual{position:relative;}
+.intro-img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:brightness(.4) saturate(.6);border-radius:16px;display:block;}
+.intro-frame{position:absolute;inset:14px;border:1px solid rgba(212,179,100,.2);pointer-events:none;border-radius:12px;}
+.award-badge{position:absolute;bottom:-20px;right:-20px;width:88px;height:88px;background:var(--charcoal);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.award-stars{color:var(--gold);font-size:10px;letter-spacing:2px;}
+.award-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--cream);margin-top:4px;}
+.award-src{font-size:8px;color:var(--dim);margin-top:2px;}
+
+/* MENU */
+.menu-preview{padding:0 60px 100px;}
+.menu-header{text-align:center;margin-bottom:60px;}
+.menu-tag{font-family:'Crimson Pro',serif;font-size:13px;font-style:italic;letter-spacing:3px;color:var(--gold);margin-bottom:14px;}
+.menu-title{font-family:'Cinzel',serif;font-size:clamp(28px,4vw,48px);font-weight:400;letter-spacing:6px;}
+.menu-sub{font-family:'Crimson Pro',serif;font-size:15px;font-style:italic;color:var(--dim);margin-top:10px;}
+.div-row{display:flex;align-items:center;gap:20px;justify-content:center;margin-top:20px;}
+.div-line{width:60px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+.div-sym{color:var(--gold);font-size:13px;}
+.div-line-r{width:60px;height:1px;background:linear-gradient(to left,transparent,var(--gold));}
+.courses{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.course{padding:48px 52px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:background .4s;}
+.course:hover{background:var(--warm);}
+.course:nth-child(2n){border-right:none;}
+.course:nth-child(3),.course:nth-child(4){border-bottom:none;}
+.course-num{font-family:'Crimson Pro',serif;font-size:11px;font-style:italic;letter-spacing:3px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.course-num::before{content:'';width:16px;height:1px;background:var(--gold);}
+.course-name{font-family:'Cinzel',serif;font-size:clamp(20px,2.5vw,26px);font-weight:400;letter-spacing:2px;margin-bottom:14px;}
+.course-desc{font-family:'Crimson Pro',serif;font-size:15px;font-weight:300;font-style:italic;line-height:1.8;color:var(--dim);margin-bottom:18px;}
+.course-ingredients{display:flex;gap:12px;flex-wrap:wrap;}
+.ingr{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.6;}
+.ingr:not(:last-child)::after{content:'·';margin-left:12px;}
+
+/* AMBIENCE */
+.ambience{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.amb-item{position:relative;overflow:hidden;}
+.amb-img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:brightness(.3) saturate(.4);transition:all .6s;display:block;}
+.amb-item:hover .amb-img{filter:brightness(.2) saturate(.6);transform:scale(1.04);}
+.amb-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:28px 24px;background:linear-gradient(to top,rgba(3,3,3,.9),transparent 60%);}
+.amb-label{font-family:'Cinzel',serif;font-size:15px;letter-spacing:2px;}
+.amb-sub{font-family:'Crimson Pro',serif;font-size:13px;font-style:italic;color:var(--gold);opacity:.8;margin-top:4px;}
+
+/* EXPERIENCE */
+.experience{padding:80px 60px;background:var(--deep);display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.exp-item{text-align:center;padding:44px 32px;border-right:1px solid var(--border);}
+.exp-item:last-child{border-right:none;}
+.exp-icon{font-size:26px;margin-bottom:16px;}
+.exp-title{font-family:'Cinzel',serif;font-size:17px;letter-spacing:3px;margin-bottom:10px;}
+.exp-desc{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;font-weight:300;color:var(--dim);line-height:1.8;}
+
+/* RESERVATION */
+.reservation{padding:100px 60px;text-align:center;position:relative;overflow:hidden;}
+.res-bg{position:absolute;inset:0;}
+.res-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.1) saturate(.3);}
+.res-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(3,3,3,.7),var(--black) 100%);}
+.res-content{position:relative;z-index:1;}
+.res-sym{font-size:20px;color:var(--gold);letter-spacing:8px;margin-bottom:24px;display:block;opacity:.5;}
+.res-tag{font-family:'Crimson Pro',serif;font-size:13px;font-style:italic;letter-spacing:3px;color:var(--gold);margin-bottom:18px;}
+.res-title{font-family:'Cinzel',serif;font-size:clamp(32px,5vw,64px);font-weight:400;letter-spacing:clamp(2px,2vw,6px);line-height:1.1;margin-bottom:18px;}
+.res-sub{font-family:'Crimson Pro',serif;font-size:16px;font-style:italic;color:var(--dim);margin-bottom:48px;max-width:440px;margin-left:auto;margin-right:auto;}
+.res-info{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:56px;padding-top:48px;border-top:1px solid var(--border);}
+.res-detail-label{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;opacity:.7;}
+.res-detail-val{font-family:'Cinzel',serif;font-size:14px;letter-spacing:2px;}
+
+/* FOOTER */
+footer{padding:56px 60px 36px;border-top:1px solid var(--border);text-align:center;}
+.footer-logo-big{font-family:'Cinzel',serif;font-size:clamp(24px,4vw,32px);font-weight:400;letter-spacing:clamp(6px,2vw,14px);margin-bottom:8px;}
+.footer-tagline{font-family:'Crimson Pro',serif;font-size:13px;font-style:italic;color:var(--gold);letter-spacing:3px;margin-bottom:40px;}
+.footer-nav{display:flex;gap:36px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;list-style:none;}
+.footer-nav a{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--cream);text-decoration:none;opacity:.3;transition:opacity .3s;}
+.footer-nav a:hover{opacity:.9;}
+.footer-div{width:48px;height:1px;background:var(--gold);margin:0 auto 28px;opacity:.4;}
+.footer-copy{font-family:'Crimson Pro',serif;font-size:12px;color:var(--dim);opacity:.4;letter-spacing:1px;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .intro{grid-template-columns:1fr;gap:48px;padding:72px 40px;}
+  .intro-visual{order:-1;}
+  .intro-img{aspect-ratio:16/9;}
+  .award-badge{display:none;}
+  .courses{grid-template-columns:1fr;}
+  .course{border-right:none;}
+  .course:nth-child(3){border-bottom:1px solid var(--border);}
+  .res-info{grid-template-columns:1fr 1fr;gap:20px;}
+  .experience{grid-template-columns:1fr;}
+  .exp-item{border-right:none;border-bottom:1px solid var(--border);}
+  .exp-item:last-child{border-bottom:none;}
+}
+@media(max-width:768px){
+  nav{padding:16px 20px;}
+  .nav-links,.nav-reserve{display:none;}
+  .hamburger{display:flex;}
+  .menu-preview{padding:0 20px 72px;}
+  .ambience{grid-template-columns:1fr;}
+  .experience{padding:56px 20px;}
+  .reservation{padding:72px 20px;}
+  footer{padding:48px 20px 32px;}
+  .res-info{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:480px){
+  .hero-ctas{flex-direction:column;align-items:center;}
+  .res-info{grid-template-columns:1fr;}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div><div class="cur-ring" id="curRing"></div>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" id="mobClose">✕</button>
+  <a href="#">Menu</a><a href="#">Chef</a><a href="#">Cellar</a><a href="#">Events</a><a href="#">Gifts</a>
+  <a href="#" style="margin-top:16px;padding:13px 40px;border:1px solid rgba(212,179,100,.4);border-radius:100px;color:var(--gold);font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;">Reserve</a>
+</div>
+<nav>
+  <ul class="nav-links"><li><a href="#">Menu</a></li><li><a href="#">Chef</a></li><li><a href="#">Cellar</a></li></ul>
+  <div class="nav-logo"><div class="nav-logo-name">OBSIDIAN</div><div class="nav-logo-sub">Fine Dining · Est. 2019</div></div>
+  <ul class="nav-links" style="justify-content:flex-end;"><li><a href="#">Events</a></li><li><a href="#" style="color:var(--gold);opacity:.9;">Reserve</a></li></ul>
+  <a href="#" class="nav-reserve" style="display:none;">Reserve</a>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<section class="hero">
+  <div class="hero-bg"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1800&q=80" alt="Fine Dining"/></div>
+  <div class="hero-content">
+    <span class="hero-ornament">— ✦ —</span>
+    <div class="hero-eyebrow">New York City · Midtown Manhattan</div>
+    <h1 class="hero-title">OBSIDIAN</h1>
+    <p class="hero-tagline">Where the art of fire meets the poetry of the plate</p>
+    <div class="hero-ctas"><a href="#" class="btn-gold">Reserve a Table</a><a href="#" class="btn-ghost-gold">View the Menu</a></div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line-v"></div></div>
+</section>
+<section class="intro">
+  <div class="intro-content">
+    <div class="orn-line-wrap"><div class="orn-line"></div><span class="orn-sym">✦</span><div class="orn-line-r"></div></div>
+    <div class="intro-tag">Our Philosophy</div>
+    <h2 class="intro-title">A Journey Through Fire & Restraint</h2>
+    <p class="intro-body">At Obsidian, we believe that the finest meal is one that lingers in memory long after the plates are cleared. Executive Chef Marco Delacroix presents a nine-course tasting menu that draws from the classical canon while walking fearlessly into uncharted territory.</p>
+    <div class="intro-sig">— Marco Delacroix <span>Executive Chef & Founder</span></div>
+  </div>
+  <div class="intro-visual">
+    <img class="intro-img" src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&q=80" alt="Chef"/>
+    <div class="intro-frame"></div>
+    <div class="award-badge"><div class="award-stars">★ ★ ★</div><div class="award-label">Michelin</div><div class="award-src">2025</div></div>
+  </div>
+</section>
+<section class="menu-preview">
+  <div class="menu-header">
+    <div class="menu-tag">The Tasting Menu</div>
+    <h2 class="menu-title">Nine Acts</h2>
+    <p class="menu-sub">A seasonal composition. Changed with the harvest.</p>
+    <div class="div-row"><div class="div-line"></div><span class="div-sym">✦</span><div class="div-line-r"></div></div>
+  </div>
+  <div class="courses">
+    <div class="course"><div class="course-num">First Course</div><div class="course-name">Amuse-Bouche</div><p class="course-desc">A sequence of three singular bites designed to open the palate and announce the evening's intention.</p><div class="course-ingredients"><span class="ingr">Oscietra Caviar</span><span class="ingr">Crème Fraîche</span><span class="ingr">Dill</span></div></div>
+    <div class="course"><div class="course-num">Second Course</div><div class="course-name">Sea Urchin</div><p class="course-desc">Hokkaido uni, aged kombu butter, charred brioche, and a cloud of sea foam that disappears on the tongue.</p><div class="course-ingredients"><span class="ingr">Hokkaido Uni</span><span class="ingr">Kombu</span><span class="ingr">Brioche</span></div></div>
+    <div class="course"><div class="course-num">Fifth Course</div><div class="course-name">Dry-Aged Duck</div><p class="course-desc">21-day aged Rohan duck breast, fermented black garlic, smoked bone marrow, micro herbs from our rooftop.</p><div class="course-ingredients"><span class="ingr">Rohan Duck</span><span class="ingr">Black Garlic</span><span class="ingr">Marrow</span></div></div>
+    <div class="course"><div class="course-num">Ninth Course</div><div class="course-name">Mignardises</div><p class="course-desc">A closing sequence of confections, each a miniature world unto itself. The memory you carry home.</p><div class="course-ingredients"><span class="ingr">Valrhona</span><span class="ingr">Seasonal Fruit</span><span class="ingr">Citrus</span></div></div>
+  </div>
+</section>
+<div class="ambience">
+  <div class="amb-item"><img class="amb-img" src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=80" alt="Interior"/><div class="amb-overlay"><div class="amb-label">The Dining Room</div><div class="amb-sub">Forty-two covers, intimate by design</div></div></div>
+  <div class="amb-item"><img class="amb-img" src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=600&q=80" alt="Wine"/><div class="amb-overlay"><div class="amb-label">The Cellar</div><div class="amb-sub">2,400 labels, curated by our sommelier</div></div></div>
+  <div class="amb-item"><img class="amb-img" src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=600&q=80" alt="Kitchen"/><div class="amb-overlay"><div class="amb-label">The Kitchen</div><div class="amb-sub">Open hearth, Japanese steel, live fire</div></div></div>
+</div>
+<section class="experience">
+  <div class="exp-item"><div class="exp-icon">🕯</div><div class="exp-title">The Menu</div><p class="exp-desc">Nine courses, crafted seasonally. A tasting menu that changes with what is finest — never what is convenient.</p></div>
+  <div class="exp-item"><div class="exp-icon">🍷</div><div class="exp-title">Wine Pairing</div><p class="exp-desc">Our sommelier has curated pairings from the world's finest estates — from grand Burgundy to natural wine rarities.</p></div>
+  <div class="exp-item"><div class="exp-icon">✦</div><div class="exp-title">Private Events</div><p class="exp-desc">The private dining room seats up to fourteen. A space for the moments that deserve to be remembered in full.</p></div>
+</section>
+<section class="reservation">
+  <div class="res-bg"><img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=1400&q=80" alt="Restaurant"/></div>
+  <div class="res-content">
+    <span class="res-sym">— ✦ ✦ ✦ —</span>
+    <div class="res-tag">Reserve Your Evening</div>
+    <h2 class="res-title">A Table Awaits</h2>
+    <p class="res-sub">Obsidian accepts reservations up to sixty days in advance. We seat forty-two guests per service.</p>
+    <a href="#" class="btn-gold" style="display:inline-block;">Reserve Now</a>
+    <div class="res-info">
+      <div><div class="res-detail-label">Service</div><div class="res-detail-val">Tue — Sat</div></div>
+      <div><div class="res-detail-label">Sittings</div><div class="res-detail-val">6:30 · 9:00 PM</div></div>
+      <div><div class="res-detail-label">Tasting Menu</div><div class="res-detail-val">$285 per person</div></div>
+      <div><div class="res-detail-label">Wine Pairing</div><div class="res-detail-val">$160 per person</div></div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="footer-logo-big">OBSIDIAN</div>
+  <div class="footer-tagline">Three Michelin Stars · New York City</div>
+  <ul class="footer-nav"><li><a href="#">The Menu</a></li><li><a href="#">The Chef</a></li><li><a href="#">The Cellar</a></li><li><a href="#">Private Dining</a></li><li><a href="#">Gift Cards</a></li><li><a href="#">Press</a></li><li><a href="#">Contact</a></li></ul>
+  <div class="footer-div"></div>
+  <div class="footer-copy">© 2026 Obsidian Restaurant Group · 16 West 57th Street, New York, NY</div>
+</footer>
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+function ar(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar);}ar();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{ring.style.width='48px';ring.style.height='48px';ring.style.opacity='.5';});el.addEventListener('mouseleave',()=>{ring.style.width='30px';ring.style.height='30px';ring.style.opacity='.3';});});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobMenu').classList.add('open'));
+document.getElementById('mobClose').addEventListener('click',()=>document.getElementById('mobMenu').classList.remove('open'));
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.style.animation='fadeUp .8s ease forwards';}),{threshold:.1});
+document.querySelectorAll('.course,.amb-item,.exp-item').forEach(el=>{el.style.opacity='0';obs.observe(el);});
+</script>
+</body>
+</html>

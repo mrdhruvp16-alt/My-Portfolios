@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WILD — Nature & Wilderness</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,600&family=Epilogue:wght@300;400;500;700&family=Space+Mono&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--black:#080b08;--deep:#0e1510;--forest:#1a2d1a;--fern:#4a7c3f;--leaf:#6db35a;--mist:#c2d4ba;--cream:#f0ede6;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--cream);font-family:'Epilogue',sans-serif;overflow-x:hidden;cursor:none;}
+@media(max-width:768px){body{cursor:auto;}}
+.cur,.cur-ring{pointer-events:none;position:fixed;border-radius:50%;z-index:9999;transform:translate(-50%,-50%);}
+.cur{width:8px;height:8px;background:var(--leaf);transition:width .3s,height .3s;}
+.cur-ring{width:36px;height:36px;border:1px solid var(--leaf);z-index:9998;transition:all .18s;opacity:.4;}
+@media(max-width:768px){.cur,.cur-ring{display:none;}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(8,11,8,.9);backdrop-filter:blur(12px);}
+.nav-logo{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;letter-spacing:6px;color:var(--leaf);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--mist);text-decoration:none;opacity:.7;transition:opacity .3s;}
+.nav-links a:hover{opacity:1;}
+.nav-cta{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;padding:10px 24px;border:1px solid var(--fern);color:var(--leaf);text-decoration:none;border-radius:100px;transition:all .3s;}
+.nav-cta:hover{background:var(--fern);color:var(--black);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{width:24px;height:2px;background:var(--leaf);display:block;border-radius:2px;}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(8,11,8,.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.mob-menu.open{display:flex;}
+.mob-menu a{font-family:'Space Mono',monospace;font-size:14px;letter-spacing:4px;text-transform:uppercase;color:var(--mist);text-decoration:none;transition:color .3s;}
+.mob-menu a:hover{color:var(--leaf);}
+.mob-close{position:absolute;top:24px;right:24px;font-size:28px;color:var(--mist);cursor:pointer;background:none;border:none;}
+
+/* HERO */
+.hero{height:100vh;min-height:580px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 72px;}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=1800&q=80') center/cover no-repeat;filter:brightness(.35);}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--black) 0%,transparent 55%);}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--leaf);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:14px;animation:fadeUp .8s ease .2s both;}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--leaf);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,9vw,128px);font-weight:300;line-height:.95;letter-spacing:-2px;margin-bottom:24px;animation:fadeUp .8s ease .4s both;}
+.hero-title em{font-style:italic;color:var(--leaf);}
+.hero-sub{font-size:15px;font-weight:300;color:var(--mist);max-width:400px;line-height:1.7;margin-bottom:36px;opacity:.8;animation:fadeUp .8s ease .6s both;}
+.hero-actions{display:flex;align-items:center;gap:28px;flex-wrap:wrap;animation:fadeUp .8s ease .8s both;}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;padding:14px 32px;background:var(--fern);color:var(--cream);text-decoration:none;border-radius:100px;transition:all .3s;border:none;cursor:pointer;}
+.btn-primary:hover{background:var(--leaf);transform:translateY(-2px);box-shadow:0 8px 24px rgba(74,124,63,.4);}
+.hero-scroll{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--mist);opacity:.5;}
+.scroll-line{width:44px;height:1px;background:var(--mist);opacity:.4;animation:scrollLine 2s ease-in-out infinite;}
+@keyframes scrollLine{0%,100%{transform:scaleX(1);}50%{transform:scaleX(.3);transform-origin:left;}}
+.hero-stats{position:absolute;right:48px;bottom:72px;display:flex;flex-direction:column;gap:20px;align-items:flex-end;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;color:var(--leaf);line-height:1;}
+.stat-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--mist);opacity:.5;margin-top:3px;}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--forest);padding:15px 0;overflow:hidden;border-top:1px solid rgba(74,124,63,.2);border-bottom:1px solid rgba(74,124,63,.2);}
+.marquee-track{display:flex;animation:marquee 20s linear infinite;white-space:nowrap;}
+.marquee-item{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--mist);padding:0 44px;opacity:.6;}
+.marquee-dot{color:var(--leaf);opacity:1;}
+@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* FEATURED */
+.featured{padding:80px 48px;}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:52px;flex-wrap:wrap;gap:16px;}
+.section-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--leaf);margin-bottom:12px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,4.5vw,52px);font-weight:300;line-height:1.1;}
+.section-title em{font-style:italic;color:var(--leaf);}
+.view-all{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mist);text-decoration:none;display:flex;align-items:center;gap:8px;opacity:.6;transition:all .3s;padding:8px 20px;border:1px solid rgba(194,212,186,.2);border-radius:100px;}
+.view-all:hover{opacity:1;border-color:var(--leaf);}
+.view-all::after{content:'→';}
+.cards-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2px;}
+.card{position:relative;overflow:hidden;border-radius:12px;}
+.card-img{width:100%;aspect-ratio:3/4;object-fit:cover;transition:transform .8s,filter .5s;filter:brightness(.6) saturate(.8);display:block;}
+.card:hover .card-img{transform:scale(1.05);filter:brightness(.4) saturate(1);}
+.card-body{position:absolute;bottom:0;left:0;right:0;padding:28px 24px;background:linear-gradient(to top,rgba(8,11,8,.96) 0%,transparent 100%);}
+.card-cat{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--leaf);margin-bottom:10px;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2vw,26px);font-weight:400;line-height:1.2;margin-bottom:8px;}
+.card-date{font-size:11px;color:var(--mist);opacity:.4;}
+.card-big .card-img{aspect-ratio:2/3;}
+.card-read{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--leaf);text-decoration:none;margin-top:12px;opacity:0;transform:translateY(8px);transition:all .4s;padding:6px 16px;border:1px solid var(--fern);border-radius:100px;}
+.card:hover .card-read{opacity:1;transform:translateY(0);}
+
+/* STRIP */
+.strip{padding:0 48px;margin-bottom:60px;}
+.strip-inner{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid rgba(74,124,63,.15);border-radius:16px;overflow:hidden;}
+.strip-block{padding:44px 36px;border-right:1px solid rgba(74,124,63,.15);position:relative;overflow:hidden;transition:background .3s;}
+.strip-block:last-child{border-right:none;}
+.strip-block:hover{background:rgba(26,45,26,.5);}
+.strip-icon{font-size:30px;margin-bottom:18px;}
+.strip-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--forest);position:absolute;right:16px;top:12px;line-height:1;}
+.strip-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--leaf);margin-bottom:12px;}
+.strip-text{font-size:13px;color:var(--mist);opacity:.6;line-height:1.8;}
+
+/* EDITORIAL */
+.editorial{padding:60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.ed-img-wrap{position:relative;}
+.ed-img{width:100%;aspect-ratio:4/5;object-fit:cover;filter:brightness(.5) saturate(.7);border-radius:16px;display:block;}
+.ed-tag{position:absolute;top:28px;left:0;background:var(--fern);color:var(--black);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:7px 18px;border-radius:0 100px 100px 0;}
+.ed-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--leaf);margin-bottom:18px;}
+.ed-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:300;line-height:1.05;margin-bottom:22px;}
+.ed-title em{font-style:italic;color:var(--leaf);}
+.ed-body{font-size:14px;line-height:1.85;color:var(--mist);opacity:.7;margin-bottom:30px;}
+.ed-author{display:flex;align-items:center;gap:14px;padding-top:24px;border-top:1px solid rgba(74,124,63,.2);margin-top:30px;}
+.ed-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;filter:brightness(.6);}
+.ed-name{font-size:13px;font-weight:500;color:var(--mist);}
+.ed-role{font-size:11px;color:var(--leaf);}
+
+/* QUOTE */
+.quote-section{padding:80px 48px;text-align:center;background:var(--deep);position:relative;overflow:hidden;}
+.quote-section::before{content:'"';font-family:'Cormorant Garamond',serif;font-size:260px;color:var(--forest);position:absolute;top:-40px;left:50%;transform:translateX(-50%);line-height:1;pointer-events:none;opacity:.7;}
+.quote-text{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,46px);font-weight:300;font-style:italic;line-height:1.3;max-width:680px;margin:0 auto 24px;position:relative;}
+.quote-author{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--leaf);}
+
+/* MINI GRID */
+.mini-grid{padding:60px 48px;}
+.mini-title{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,3.5vw,42px);font-weight:300;margin-bottom:36px;}
+.mini-title em{font-style:italic;color:var(--leaf);}
+.mini-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+.mini-card{border:1px solid rgba(74,124,63,.15);overflow:hidden;transition:border-color .3s;border-radius:12px;}
+.mini-card:hover{border-color:var(--fern);}
+.mini-card img{width:100%;aspect-ratio:16/10;object-fit:cover;filter:brightness(.5) saturate(.7);transition:transform .5s,filter .5s;display:block;}
+.mini-card:hover img{transform:scale(1.05);filter:brightness(.4) saturate(1);}
+.mini-card-body{padding:16px;}
+.mini-cat{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--leaf);margin-bottom:6px;}
+.mini-card-title{font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.3;}
+.mini-read{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fern);margin-top:10px;display:inline-block;padding:5px 14px;border:1px solid rgba(74,124,63,.3);border-radius:100px;text-decoration:none;transition:all .3s;}
+.mini-read:hover{background:var(--fern);color:var(--black);}
+
+/* NEWSLETTER */
+.newsletter{margin:0 48px 80px;padding:56px 60px;background:var(--forest);position:relative;overflow:hidden;border-radius:20px;}
+.newsletter::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(74,124,63,.3),transparent 70%);}
+.nl-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--leaf);margin-bottom:14px;}
+.nl-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:300;line-height:1.1;margin-bottom:10px;}
+.nl-title em{font-style:italic;}
+.nl-sub{font-size:13px;color:var(--mist);opacity:.6;margin-bottom:28px;}
+.nl-form{display:flex;gap:10px;max-width:460px;flex-wrap:wrap;}
+.nl-input{flex:1;min-width:180px;background:rgba(8,11,8,.5);border:1px solid rgba(74,124,63,.3);padding:13px 20px;color:var(--cream);font-family:'Epilogue',sans-serif;font-size:13px;outline:none;border-radius:100px;}
+.nl-input::placeholder{color:var(--mist);opacity:.35;}
+.nl-input:focus{border-color:var(--fern);}
+.nl-btn{background:var(--leaf);border:none;padding:13px 28px;color:var(--black);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;cursor:pointer;transition:all .3s;border-radius:100px;}
+.nl-btn:hover{background:var(--cream);transform:translateY(-2px);}
+
+/* FOOTER */
+footer{padding:56px 48px 40px;background:var(--deep);display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:44px;border-top:1px solid rgba(74,124,63,.15);}
+.footer-brand .logo{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;letter-spacing:6px;color:var(--leaf);margin-bottom:14px;}
+.footer-desc{font-size:13px;color:var(--mist);opacity:.5;line-height:1.8;}
+.footer-col-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--leaf);margin-bottom:18px;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.footer-links a{font-size:13px;color:var(--mist);text-decoration:none;opacity:.5;transition:opacity .3s;}
+.footer-links a:hover{opacity:1;}
+.footer-bottom{padding:18px 48px;background:var(--black);display:flex;justify-content:center;}
+.footer-copy{font-size:11px;color:var(--mist);opacity:.3;letter-spacing:1px;}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .cards-grid{grid-template-columns:1fr 1fr;}
+  .card-big{grid-column:span 2;}
+  .mini-cards{grid-template-columns:repeat(2,1fr);}
+  footer{grid-template-columns:1fr 1fr;gap:32px;}
+  .hero-stats{display:none;}
+}
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  .hero{padding:0 20px 52px;}
+  .hero-sub{max-width:100%;}
+  .featured{padding:52px 20px;}
+  .section-header{flex-direction:column;align-items:flex-start;}
+  .cards-grid{grid-template-columns:1fr;}
+  .card-big{grid-column:auto;}
+  .card-big .card-img{aspect-ratio:3/4;}
+  .strip{padding:0 20px;margin-bottom:40px;}
+  .strip-inner{grid-template-columns:1fr;border-radius:12px;}
+  .strip-block{border-right:none;border-bottom:1px solid rgba(74,124,63,.15);}
+  .strip-block:last-child{border-bottom:none;}
+  .editorial{padding:40px 20px;grid-template-columns:1fr;gap:36px;}
+  .quote-section{padding:60px 20px;}
+  .mini-grid{padding:48px 20px;}
+  .newsletter{margin:0 20px 56px;padding:36px 28px;}
+  footer{padding:44px 20px 32px;grid-template-columns:1fr 1fr;gap:28px;}
+  .footer-bottom{padding:14px 20px;}
+  .hero-scroll{display:none;}
+}
+@media(max-width:480px){
+  .mini-cards{grid-template-columns:1fr;}
+  footer{grid-template-columns:1fr;}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" id="mobClose">✕</button>
+  <a href="#">Explore</a><a href="#">Stories</a><a href="#">Wildlife</a><a href="#">Conservation</a><a href="#">Journal</a>
+  <a href="#" style="margin-top:16px;padding:12px 32px;border:1px solid var(--fern);border-radius:100px;color:var(--leaf);">Subscribe</a>
+</div>
+<nav>
+  <div class="nav-logo">WILD</div>
+  <ul class="nav-links"><li><a href="#">Explore</a></li><li><a href="#">Stories</a></li><li><a href="#">Wildlife</a></li><li><a href="#">Conservation</a></li><li><a href="#">Journal</a></li></ul>
+  <a href="#" class="nav-cta">Subscribe</a>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Issue No. 47 · Spring 2026</div>
+  <h1 class="hero-title">Into the<br/><em>Ancient</em><br/>Wild</h1>
+  <p class="hero-sub">Where the last untouched forests breathe, and silence speaks louder than civilization ever could.</p>
+  <div class="hero-actions">
+    <a href="#" class="btn-primary">Read the Issue →</a>
+    <div class="hero-scroll"><span class="scroll-line"></span>Scroll to Explore</div>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-num">84%</div><div class="stat-label">Forest Lost</div></div>
+    <div><div class="stat-num">1M+</div><div class="stat-label">Species at Risk</div></div>
+  </div>
+</section>
+<div class="marquee-wrap"><div class="marquee-track"><span class="marquee-item">Amazon Rainforest</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Siberian Taiga</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Congo Basin</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Borneo Highlands</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Patagonia Wilds</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Arctic Tundra</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Amazon Rainforest</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Siberian Taiga</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Congo Basin</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Borneo Highlands</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Patagonia Wilds</span><span class="marquee-item marquee-dot">✦</span><span class="marquee-item">Arctic Tundra</span><span class="marquee-item marquee-dot">✦</span></div></div>
+<section class="featured">
+  <div class="section-header">
+    <div><div class="section-tag">Featured Stories</div><h2 class="section-title">This Season's<br/><em>Dispatches</em></h2></div>
+    <a href="#" class="view-all">All Stories</a>
+  </div>
+  <div class="cards-grid">
+    <div class="card card-big"><img class="card-img" src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80" alt="Forest"/><div class="card-body"><div class="card-cat">Wilderness</div><div class="card-title">The Last Old-Growth Forests of the Pacific Northwest</div><div class="card-date">March 12, 2026</div><a href="#" class="card-read">Read Story →</a></div></div>
+    <div class="card"><img class="card-img" src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=600&q=80" alt="Wildlife"/><div class="card-body"><div class="card-cat">Wildlife</div><div class="card-title">Following the Great Migration Across the Serengeti</div><div class="card-date">March 8, 2026</div><a href="#" class="card-read">Read Story →</a></div></div>
+    <div class="card"><img class="card-img" src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80" alt="Ocean"/><div class="card-body"><div class="card-cat">Ocean</div><div class="card-title">Beneath the Surface: The Coral Triangle</div><div class="card-date">March 4, 2026</div><a href="#" class="card-read">Read Story →</a></div></div>
+  </div>
+</section>
+<div class="strip"><div class="strip-inner">
+  <div class="strip-block"><div class="strip-num">01</div><div class="strip-icon">🌿</div><div class="strip-label">Ecosystems</div><p class="strip-text">Dive deep into the complex webs of life that sustain our planet's most biodiverse regions.</p></div>
+  <div class="strip-block"><div class="strip-num">02</div><div class="strip-icon">🦁</div><div class="strip-label">Wildlife Watch</div><p class="strip-text">Intimate portraits of the animals that define wilderness — their lives, threats, and survival.</p></div>
+  <div class="strip-block"><div class="strip-num">03</div><div class="strip-icon">🌊</div><div class="strip-label">Conservation</div><p class="strip-text">The stories of those fighting to protect what remains.</p></div>
+</div></div>
+<section class="editorial">
+  <div class="ed-img-wrap"><img class="ed-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="Editor"/><div class="ed-tag">Editor's Pick</div></div>
+  <div class="ed-content">
+    <div class="ed-eyebrow">Long Read · 14 min</div>
+    <h2 class="ed-title">The Forest that <em>Breathes</em> for All of Us</h2>
+    <p class="ed-body">Deep inside the Amazon, a stretch of rainforest the size of Belgium remains almost entirely untouched by modern civilization. We spent three weeks inside one of the last truly wild places on Earth.</p>
+    <a href="#" class="btn-primary">Read the Full Story →</a>
+    <div class="ed-author">
+      <img class="ed-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="Author"/>
+      <div><div class="ed-name">Elena Vasquez</div><div class="ed-role">Senior Field Correspondent</div></div>
+    </div>
+  </div>
+</section>
+<section class="quote-section">
+  <p class="quote-text">In every walk with nature, one receives far more than he seeks.</p>
+  <div class="quote-author">— John Muir</div>
+</section>
+<section class="mini-grid">
+  <h2 class="mini-title">More from the <em>Journal</em></h2>
+  <div class="mini-cards">
+    <div class="mini-card"><img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&q=80" alt="Mountains"/><div class="mini-card-body"><div class="mini-cat">Mountains</div><div class="mini-card-title">Solitude Above the Cloud Line</div><a href="#" class="mini-read">Read →</a></div></div>
+    <div class="mini-card"><img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80" alt="Desert"/><div class="mini-card-body"><div class="mini-cat">Desert</div><div class="mini-card-title">Life in the World's Driest Place</div><a href="#" class="mini-read">Read →</a></div></div>
+    <div class="mini-card"><img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=400&q=80" alt="Arctic"/><div class="mini-card-body"><div class="mini-cat">Arctic</div><div class="mini-card-title">When Ice Becomes Memory</div><a href="#" class="mini-read">Read →</a></div></div>
+    <div class="mini-card"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80" alt="Valley"/><div class="mini-card-body"><div class="mini-cat">Landscape</div><div class="mini-card-title">Hidden Valleys of the Himalayas</div><a href="#" class="mini-read">Read →</a></div></div>
+  </div>
+</section>
+<div class="newsletter">
+  <div class="nl-label">Stay Connected</div>
+  <h3 class="nl-title">The Wild <em>Weekly</em></h3>
+  <p class="nl-sub">Stories and dispatches from the edges of the natural world — every Thursday.</p>
+  <div class="nl-form"><input class="nl-input" type="text" placeholder="Enter your email"/><button class="nl-btn">Subscribe</button></div>
+</div>
+<footer>
+  <div class="footer-brand"><div class="logo">WILD</div><p class="footer-desc">A magazine for those who believe the natural world is worth fighting for, photographing, and exploring.</p></div>
+  <div><div class="footer-col-title">Explore</div><ul class="footer-links"><li><a href="#">Wilderness</a></li><li><a href="#">Wildlife</a></li><li><a href="#">Ocean</a></li><li><a href="#">Mountains</a></li></ul></div>
+  <div><div class="footer-col-title">Journal</div><ul class="footer-links"><li><a href="#">Long Reads</a></li><li><a href="#">Photo Essays</a></li><li><a href="#">Field Notes</a></li><li><a href="#">Interviews</a></li></ul></div>
+  <div><div class="footer-col-title">About</div><ul class="footer-links"><li><a href="#">Our Mission</a></li><li><a href="#">Contributors</a></li><li><a href="#">Advertise</a></li><li><a href="#">Contact</a></li></ul></div>
+</footer>
+<div class="footer-bottom"><div class="footer-copy">© 2026 WILD Magazine. All rights reserved.</div></div>
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+function ar(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar);}ar();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{cur.style.width='16px';cur.style.height='16px';ring.style.width='52px';ring.style.height='52px';ring.style.opacity='.6';});el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';ring.style.width='36px';ring.style.height='36px';ring.style.opacity='.4';});});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobMenu').classList.add('open'));
+document.getElementById('mobClose').addEventListener('click',()=>document.getElementById('mobMenu').classList.remove('open'));
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.style.animation='fadeUp .7s ease forwards';}),{threshold:.1});
+document.querySelectorAll('.card,.strip-block,.mini-card').forEach(el=>{el.style.opacity='0';obs.observe(el);});
+</script>
+</body>
+</html>
