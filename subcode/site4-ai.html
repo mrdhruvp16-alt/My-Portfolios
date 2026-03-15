@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SYNAPSE — AI Infrastructure</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--void:#020509;--deep:#050d14;--dark:#080f18;--panel:#0d1822;--border:rgba(0,180,255,.1);--borderlg:rgba(0,180,255,.05);--cyan:#00b4ff;--blue:#0066ff;--glow:rgba(0,180,255,.15);--glowstr:rgba(0,180,255,.4);--white:#e8f4ff;--dim:rgba(232,244,255,.4);--dimmer:rgba(232,244,255,.2);}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--white);font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden;cursor:none;}
+@media(max-width:768px){body{cursor:auto;}}
+.cur{position:fixed;width:8px;height:8px;background:var(--cyan);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--cyan);}
+.cur-ring{position:fixed;width:36px;height:36px;border:1px solid var(--cyan);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .2s;opacity:.3;}
+@media(max-width:768px){.cur,.cur-ring{display:none;}}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--borderlg) 1px,transparent 1px),linear-gradient(90deg,var(--borderlg) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+body::after{content:'';position:fixed;top:0;left:0;right:0;height:100vh;background:radial-gradient(ellipse at 50% 0%,rgba(0,102,255,.12),transparent 60%);pointer-events:none;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:18px 56px;border-bottom:1px solid var(--border);background:rgba(2,5,9,.88);backdrop-filter:blur(20px);}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;letter-spacing:2px;}
+.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{font-size:13px;color:var(--dim);text-decoration:none;letter-spacing:.3px;transition:color .2s;}
+.nav-links a:hover{color:var(--white);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn-nav-ghost{font-size:13px;padding:8px 20px;border:1px solid var(--border);color:var(--dim);text-decoration:none;transition:all .3s;border-radius:100px;}
+.btn-nav-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-nav-solid{font-size:13px;font-weight:600;padding:8px 20px;background:var(--cyan);color:var(--void);text-decoration:none;transition:all .3s;border-radius:100px;}
+.btn-nav-solid:hover{background:#33c6ff;box-shadow:0 0 20px var(--glowstr);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hamburger span{width:22px;height:2px;background:var(--white);display:block;border-radius:2px;}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(2,5,9,.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:24px;}
+.mob-menu.open{display:flex;}
+.mob-menu a{font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none;opacity:.5;transition:all .3s;}
+.mob-menu a:hover{opacity:1;color:var(--cyan);}
+.mob-close{position:absolute;top:24px;right:24px;font-size:28px;color:var(--white);cursor:pointer;background:none;border:none;opacity:.4;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:140px 56px 80px;text-align:center;position:relative;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;padding:6px 16px;border:1px solid var(--border);color:var(--cyan);background:rgba(0,180,255,.05);border-radius:100px;margin-bottom:36px;animation:fadeDown .6s ease both;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.hero-title{font-size:clamp(44px,7vw,100px);font-weight:800;line-height:.92;letter-spacing:-3px;margin-bottom:28px;animation:fadeUp .8s ease .1s both;}
+.hero-title .grad{background:linear-gradient(135deg,var(--white) 20%,var(--cyan) 60%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-title .outline{color:transparent;-webkit-text-stroke:2px rgba(232,244,255,.2);}
+.hero-sub{font-size:clamp(15px,2vw,18px);font-weight:300;color:var(--dim);max-width:560px;line-height:1.7;margin:0 auto 44px;animation:fadeUp .8s ease .2s both;}
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s ease .3s both;}
+.btn-primary-lg{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:600;padding:15px 36px;background:var(--cyan);color:var(--void);text-decoration:none;transition:all .3s;border-radius:100px;}
+.btn-primary-lg:hover{background:#33c6ff;box-shadow:0 0 40px var(--glowstr);}
+.btn-secondary-lg{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:500;padding:15px 36px;border:1px solid var(--border);color:var(--white);text-decoration:none;transition:all .3s;border-radius:100px;}
+.btn-secondary-lg:hover{border-color:var(--cyan);background:var(--glow);}
+.hero-trust{margin-top:56px;animation:fadeUp .8s ease .5s both;}
+.trust-label{font-size:12px;color:var(--dimmer);margin-bottom:16px;}
+.trust-logos{display:flex;gap:40px;justify-content:center;align-items:center;flex-wrap:wrap;}
+.trust-logo{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--dimmer);letter-spacing:2px;text-transform:uppercase;}
+.hero-terminal{margin-top:72px;width:100%;max-width:860px;background:var(--panel);border:1px solid var(--border);position:relative;overflow:hidden;border-radius:16px;box-shadow:0 0 80px var(--glow),0 40px 80px rgba(0,0,0,.5);animation:fadeUp .8s ease .4s both;}
+.hero-terminal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--cyan),transparent);}
+.terminal-bar{display:flex;align-items:center;gap:8px;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--dark);}
+.t-dot{width:10px;height:10px;border-radius:50%;}
+.terminal-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dimmer);margin-left:8px;}
+.terminal-body{padding:20px;}
+.t-line{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;color:var(--dim);}
+.t-line .prompt{color:var(--cyan);}
+.t-line .cmd{color:var(--white);}
+.t-line .out{color:rgba(0,180,255,.6);}
+.t-line .str{color:#7ec8a0;}
+.t-line .num{color:#f0b35b;}
+.t-cursor{display:inline-block;width:8px;height:14px;background:var(--cyan);animation:blink 1s step-end infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* LOGOS */
+.logos-row{padding:44px 56px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:56px;overflow:hidden;flex-wrap:nowrap;}
+.logos-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--dimmer);white-space:nowrap;flex-shrink:0;}
+.logos-track{display:flex;gap:56px;animation:ticker 20s linear infinite;}
+.logos-track span{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--dimmer);letter-spacing:2px;white-space:nowrap;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* FEATURES */
+.features{padding:100px 56px;}
+.feat-header{text-align:center;margin-bottom:72px;}
+.section-chip{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;padding:5px 14px;border:1px solid var(--border);color:var(--cyan);background:rgba(0,180,255,.05);border-radius:100px;margin-bottom:18px;}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;margin-bottom:14px;}
+.section-title .grad{background:linear-gradient(135deg,var(--white),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-sub{font-size:15px;font-weight:300;color:var(--dim);max-width:480px;margin:0 auto;line-height:1.7;}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:16px;overflow:hidden;}
+.feat-card{background:var(--void);padding:44px 36px;position:relative;overflow:hidden;transition:background .4s;}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--cyan),transparent);opacity:0;transition:opacity .4s;}
+.feat-card:hover{background:var(--panel);}
+.feat-card:hover::before{opacity:1;}
+.feat-icon{width:44px;height:44px;background:rgba(0,180,255,.1);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:24px;transition:all .4s;}
+.feat-card:hover .feat-icon{background:rgba(0,180,255,.2);border-color:var(--cyan);box-shadow:0 0 20px var(--glow);}
+.feat-title{font-size:18px;font-weight:700;margin-bottom:10px;}
+.feat-desc{font-size:13px;font-weight:300;color:var(--dim);line-height:1.8;}
+.feat-badge{display:inline-block;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;padding:4px 10px;background:rgba(0,180,255,.08);border:1px solid var(--border);color:var(--cyan);border-radius:100px;}
+
+/* METRICS */
+.metrics{padding:60px 56px;background:var(--deep);}
+.metrics-inner{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.metric{padding:44px 36px;border-right:1px solid var(--border);text-align:center;}
+.metric:last-child{border-right:none;}
+.metric-val{font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:400;line-height:1;}
+.metric-val span{color:var(--cyan);}
+.metric-label{font-size:13px;color:var(--dim);margin-top:8px;}
+.metric-trend{font-family:'JetBrains Mono',monospace;font-size:11px;color:#4ade80;margin-top:8px;}
+
+/* PRICING */
+.pricing{padding:100px 56px;}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:16px;overflow:hidden;}
+.plan{background:var(--void);padding:44px 36px;position:relative;overflow:hidden;}
+.plan.featured{background:var(--panel);}
+.plan.featured::before{content:'';position:absolute;inset:0;border:1px solid rgba(0,180,255,.3);pointer-events:none;border-radius:inherit;}
+.plan-badge{position:absolute;top:20px;right:20px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;padding:4px 10px;background:var(--cyan);color:var(--void);border-radius:100px;}
+.plan-name{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);margin-bottom:18px;}
+.plan-price{font-size:52px;font-weight:800;letter-spacing:-2px;margin-bottom:6px;}
+.plan-price sup{font-size:22px;font-weight:400;vertical-align:top;margin-top:14px;display:inline-block;}
+.plan-period{font-size:13px;color:var(--dim);margin-bottom:28px;}
+.plan-divider{height:1px;background:var(--border);margin-bottom:28px;}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:13px;margin-bottom:36px;}
+.plan-features li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--dim);}
+.plan-features li::before{content:'✓';color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:11px;flex-shrink:0;}
+.plan-cta{display:block;text-align:center;font-size:13px;font-weight:600;padding:13px;border:1px solid var(--border);color:var(--white);text-decoration:none;transition:all .3s;border-radius:100px;}
+.plan-cta:hover{border-color:var(--cyan);background:rgba(0,180,255,.08);color:var(--cyan);}
+.plan.featured .plan-cta{background:var(--cyan);color:var(--void);border-color:var(--cyan);}
+.plan.featured .plan-cta:hover{background:#33c6ff;box-shadow:0 0 30px var(--glowstr);}
+
+/* PROOF */
+.proof{padding:72px 56px;border-top:1px solid var(--border);}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:16px;overflow:hidden;}
+.proof-card{background:var(--void);padding:36px;}
+.proof-quote{font-size:14px;font-weight:300;line-height:1.8;color:var(--dim);margin-bottom:24px;}
+.proof-author{display:flex;align-items:center;gap:12px;}
+.proof-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--void);flex-shrink:0;}
+.proof-name{font-size:13px;font-weight:600;}
+.proof-role{font-size:12px;color:var(--dimmer);}
+
+/* FOOTER */
+footer{padding:72px 56px 44px;border-top:1px solid var(--border);}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:52px;margin-bottom:56px;}
+.footer-logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.footer-logo{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:500;letter-spacing:2px;}
+.footer-desc{font-size:13px;color:var(--dimmer);line-height:1.8;}
+.footer-col-h{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);margin-bottom:18px;opacity:.7;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.footer-links a{font-size:13px;color:var(--dimmer);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:var(--white);}
+.footer-bottom{display:flex;justify-content:center;padding-top:22px;border-top:1px solid var(--border);}
+.footer-copy{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dimmer);}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .metrics-inner{grid-template-columns:1fr 1fr;}
+  .metric:nth-child(2){border-right:none;}
+  .metric:nth-child(3),.metric:nth-child(4){border-top:1px solid var(--border);}
+  .plans{grid-template-columns:1fr;}
+  .plan.featured::before{border-radius:0;}
+  .proof-grid{grid-template-columns:1fr;}
+  footer .footer-top{grid-template-columns:1fr 1fr;gap:32px;}
+}
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .nav-links,.nav-right{display:none;}
+  .hamburger{display:flex;}
+  .hero{padding:100px 20px 60px;}
+  .trust-logos{gap:20px;}
+  .logos-row{padding:32px 20px;}
+  .features{padding:60px 20px;}
+  .feat-grid{grid-template-columns:1fr;}
+  .metrics{padding:40px 20px;}
+  .metrics-inner{grid-template-columns:1fr;}
+  .metric{border-right:none;border-bottom:1px solid var(--border);}
+  .metric:last-child{border-bottom:none;}
+  .pricing{padding:60px 20px;}
+  .proof{padding:48px 20px;}
+  footer{padding:48px 20px 32px;}
+  footer .footer-top{grid-template-columns:1fr;}
+  .hero-terminal{border-radius:12px;}
+}
+@media(max-width:480px){
+  .hero-title{letter-spacing:-2px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div><div class="cur-ring" id="curRing"></div>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" id="mobClose">✕</button>
+  <a href="#">Product</a><a href="#">Docs</a><a href="#">Pricing</a><a href="#">Customers</a><a href="#">Blog</a>
+  <a href="#" style="margin-top:16px;padding:12px 32px;background:var(--cyan);color:var(--void);border-radius:100px;font-weight:600;">Start Free</a>
+</div>
+<nav>
+  <div class="nav-logo"><div class="logo-icon">⚡</div>SYNAPSE</div>
+  <ul class="nav-links"><li><a href="#">Product</a></li><li><a href="#">Docs</a></li><li><a href="#">Pricing</a></li><li><a href="#">Customers</a></li><li><a href="#">Blog</a></li></ul>
+  <div class="nav-right"><a href="#" class="btn-nav-ghost">Sign In</a><a href="#" class="btn-nav-solid">Start Free</a></div>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<section class="hero">
+  <div class="hero-badge"><div class="badge-dot"></div>Announcing Synapse v3.0 — 10x faster inference</div>
+  <h1 class="hero-title"><span class="grad">The AI Infrastructure</span><br/><span class="outline">Built for Scale</span></h1>
+  <p class="hero-sub">Deploy, fine-tune, and serve large language models at production scale — with sub-100ms latency and 99.99% uptime.</p>
+  <div class="hero-actions"><a href="#" class="btn-primary-lg">Start Building Free →</a><a href="#" class="btn-secondary-lg">Watch Demo</a></div>
+  <div class="hero-trust">
+    <div class="trust-label">Trusted by 2,400+ engineering teams worldwide</div>
+    <div class="trust-logos"><div class="trust-logo">Horizon</div><div class="trust-logo">Arcana</div><div class="trust-logo">Kova Labs</div><div class="trust-logo">Stratum AI</div><div class="trust-logo">Nexus Co</div></div>
+  </div>
+  <div class="hero-terminal">
+    <div class="terminal-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><div class="terminal-title">synapse-cli · main</div></div>
+    <div class="terminal-body">
+      <div class="t-line"><span class="prompt">$</span> <span class="cmd">synapse deploy</span> <span class="str">./models/llama-70b</span> <span class="out">--env production</span></div>
+      <div class="t-line" style="color:rgba(0,180,255,.4)">  ◆ Validating model... <span style="color:#4ade80">✓</span></div>
+      <div class="t-line" style="color:rgba(0,180,255,.4)">  ◆ Optimizing for H100 cluster... <span style="color:#4ade80">✓</span></div>
+      <div class="t-line"><span style="color:#4ade80">✓ Deployed!</span> <span class="out">Endpoint live at</span> <span class="str">api.synapse.io/v1/llama-70b</span></div>
+      <div class="t-line"><span class="out">  Latency: </span><span class="num">68ms</span> <span class="out">· Throughput: </span><span class="num">1,240 req/s</span></div>
+      <div class="t-line"><span class="prompt">$</span> <div class="t-cursor"></div></div>
+    </div>
+  </div>
+</section>
+<div class="logos-row"><div class="logos-label">Certified by</div><div class="logos-track"><span>YCombinator</span><span>Sequoia Portfolio</span><span>Enterprise Ready</span><span>SOC 2 Type II</span><span>HIPAA Compliant</span><span>GDPR Ready</span><span>YCombinator</span><span>Sequoia Portfolio</span><span>Enterprise Ready</span><span>SOC 2 Type II</span><span>HIPAA Compliant</span><span>GDPR Ready</span></div></div>
+<section class="features">
+  <div class="feat-header"><div class="section-chip">⚡ Core Platform</div><h2 class="section-title">Everything you need to <span class="grad">ship AI</span></h2><p class="section-sub">Stop fighting infrastructure. Start building products.</p></div>
+  <div class="feat-grid">
+    <div class="feat-card"><div class="feat-icon">🚀</div><div class="feat-title">One-Click Deploy</div><p class="feat-desc">Deploy any open-source model from HuggingFace in seconds. Llama, Mistral, Falcon — we handle the rest.</p><span class="feat-badge">50+ Models</span></div>
+    <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">Sub-100ms Latency</div><p class="feat-desc">Our custom inference engine delivers blazing-fast responses, even at 1M+ requests per hour.</p><span class="feat-badge">P99 &lt; 100ms</span></div>
+    <div class="feat-card"><div class="feat-icon">🔧</div><div class="feat-title">Fine-Tuning Studio</div><p class="feat-desc">Domain-adapt any foundation model with your data. No ML expertise required.</p><span class="feat-badge">LoRA · QLoRA</span></div>
+    <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Real-Time Analytics</div><p class="feat-desc">Monitor latency, cost, token usage, and model drift with dashboards that surface what matters.</p><span class="feat-badge">Live Metrics</span></div>
+    <div class="feat-card"><div class="feat-icon">🔒</div><div class="feat-title">Enterprise Security</div><p class="feat-desc">Your data never leaves your VPC. SOC 2 Type II, HIPAA, and GDPR compliant out of the box.</p><span class="feat-badge">Private Deploy</span></div>
+    <div class="feat-card"><div class="feat-icon">💰</div><div class="feat-title">Cost Optimizer</div><p class="feat-desc">Automatic batching, quantization, and spot instance management cut inference costs by up to 70%.</p><span class="feat-badge">Up to 70% Savings</span></div>
+  </div>
+</section>
+<div class="metrics"><div class="metrics-inner">
+  <div class="metric"><div class="metric-val">68<span>ms</span></div><div class="metric-label">Median Latency</div><div class="metric-trend">↓ 40% vs last gen</div></div>
+  <div class="metric"><div class="metric-val">99.<span>99%</span></div><div class="metric-label">Uptime SLA</div><div class="metric-trend">↑ Enterprise tier</div></div>
+  <div class="metric"><div class="metric-val">2.<span>4k</span></div><div class="metric-label">Teams Using Synapse</div><div class="metric-trend">↑ 3x YoY growth</div></div>
+  <div class="metric"><div class="metric-val">70<span>%</span></div><div class="metric-label">Avg Cost Reduction</div><div class="metric-trend">↓ vs direct API</div></div>
+</div></div>
+<section class="pricing">
+  <div class="feat-header" style="margin-bottom:52px;"><div class="section-chip">💎 Pricing</div><h2 class="section-title">Simple, <span class="grad">transparent</span> pricing</h2></div>
+  <div class="plans">
+    <div class="plan"><div class="plan-name">Starter</div><div class="plan-price"><sup>$</sup>0</div><div class="plan-period">Free forever</div><div class="plan-divider"></div><ul class="plan-features"><li>100k requests/month</li><li>3 model deployments</li><li>Community support</li><li>Basic analytics</li></ul><a href="#" class="plan-cta">Get Started Free</a></div>
+    <div class="plan featured"><div class="plan-badge">Most Popular</div><div class="plan-name">Pro</div><div class="plan-price"><sup>$</sup>99</div><div class="plan-period">per month</div><div class="plan-divider"></div><ul class="plan-features"><li>10M requests/month</li><li>Unlimited deployments</li><li>Fine-tuning studio</li><li>Priority support</li><li>Advanced analytics</li></ul><a href="#" class="plan-cta">Start Pro Trial</a></div>
+    <div class="plan"><div class="plan-name">Enterprise</div><div class="plan-price" style="font-size:36px;letter-spacing:-1px;">Custom</div><div class="plan-period">Contact us</div><div class="plan-divider"></div><ul class="plan-features"><li>Unlimited everything</li><li>Private VPC deploy</li><li>SLA guarantee</li><li>Dedicated support</li></ul><a href="#" class="plan-cta">Talk to Sales</a></div>
+  </div>
+</section>
+<section class="proof">
+  <div class="feat-header" style="margin-bottom:52px;"><div class="section-chip">💬 Testimonials</div><h2 class="section-title">Loved by <span class="grad">builders</span></h2></div>
+  <div class="proof-grid">
+    <div class="proof-card"><p class="proof-quote">"We replaced three separate ML infra vendors with Synapse. Our costs dropped 60% and our team actually sleeps now."</p><div class="proof-author"><div class="proof-avatar">JK</div><div><div class="proof-name">Jake Kim</div><div class="proof-role">CTO, Horizon AI</div></div></div></div>
+    <div class="proof-card"><p class="proof-quote">"The fine-tuning studio alone is worth the price. We adapted GPT-J to our legal domain in an afternoon."</p><div class="proof-author"><div class="proof-avatar">SM</div><div><div class="proof-name">Sarah Mitchell</div><div class="proof-role">Head of AI, LexAI</div></div></div></div>
+    <div class="proof-card"><p class="proof-quote">"The P99 latency numbers are real. After a week of benchmarks — these people have built something genuinely different."</p><div class="proof-author"><div class="proof-avatar">AC</div><div><div class="proof-name">Amir Chaudhry</div><div class="proof-role">ML Engineer, Stratum</div></div></div></div>
+  </div>
+</section>
+<footer>
+  <div class="footer-top">
+    <div><div class="footer-logo-wrap"><div class="logo-icon">⚡</div><div class="footer-logo">SYNAPSE</div></div><p class="footer-desc">AI infrastructure for teams that need speed, reliability, and control — without the complexity.</p></div>
+    <div><div class="footer-col-h">Product</div><ul class="footer-links"><li><a href="#">Deploy</a></li><li><a href="#">Fine-Tuning</a></li><li><a href="#">Analytics</a></li><li><a href="#">Changelog</a></li></ul></div>
+    <div><div class="footer-col-h">Company</div><ul class="footer-links"><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Press</a></li></ul></div>
+    <div><div class="footer-col-h">Legal</div><ul class="footer-links"><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Security</a></li><li><a href="#">Status</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><div class="footer-copy">© 2026 Synapse Labs, Inc.</div></div>
+</footer>
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+function ar(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar);}ar();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{ring.style.width='56px';ring.style.height='56px';ring.style.opacity='.5';});el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';ring.style.opacity='.3';});});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobMenu').classList.add('open'));
+document.getElementById('mobClose').addEventListener('click',()=>document.getElementById('mobMenu').classList.remove('open'));
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.style.animation='fadeUp .6s ease forwards';}),{threshold:.1});
+document.querySelectorAll('.feat-card,.proof-card,.plan').forEach(el=>{el.style.opacity='0';obs.observe(el);});
+</script>
+</body>
+</html>
