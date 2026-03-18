@@ -217,7 +217,7 @@ function toggleMenu() {
 //  SETUP: Paste your deployed Web App URL below
 // ════════════════════════════════════════════════
 
-const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzeAXo5AzuBfm3lan3tm7YL0pbm85GmydZPBLuogJszjTn5XZshvIr8n7d2DaFqUJCg/exec';
 
 let selectedStars = 0;
 
