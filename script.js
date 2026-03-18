@@ -214,12 +214,13 @@ function toggleMenu() {
 
 // ════════════════════════════════════════════════
 //  REVIEWS — Google Sheets via Apps Script
-//  SETUP: Paste your deployed Web App URL below
 // ════════════════════════════════════════════════
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyuT-LkPzoxVFYE-cxu2s3DbKlcxXmYdblfBOx2IPFHWE8p5izDkeFfA6chKrAapUXV/exec';
 
 let selectedStars = 0;
+let carouselIndex = 0;
+let carouselReviews = [];
 
 // ── Star picker ──
 function initStarPicker() {
@@ -244,9 +245,7 @@ function updateStarDisplay() {
   });
 }
 
-function starsHTML(n) {
-  return '★'.repeat(n) + '☆'.repeat(5 - n);
-}
+function starsHTML(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
 
 function escapeHTML(str) {
   return String(str)
@@ -254,70 +253,134 @@ function escapeHTML(str) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Load & display reviews from Sheet ──
+// ── Carousel controls ──
+function getVisibleCount() {
+  return window.innerWidth <= 640 ? 1 : window.innerWidth <= 960 ? 1 : 2;
+}
+
+function updateCarousel() {
+  const track = document.getElementById('rvTrack');
+  const dots = document.querySelectorAll('.carousel-dot');
+  const prevBtn = document.getElementById('rvPrev');
+  const nextBtn = document.getElementById('rvNext');
+  if (!track) return;
+
+  const visible = getVisibleCount();
+  const cardWidth = track.parentElement.offsetWidth;
+  const gap = 16;
+  const slideWidth = (cardWidth - gap * (visible - 1)) / visible + gap;
+  track.style.transform = `translateX(-${carouselIndex * slideWidth}px)`;
+
+  const maxIndex = Math.max(0, carouselReviews.length - visible);
+  if (prevBtn) prevBtn.disabled = carouselIndex === 0;
+  if (nextBtn) nextBtn.disabled = carouselIndex >= maxIndex;
+
+  dots.forEach((d, i) => d.classList.toggle('active', i === carouselIndex));
+}
+
+function carouselPrev() {
+  if (carouselIndex > 0) { carouselIndex--; updateCarousel(); }
+}
+
+function carouselNext() {
+  const visible = getVisibleCount();
+  const max = Math.max(0, carouselReviews.length - visible);
+  if (carouselIndex < max) { carouselIndex++; updateCarousel(); }
+}
+
+window.addEventListener('resize', updateCarousel);
+
+// ── Swipe support ──
+function initSwipe() {
+  const outer = document.getElementById('rvTrackOuter');
+  if (!outer) return;
+  let startX = 0;
+  outer.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: true});
+  outer.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { diff > 0 ? carouselNext() : carouselPrev(); }
+  }, {passive: true});
+}
+
+// ── Load & display reviews ──
 async function loadReviews() {
-  const list = document.getElementById('rvList');
+  const list = document.getElementById('rvTrack');
   const avgNum = document.getElementById('rvAvgNum');
   const avgStars = document.getElementById('rvAvgStars');
   const avgCount = document.getElementById('rvAvgCount');
+  const dotsWrap = document.getElementById('rvDots');
 
-  list.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
+  if (list) list.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
 
   try {
     const res = await fetch(APPS_SCRIPT_URL + '?action=get', { method: 'GET' });
     const data = await res.json();
 
     if (!data.reviews || data.reviews.length === 0) {
-      avgNum.textContent = '—';
-      avgStars.textContent = '';
-      avgCount.textContent = 'No reviews yet';
-      list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">✦</div>Be the first to leave a review</div>';
+      if (avgNum) avgNum.textContent = '—';
+      if (avgStars) avgStars.textContent = '';
+      if (avgCount) avgCount.textContent = 'No reviews yet';
+      if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">✦</div>Be the first to leave a review</div>';
       return;
     }
 
-    // Sort
-    const sort = document.getElementById('rvSort').value;
-    const sorted = [...data.reviews].sort((a, b) => {
+    const sort = document.getElementById('rvSort') ? document.getElementById('rvSort').value : 'newest';
+    carouselReviews = [...data.reviews].sort((a, b) => {
       if (sort === 'highest') return b.stars - a.stars;
       if (sort === 'lowest')  return a.stars - b.stars;
       return new Date(b.date) - new Date(a.date);
     });
 
     // Aggregate
-    const avg = data.reviews.reduce((s, r) => s + Number(r.stars), 0) / data.reviews.length;
-    avgNum.textContent = avg.toFixed(1);
-    avgStars.textContent = starsHTML(Math.round(avg));
-    avgCount.textContent = `${data.reviews.length} review${data.reviews.length > 1 ? 's' : ''}`;
+    const avg = carouselReviews.reduce((s, r) => s + Number(r.stars), 0) / carouselReviews.length;
+    if (avgNum) avgNum.textContent = avg.toFixed(1);
+    if (avgStars) avgStars.textContent = starsHTML(Math.round(avg));
+    if (avgCount) avgCount.textContent = `${carouselReviews.length} review${carouselReviews.length > 1 ? 's' : ''}`;
 
-    list.innerHTML = sorted.map(r => {
-      const initials = String(r.name).split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-      const d = new Date(r.date);
-      const dateStr = isNaN(d) ? r.date : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-      return `<div class="review-card">
-        <div class="review-card-top">
-          <div class="review-author">
-            <div class="review-avatar">${initials}</div>
-            <div>
-              <div class="review-name">${escapeHTML(r.name)}</div>
-              <div class="review-service">${escapeHTML(r.service)}</div>
+    // Build cards
+    if (list) {
+      list.innerHTML = carouselReviews.map(r => {
+        const initials = String(r.name).split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        const d = new Date(r.date);
+        const dateStr = isNaN(d) ? r.date : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        return `<div class="review-card">
+          <div class="review-card-top">
+            <div class="review-author">
+              <div class="review-avatar">${initials}</div>
+              <div>
+                <div class="review-name">${escapeHTML(r.name)}</div>
+                <div class="review-service">${escapeHTML(r.service)}</div>
+              </div>
+            </div>
+            <div class="review-stars-row">
+              <span class="review-stars">${starsHTML(Number(r.stars))}</span>
+              <span class="review-date">${dateStr}</span>
             </div>
           </div>
-          <div class="review-stars-row">
-            <span class="review-stars">${starsHTML(Number(r.stars))}</span>
-            <span class="review-date">${dateStr}</span>
-          </div>
-        </div>
-        <div class="review-text">${escapeHTML(r.text)}</div>
-      </div>`;
-    }).join('');
+          <div class="review-text">${escapeHTML(r.text)}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // Build dots
+    if (dotsWrap) {
+      dotsWrap.innerHTML = carouselReviews.map((_, i) =>
+        `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="carouselIndex=${i};updateCarousel()"></button>`
+      ).join('');
+    }
+
+    carouselIndex = 0;
+    setTimeout(updateCarousel, 50);
+    initSwipe();
 
   } catch (err) {
-    list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">!</div>Could not load reviews. Check your Apps Script URL.</div>';
+    const list = document.getElementById('rvTrack');
+    if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">!</div>Could not load reviews.</div>';
     console.error('Reviews load error:', err);
   }
 }
 
-// ── Submit review to Sheet ──
+// ── Submit review ──
 async function submitReview() {
   const name    = document.getElementById('rvName').value.trim();
   const service = document.getElementById('rvService').value;
@@ -345,15 +408,13 @@ async function submitReview() {
 
   try {
     const payload = { action: 'post', name, service, stars: selectedStars, text, date: new Date().toISOString().slice(0, 10) };
-
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',                // Required for Apps Script — response is opaque
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    // Reset form
     document.getElementById('rvName').value = '';
     document.getElementById('rvService').value = '';
     document.getElementById('rvText').value = '';
@@ -363,16 +424,13 @@ async function submitReview() {
     const success = document.getElementById('rvSuccess');
     success.style.display = 'block';
     setTimeout(() => success.style.display = 'none', 3500);
-
-    // Reload after short delay to let Sheet update
-    setTimeout(loadReviews, 1500);
+    setTimeout(loadReviews, 2000);
 
   } catch (err) {
-    alert('Could not submit. Please check your internet connection.');
-    console.error('Submit error:', err);
+    alert('Could not submit. Check your connection.');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Submit Review';
+    btn.innerHTML = '✓ Submit Review';
   }
 }
 
