@@ -5,891 +5,436 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dhruv — Clothing Design</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #050505;
-  --s1: #0e0e0e;
-  --s2: #141414;
-  --s3: #1c1c1c;
-  --accent: #ff4500;
-  --text: #efefef;
-  --sub: #777;
-  --line: #1f1f1f;
-  --nav-h: 62px;
-  --font-d: 'Bebas Neue', sans-serif;
-  --font-b: 'DM Sans', sans-serif;
-  --font-m: 'DM Mono', monospace;
-}
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+<!-- ════════════════ LIGHTBOX ════════════════ -->
+<div class="lightbox" id="lightbox" onclick="closeLB()">
+  <button class="lb-close" onclick="closeLB()">✕ Close</button>
+  <img class="lb-img" id="lbImg" src="" alt="">
+  <div class="lb-title" id="lbTitle"></div>
+</div>
 
-/* ── BODY / APP SCROLL CONTAINER ── */
-html, body {
-  height: 100vh;
-  overflow: hidden;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-b);
-  font-size: 16px; /* base font size bump */
-}
+<!-- ════════════════ WEBSITE VIEWER ════════════════ -->
+<div class="site-viewer" id="siteViewer">
+  <div class="sv-bar">
+    <div class="sv-title" id="svTitle"></div>
+    <button class="sv-close" onclick="closeSiteViewer()">✕ Close</button>
+  </div>
+  <iframe class="sv-iframe" id="svIframe" src="" frameborder="0"></iframe>
+</div>
 
-/* Only #app scrolls — body never scrolls */
-#app {
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
+<div id="app">
 
-/* Scrollbar on #app only */
-#app::-webkit-scrollbar { width: 3px; }
-#app::-webkit-scrollbar-track { background: var(--bg); }
-#app::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+<!-- ════ NAV ════ -->
+<nav>
+  <a href="#hero" class="nav-logo">DHRUV<em>.</em></a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#message">Message</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+    <div class="nav-dot"></div>
+    <div class="burger" id="burger" onclick="toggleMenu()">
+      <span id="b1"></span><span id="b2"></span><span id="b3"></span>
+    </div>
+  </div>
+</nav>
 
-/* ── NOISE ── */
-body::after {
-  content:'';
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:9000;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-}
+<!-- Mobile menu -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#about"   onclick="toggleMenu()">About</a>
+  <a href="#work"    onclick="toggleMenu()">Work</a>
+  <a href="#message" onclick="toggleMenu()">Message</a>
+  <a href="#services"onclick="toggleMenu()">Services</a>
+  <a href="#reviews" onclick="toggleMenu()">Reviews</a>
+  <a href="#connect" onclick="toggleMenu()">Connect</a>
+</div>
 
-/* ── NAV (sticky inside #app) ── */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 500;
-  height: var(--nav-h);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 clamp(16px, 4vw, 64px);
-  background: rgba(5,5,5,0.96);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--line);
-}
+<!-- ════ HERO ════ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span>Clothing &nbsp;·&nbsp; Websites &nbsp;·&nbsp; Book Design</span>
+    </div>
+    <h1 class="hero-name">
+      DHRUV
+      <span class="outline">DESIGNS</span>
+      <span class="red">IT ALL.</span>
+    </h1>
+    <p class="hero-desc">
+      Creating <strong>clothing, websites and book designs</strong> that make brands look seriously good. Based in India, working worldwide.
+    </p>
+    <div class="hero-actions">
+      <a href="#work"    class="btn btn-fill">View Work ↓</a>
+      <a href="#message" class="btn btn-ghost">Message Me</a>
+    </div>
+  </div>
 
-.nav-logo {
-  font-family: var(--font-d);
-  font-size: 24px;
-  letter-spacing: 4px;
-  color: var(--text);
-  text-decoration: none;
-}
-.nav-logo em { color: var(--accent); font-style: normal; }
+  <div class="hero-right">
+    <div class="hero-img-wrap">
+      <div class="hero-grid-bg"></div>
+      <!--
+        DEVELOPER: To show your photo, replace the div below with:
+        <img id="heroMainImg" src="your-photo.jpg" alt="Dhruv">
+        And remove the .hero-ph div entirely.
+      -->
+     <video autoplay muted loop playsinline id="heroMainImg" src="images/your-video.mp4"></video>
+      <div class="hero-tag-corner">Portfolio 2025</div>
+    </div>
+  </div>
 
-.nav-right { display: flex; align-items: center; gap: 32px; }
+  <div class="hero-scroll-hint">
+    <div class="scroll-circle">↓</div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
 
-.nav-links { display: flex; gap: 28px; list-style: none; }
-.nav-links a {
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--sub);
-  text-decoration: none;
-  transition: color 0.25s;
-}
-.nav-links a:hover { color: var(--accent); }
+<!-- ════ TICKER ════ -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">Clothing Design <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Website Design <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Book Design <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Apparel Graphics <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Brand Identity <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Landing Pages <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Clothing Design <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Website Design <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Book Design <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Apparel Graphics <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Brand Identity <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Landing Pages <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
 
-.nav-dot {
-  width: 8px; height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  animation: pulse 2s ease infinite;
-}
+<!-- ════ ABOUT ════ -->
+<section id="about" class="sec">
+  <div class="s-label rev">001 About</div>
+  <h2 class="s-title rev">THE<br>DESIGNER.</h2>
 
-.burger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 6px;
-}
-.burger span {
-  display: block;
-  width: 22px; height: 1.5px;
-  background: var(--text);
-  transition: all 0.3s;
-}
+  <!-- Designer photo + side image row -->
+  <div class="designer-row">
+    <div class="designer-photo-wrap rev">
+      <div class="designer-photo-frame">
+        <img id="heroMainImg" src="images/dhruv.jpg" alt="Dhruv">
+        <div class="designer-photo-badge">
+          <span style="width:6px;height:6px;flex-shrink:0;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s ease infinite;"></span>
+          Available
+        </div>
+      </div>
+    </div>
 
-/* Mobile menu */
-.mob-menu {
-  display: none;
-  position: fixed;
-  top: var(--nav-h); left: 0; right: 0; bottom: 0;
-  background: rgba(5,5,5,0.98);
-  backdrop-filter: blur(24px);
-  z-index: 490;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 44px;
-}
-.mob-menu.open { display: flex; }
-.mob-menu a {
-  font-family: var(--font-d);
-  font-size: 56px;
-  letter-spacing: 4px;
-  color: var(--sub);
-  text-decoration: none;
-  transition: color 0.3s;
-}
-.mob-menu a:hover { color: var(--accent); }
+    <!-- Side image: visible on tablet/desktop only -->
+    <div class="designer-side-image">
+      <img src="image/dhruvside.jpg" alt="Designer editorial photo">
+    </div>
+  </div>
 
-/* ── HERO ── */
-#hero {
-  min-height: calc(100vh - var(--nav-h));
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-left {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: clamp(32px, 5vw, 80px);
-  padding-right: clamp(20px, 3vw, 56px);
-  position: relative;
-  z-index: 2;
-}
-
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255,69,0,0.1);
-  border: 1px solid rgba(255,69,0,0.28);
-  padding: 7px 15px;
-  border-radius: 8px;
-  margin-bottom: 32px;
-  opacity: 0;
-  animation: slideIn 0.7s ease 0.3s forwards;
-}
-.hero-eyebrow::before {
-  content:'';
-  width:6px; height:6px;
-  background:var(--accent);
-  border-radius:50%;
-  animation: pulse 1.5s ease infinite;
-}
-.hero-eyebrow span {
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.hero-name {
-  font-family: var(--font-d);
-  font-size: clamp(76px, 10vw, 164px);
-  line-height: 0.88;
-  letter-spacing: -1px;
-  opacity: 0;
-  animation: slideIn 0.7s ease 0.5s forwards;
-}
-.hero-name .outline {
-  display: block;
-  -webkit-text-stroke: 1px rgba(255,255,255,0.2);
-  color: transparent;
-}
-.hero-name .red { display: block; color: var(--accent); }
-
-.hero-desc {
-  margin-top: 28px;
-  font-size: clamp(14px, 1.5vw, 16px);
-  line-height: 1.8;
-  color: var(--sub);
-  max-width: 380px;
-  opacity: 0;
-  animation: slideIn 0.7s ease 0.7s forwards;
-}
-.hero-desc strong { color: var(--text); }
-
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 36px;
-  flex-wrap: wrap;
-  opacity: 0;
-  animation: slideIn 0.7s ease 0.9s forwards;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 30px;
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s;
-  border-radius: 8px;
-}
-.btn-fill { background: var(--accent); color: #000; }
-.btn-fill:hover { background: #ff6030; transform: translateY(-2px); }
-.btn-ghost { background: transparent; color: var(--sub); border: 1px solid var(--line); }
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-
-.hero-right {
-  position: relative;
-  overflow: hidden;
-  border-left: 1px solid var(--line);
-  min-height: 400px;
-}
-
-.hero-img-wrap {
-  width: 100%;
-  height: 100%;
-  background: var(--s1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.hero-grid-bg {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-#heroMainImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  /* SET YOUR PHOTO SRC HERE */
-  /* Replace src in HTML to show your photo */
-}
-
-.hero-ph {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  position: relative;
-  z-index: 2;
-}
-.hero-ph svg { opacity: 0.12; }
-.hero-ph p {
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--sub);
-}
-/* Remove hero-ph and show img when developer sets src */
-
-.hero-tag-corner {
-  position: absolute;
-  bottom: 24px; right: 24px;
-  font-family: var(--font-m);
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--sub);
-  writing-mode: vertical-rl;
-  text-transform: uppercase;
-}
-
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 28px;
-  left: clamp(16px, 4vw, 80px);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  opacity: 0;
-  animation: fadeIn 1s ease 1.3s forwards;
-}
-.hero-scroll-hint span {
-  font-family: var(--font-m);
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color:black;
-  padding:4px;
-}
-.scroll-circle {
-  width: 32px; height: 32px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color:white;
-  font-size: 13px;
-  animation: bounceDown 1.5s ease infinite;
-}
-
-/* ── TICKER ── */
-.ticker {
-  background: var(--accent);
-  padding: 11px 0;
-  overflow: hidden;
-  white-space: nowrap;
-}
-.ticker-track {
-  display: inline-flex;
-  animation: ticker 22s linear infinite;
-}
-.ticker-item {
-  font-family: var(--font-d);
-  font-size: 17px;
-  letter-spacing: 5px;
-  color: #000;
-  padding: 0 36px;
-}
-.ticker-sep { color: rgba(0,0,0,0.3); }
-
-/* ── SHARED SECTION ── */
-.sec {
-  padding: clamp(64px, 10vh, 140px) clamp(16px, 5vw, 80px);
-}
-.s-label {
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.s-label::after {
-  content:'';
-  flex:1;
-  max-width:56px;
-  height:1px;
-  background: var(--accent);
-  opacity:0.4;
-}
-.s-title {
-  font-family: var(--font-d);
-  font-size: clamp(44px, 6.5vw, 92px);
-  line-height: 0.95;
-  letter-spacing: 1px;
-  margin-bottom: 56px;
-}
-
-/* ── ABOUT ── */
-#about { border-top: 1px solid var(--line); }
-
-.about-grid {
-  display: grid;
-  grid-template-columns: 5fr 4fr;
-  gap: clamp(32px, 6vw, 100px);
-  align-items: start;
-}
-
-.about-body {
-  font-size: clamp(15px, 1.6vw, 17px);
-  line-height: 1.85;
-  color: var(--sub);
-}
-.about-body strong { color: var(--text); }
-.about-body p + p { margin-top: 20px; }
-
-.skills-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 32px;
-}
-.skill-tag {
-  padding: 8px 18px;
-  background: var(--s2);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--sub);
-  transition: all 0.3s;
-}
-.skill-tag:hover { border-color: var(--accent); color: var(--accent); }
-
-.stat-stack { display: flex; flex-direction: column; gap: 2px; margin-bottom: 24px; }
-.stat-item {
-  padding: 22px 24px;
-  background: var(--s1);
-  border: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: border-color 0.3s;
-}
-.stat-item:hover { border-color: var(--accent); }
-.stat-n {
-  font-family: var(--font-d);
-  font-size: 44px;
-  color: var(--accent);
-  line-height: 1;
-}
-.stat-plus {
-  font-family: var(--font-d);
-  font-size: 22px;
-  color: var(--accent);
-  opacity: 0.75;
-}
-.stat-l {
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--sub);
-  text-align: right;
-}
-.avail-box {
-  padding: 20px 24px;
-  background: rgba(255,69,0,0.06);
-  border: 1px solid rgba(255,69,0,0.2);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.avail-dot {
-  width: 8px; height: 8px;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: pulse 1.5s ease infinite;
-  flex-shrink: 0;
-}
-.avail-text {
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-/* ── WORK / WARDROBE ── */
-#work {
-  border-top: 1px solid var(--line);
-  background: var(--s1);
-}
-
-/* Title area above the split */
-.work-header {
-  padding: clamp(64px, 10vh, 140px) clamp(16px, 5vw, 80px) 0;
-}
-
-/* Split layout: sidebar + gallery */
-.work-body {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  border-top: 1px solid var(--line);
-  margin-top: 40px;
-}
-
-/* SIDEBAR — sticky, only this scrolls within work section */
-.work-sidebar {
-  position: sticky;
-  top: var(--nav-h);
-  height: calc(100vh - var(--nav-h));
-  overflow-y: auto;
-  border-right: 1px solid var(--line);
-  padding: 28px 20px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
-}
-.work-sidebar::-webkit-scrollbar { width: 2px; }
-.work-sidebar::-webkit-scrollbar-thumb { background: var(--accent); }
-
-.sidebar-label {
-  font-family: var(--font-m);
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--sub);
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--line);
-}
-
-.cat-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--sub);
-  font-family: var(--font-b);
-  font-size: 14px;
-  cursor: pointer;
-  text-align: left;
-  border-radius: 8px;
-  transition: all 0.25s;
-  margin-bottom: 3px;
-}
-.cat-btn:hover { background: var(--s2); color: var(--text); border-color: var(--line); }
-.cat-btn.active { background: var(--s3); border-color: var(--accent); color: var(--text); }
-.cat-btn .cat-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--sub); }
-.cat-btn.active .cat-icon { color: var(--accent); }
-.cat-btn:hover .cat-icon { color: var(--text); }
-.cat-btn .cat-icon svg { width: 18px; height: 18px; }
-.cat-btn .cat-info {}
-.cat-btn .cat-name { font-size: 14px; font-weight: 500; display: block; }
-.cat-btn .cat-count { font-family: var(--font-m); font-size: 10px; color: var(--sub); margin-top: 2px; display: block; }
-.cat-btn.active .cat-count { color: var(--accent); }
-
-/* GALLERY AREA */
-.work-gallery-area {
-  padding: 28px clamp(16px, 3vw, 40px);
-  min-height: calc(100vh - var(--nav-h));
-}
-
-.gallery-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--line);
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.gallery-cat-title {
-  font-family: var(--font-d);
-  font-size: 32px;
-  letter-spacing: 2px;
-}
-.gallery-cat-sub {
-  font-family: var(--font-m);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--sub);
-}
-
-/* 3×3 GRID — exactly 9 images */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
-}
-
-.g-item {
-  position: relative;
-  aspect-ratio: 3/4;
-  overflow: hidden;
-  background: var(--s2);
-  cursor: pointer;
-  transition: opacity 0.45s ease, transform 0.45s ease;
-}
-html.js-ready .g-item {
-  opacity: 0;
-  transform: scale(0.97);
-}
-html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
-.g-item:nth-child(2) { transition-delay: 0.06s; }
-.g-item:nth-child(3) { transition-delay: 0.12s; }
-.g-item:nth-child(4) { transition-delay: 0.04s; }
-.g-item:nth-child(5) { transition-delay: 0.1s; }
-.g-item:nth-child(6) { transition-delay: 0.16s; }
-.g-item:nth-child(7) { transition-delay: 0.08s; }
-.g-item:nth-child(8) { transition-delay: 0.14s; }
-.g-item:nth-child(9) { transition-delay: 0.2s; }
-
-.g-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.55s ease;
-  display: block;
-}
-.g-item:hover .g-img { transform: scale(1.06); }
-
-/* Placeholder shown when no image src set */
-.g-ph {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: var(--s2);
-  transition: background 0.3s;
-}
-.g-item:hover .g-ph { background: var(--s3); }
-.g-ph-icon { opacity: 0.15; display: flex; align-items: center; justify-content: center; color: var(--sub); }
-.g-ph-icon svg { width: 32px; height: 32px; }
-.g-ph-label {
-  font-family: var(--font-m);
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--sub);
-  text-align: center;
-  padding: 0 12px;
-}
-
-.g-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.88) 100%);
-  opacity: 0;
-  transition: opacity 0.35s;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 16px;
-}
-.g-item:hover .g-overlay { opacity: 1; }
-.g-name {
-  font-family: var(--font-d);
-  font-size: 20px;
-  letter-spacing: 1px;
-}
-.g-sub {
-  font-family: var(--font-m);
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--accent);
-  text-transform: uppercase;
-  margin-top: 4px;
-}
-
-/* ── WEBSITE CARD (no image) ── */
-.g-site-card {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  background: var(--s2);
-  position: relative;
-  overflow: hidden;
-  transition: background 0.3s;
-}
-.g-item:hover .g-site-card { background: var(--s3); }
-
-/* animated corner accents */
-.g-site-card::before,
-.g-site-card::after {
-  content: '';
-  position: absolute;
-  width: 22px; height: 22px;
-  border-color: var(--accent);
-  border-style: solid;
-  opacity: 0;
-  transition: opacity 0.35s, transform 0.35s;
-}
-.g-site-card::before {
-  top: 14px; left: 14px;
-  border-width: 1px 0 0 1px;
-  transform: translate(-4px, -4px);
-}
-.g-site-card::after {
-  bottom: 14px; right: 14px;
-  border-width: 0 1px 1px 0;
-  transform: translate(4px, 4px);
-}
-.g-item:hover .g-site-card::before,
-.g-item:hover .g-site-card::after {
-  opacity: 1;
-  transform: translate(0, 0);
-}
-
-.g-site-num {
-  font-family: var(--font-d);
-  font-size: 72px;
-  line-height: 1;
-  color: var(--line);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -54%);
-  transition: color 0.35s, transform 0.35s;
-  pointer-events: none;
-  user-select: none;
-}
-.g-item:hover .g-site-num {
-  color: rgba(255,69,0,0.07);
-  transform: translate(-50%, -58%) scale(1.15);
-}
-
-.g-site-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 24px;
-}
-
-.g-site-icon {
-  width: 42px; height: 42px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  background: var(--bg);
-  transition: border-color 0.3s, transform 0.3s;
-}
-.g-item:hover .g-site-icon {
-  border-color: var(--accent);
-  transform: translateY(-3px);
-}
-
-.g-site-name {
-  font-family: var(--font-d);
-  font-size: clamp(16px, 2vw, 22px);
-  letter-spacing: 2px;
-  text-align: center;
-  color: var(--text);
-  line-height: 1.1;
-}
-
-.g-site-tag {
-  font-family: var(--font-m);
-  font-size: 9px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--sub);
-  padding: 5px 12px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  transition: border-color 0.3s, color 0.3s;
-}
-.g-item:hover .g-site-tag {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.g-site-arrow {
-  position: absolute;
-  bottom: 18px;
-  right: 18px;
-  width: 30px; height: 30px;
-  background: var(--accent);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #000;
-  font-size: 13px;
-  opacity: 0;
-  transform: scale(0.7);
-  transition: opacity 0.3s, transform 0.3s;
-}
-.g-item:hover .g-site-arrow {
-  opacity: 1;
-  transform: scale(1);
-}
+  <div class="about-grid">
+    <div>
+      <div class="about-body rev">
+        <p>I'm <strong>Dhruv</strong>, a designer from India with over <strong>3 years of experience</strong> in clothing, web and book design. Worked with <strong>5 startups and companies</strong> along the way, which taught me a lot about delivering good work under real conditions.</p>
+        <p>Clothes, landing pages, book covers. I handle the whole thing myself so you don't have to coordinate between three different people. Quick turnaround, straight communication, and results you actually want to show off.</p>
+      </div>
+      <div class="skills-row rev d1">
+        <span class="skill-tag">Clothing Design</span>
+        <span class="skill-tag">Website Design</span>
+        <span class="skill-tag">Book Design</span>
+        <span class="skill-tag">Figma</span>
+        <span class="skill-tag">Apparel Mockups</span>
+        <span class="skill-tag">Canva</span>
+        <span class="skill-tag">Brand Identity</span>
+      </div>
+    </div>
+    <div class="rev d2">
+      <div class="stat-stack">
+        <div class="stat-item">
+          <div class="stat-n">3<span class="stat-plus">yr+</span></div>
+          <div class="stat-l">Design<br>Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-n">30<span class="stat-plus">+</span></div>
+          <div class="stat-l">Designs<br>Delivered</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-n">5</div>
+          <div class="stat-l">Startups &amp;<br>Companies</div>
+        </div>
+      </div>
+      <div class="avail-box">
+        <div class="avail-dot"></div>
+        <div class="avail-text">Available for new projects</div>
+      </div>
+    </div>
+  </div>
 
 
-.lightbox {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.94);
-  z-index: 800;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  backdrop-filter: blur(8px);
-}
-.lightbox.open { display: flex; }
-.lb-img {
-  max-width: min(80vw, 600px);
-  max-height: 85vh;
-  object-fit: contain;
-  border: 1px solid var(--line);
-}
-.lb-close {
-  position: fixed;
-  top: 24px; right: 28px;
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--sub);
-  background: none;
-  border: 1px solid var(--line);
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.lb-close:hover { border-color: var(--accent); color: var(--accent); }
-.lb-title {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-d);
-  font-size: 22px;
-  letter-spacing: 3px;
-  color: var(--text);
-}
+</section>
 
-/* ── WEBSITE VIEWER ── */
-.site-viewer {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 900;
-  background: #000;
-  flex-direction: column;
-}
-.site-viewer.open { display: flex; }
-.sv-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  height: 52px;
-  background: var(--s1);
-  border-bottom: 1px solid var(--line);
-  flex-shrink: 0;
-}
-.sv-title {
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--sub);
-}
-.sv-close {
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--sub);
-  background: none;
-  border: 1px solid var(--line);
-  padding: 8px 18px;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.3s;
-}
-.sv-close:hover { border-color: var(--accent); color: var(--accent); }
-.sv-iframe {
-  flex: 1;
-  width: 100%;
-  border: none;
-}
+<!-- ════ WORK / WARDROBE ════ -->
+<section id="work">
+  <div class="work-header">
+    <div class="s-label rev">002 Work</div>
+    <h2 class="s-title rev" style="margin-bottom:0;">THE<br>WORK.</h2>
+  </div>
 
-/* ── WHATSAPP SECTION ── */
-#message {
-  border-top: 1px so
+  <div class="work-body">
+
+    <!-- SIDEBAR: category list, sticky & scrollable -->
+    <div class="work-sidebar" id="workSidebar">
+      <div class="sidebar-label">Categories</div>
+      <!-- Category buttons are injected by JS -->
+    </div>
+
+    <!-- GALLERY: 3×3 grid -->
+    <div class="work-gallery-area">
+      <div class="gallery-heading">
+        <div>
+          <div class="gallery-cat-title" id="galTitle">All Designs</div>
+          <div class="gallery-cat-sub" id="galSub">Showing 6 items</div>
+        </div>
+      </div>
+      <div class="gallery-grid" id="galGrid"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ MESSAGE / WHATSAPP ════ -->
+<section id="message" class="sec">
+  <div class="s-label rev">003 Contact</div>
+  <h2 class="s-title rev">TEXT<br>ME.</h2>
+
+  <div class="msg-wrap">
+    <div class="msg-left rev">
+      <p>Got a project? Fill in your name and what you need, then drop your message. Hit send and it opens straight in <strong>WhatsApp</strong> with everything ready.</p>
+      <p style="margin-top:20px;">I respond fast. Let's get something going.</p>
+    </div>
+
+    <div class="msg-right rev d1">
+      <div class="msg-box-head">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#25d366">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <div class="msg-box-head-text">
+          <strong>Send a WhatsApp Message</strong>
+          <span>Opens WhatsApp with your message ready</span>
+        </div>
+      </div>
+
+      <!-- Name field -->
+      <input
+        type="text"
+        class="msg-input-field"
+        id="msgName"
+        placeholder="Your name"
+        autocomplete="off"
+      />
+
+      <!-- Need / service dropdown -->
+      <select class="msg-input-field" id="msgNeed">
+        <option value="" disabled selected>What do you need?</option>
+        <option value="Clothing Design">Clothing Design</option>
+        <option value="Website Design">Website Design</option>
+        <option value="Book Design">Book Design</option>
+        <option value="Brand Identity">Brand Identity</option>
+        <option value="Something Else">Something Else</option>
+      </select>
+
+      <!-- Message -->
+      <textarea
+        class="msg-textarea"
+        id="msgInput"
+        placeholder="Tell me more about your project..."
+      ></textarea>
+
+      <button class="msg-send-btn" onclick="sendWhatsApp()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
+        </svg>
+        Send on WhatsApp
+      </button>
+
+      <p class="msg-note">Your message opens in WhatsApp — nothing is stored here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ SERVICES ════ -->
+<section id="services" class="sec">
+  <div class="s-label rev">004 Services</div>
+  <h2 class="s-title rev">WHAT I<br>OFFER.</h2>
+  <div class="srv-grid">
+    <div class="srv-card">
+      <div class="srv-n">01</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/>
+        </svg>
+      </span>
+      <div class="srv-name">Clothing Design</div>
+      <div class="srv-desc">Custom t-shirt graphics, hoodie prints and full apparel mockups. PNG and print-ready delivery.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">02</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+        </svg>
+      </span>
+      <div class="srv-name">Website Design</div>
+      <div class="srv-desc">Landing pages, portfolio sites and brand websites that look sharp and actually work for you.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">03</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2a14.5 14.5 0 010 20M2 12h20"/>
+        </svg>
+      </span>
+      <div class="srv-name">Brand Identity</div>
+      <div class="srv-desc">Logo, color palette and visual identity for brands starting from scratch. Full kit delivery.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ REVIEWS ════ -->
+<section id="reviews" class="sec">
+  <div class="s-label rev">005 Reviews</div>
+  <h2 class="s-title rev">WHAT THEY<br>SAY.</h2>
+
+  <div class="reviews-layout">
+
+    <!-- LEFT: Write a review -->
+    <div class="review-form-wrap rev">
+      <div class="review-form-title">Leave a Review</div>
+      <div class="review-form-sub">Share your experience working with Dhruv</div>
+
+      <input
+        type="text"
+        class="msg-input-field"
+        id="rvName"
+        placeholder="Your name"
+        autocomplete="off"
+        style="margin-bottom:12px;"
+      />
+
+      <select class="msg-input-field" id="rvService" style="margin-bottom:12px;">
+        <option value="" disabled selected>Service you used</option>
+        <option value="Clothing Design">Clothing Design</option>
+        <option value="Website Design">Website Design</option>
+        <option value="Book Design">Book Design</option>
+        <option value="Brand Identity">Brand Identity</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <div style="margin-bottom:12px;">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">Rating</div>
+        <div class="star-picker" id="starPicker">
+          <span data-v="1">★</span>
+          <span data-v="2">★</span>
+          <span data-v="3">★</span>
+          <span data-v="4">★</span>
+          <span data-v="5">★</span>
+        </div>
+      </div>
+
+      <textarea
+        class="msg-textarea"
+        id="rvText"
+        placeholder="Tell others about your experience..."
+        style="margin-bottom:12px;"
+      ></textarea>
+
+      <button class="review-submit-btn" onclick="submitReview()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Submit Review
+      </button>
+      <div class="review-success" id="rvSuccess">✓ Review posted — thank you!</div>
+    </div>
+
+    <!-- RIGHT: Display reviews -->
+    <div class="reviews-list-wrap rev d1">
+      <div class="reviews-meta-bar">
+        <div class="reviews-avg">
+          <div class="reviews-avg-num" id="rvAvgNum">—</div>
+          <div class="reviews-avg-detail">
+            <div class="reviews-avg-stars" id="rvAvgStars"></div>
+            <div class="reviews-avg-count" id="rvAvgCount">No reviews yet</div>
+          </div>
+        </div>
+        <select class="reviews-sort" id="rvSort" onchange="renderReviews()">
+          <option value="newest">Newest first</option>
+          <option value="highest">Highest rated</option>
+          <option value="lowest">Lowest rated</option>
+        </select>
+      </div>
+      <div id="rvList"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ CONNECT ════ -->
+<section id="connect" class="sec">
+  <div class="connect-glow"></div>
+  <div class="connect-inner">
+    <div class="s-label rev" style="justify-content:center;">006 Connect</div>
+    <h2 class="s-title rev" style="text-align:center;">LET'S BUILD<br>SOMETHING REAL.</h2>
+    <p class="rev" style="color:var(--sub);font-size:16px;max-width:420px;margin:0 auto;line-height:1.8;text-align:center;">
+      Want to see more work or reach out for a collab? Find me on Instagram.
+    </p>
+    <a href="https://instagram.com/my_namedhruv" target="_blank" class="big-link rev">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <rect x="2" y="2" width="20" height="20" rx="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+      </svg>
+      Instagram
+    </a>
+    <p class="connect-sub rev">DM for collabs · custom projects · pricing</p>
+
+    <div class="social-mini rev">
+      <a href="https://www.linkedin.com/in/dhruv-panchal-91ab80212?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="social-mini-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="4"/>
+          <path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 10v7"/>
+        </svg>
+        LinkedIn
+      </a>
+      <a href="/cdn-cgi/l/email-protection#711c035f151903040701404731161c10181d5f121e1c" class="social-mini-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <polyline points="2,4 12,13 22,4"/>
+        </svg>
+        Email
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div class="f-logo">DHRUV<em>.</em></div>
+  <p>© 2025 — Clothing · Websites · Book Design</p>
+  <p>Made with intent.</p>
+</footer>
+
+</div><!-- /app -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
