@@ -311,23 +311,17 @@
   <div class="s-label rev">005 Reviews</div>
   <h2 class="s-title rev">WHAT THEY<br>SAY.</h2>
 
-  <div class="reviews-layout">
+  <!-- Top row: form + stats -->
+  <div class="reviews-top rev">
 
-    <!-- LEFT: Write a review -->
-    <div class="review-form-wrap rev">
+    <!-- Write a review -->
+    <div class="review-form-wrap">
       <div class="review-form-title">Leave a Review</div>
-      <div class="review-form-sub">Share your experience working with Dhruv</div>
+      <div class="review-form-sub">Share your experience</div>
 
-      <input
-        type="text"
-        class="msg-input-field"
-        id="rvName"
-        placeholder="Your name"
-        autocomplete="off"
-        style="margin-bottom:12px;"
-      />
+      <input type="text" class="msg-input-field" id="rvName" placeholder="Your name" autocomplete="off" style="margin-bottom:10px;">
 
-      <select class="msg-input-field" id="rvService" style="margin-bottom:12px;">
+      <select class="msg-input-field" id="rvService" style="margin-bottom:10px;">
         <option value="" disabled selected>Service you used</option>
         <option value="Clothing Design">Clothing Design</option>
         <option value="Website Design">Website Design</option>
@@ -347,42 +341,47 @@
         </div>
       </div>
 
-      <textarea
-        class="msg-textarea"
-        id="rvText"
-        placeholder="Tell others about your experience..."
-        style="margin-bottom:12px;"
-      ></textarea>
+      <textarea class="msg-textarea" id="rvText" placeholder="Tell others about your experience..." style="min-height:90px;margin-bottom:10px;"></textarea>
 
-      <button class="review-submit-btn" onclick="submitReview()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
-        Submit Review
-      </button>
+      <button class="review-submit-btn" onclick="submitReview()">✓ Submit Review</button>
       <div class="review-success" id="rvSuccess">✓ Review posted — thank you!</div>
     </div>
 
-    <!-- RIGHT: Display reviews -->
-    <div class="reviews-list-wrap rev d1">
-      <div class="reviews-meta-bar">
-        <div class="reviews-avg">
-          <div class="reviews-avg-num" id="rvAvgNum">—</div>
-          <div class="reviews-avg-detail">
-            <div class="reviews-avg-stars" id="rvAvgStars"></div>
-            <div class="reviews-avg-count" id="rvAvgCount">No reviews yet</div>
-          </div>
+    <!-- Stats -->
+    <div class="reviews-stats-wrap">
+      <div class="reviews-avg-big">
+        <div class="reviews-avg-num" id="rvAvgNum">—</div>
+        <div class="reviews-avg-detail">
+          <div class="reviews-avg-stars" id="rvAvgStars"></div>
+          <div class="reviews-avg-count" id="rvAvgCount">No reviews yet</div>
         </div>
-        <select class="reviews-sort" id="rvSort" onchange="renderReviews()">
-          <option value="newest">Newest first</option>
-          <option value="highest">Highest rated</option>
-          <option value="lowest">Lowest rated</option>
-        </select>
       </div>
-      <div id="rvList"></div>
+      <select class="reviews-sort" id="rvSort" onchange="loadReviews()">
+        <option value="newest">Newest first</option>
+        <option value="highest">Highest rated</option>
+        <option value="lowest">Lowest rated</option>
+      </select>
     </div>
 
   </div>
+
+  <!-- Carousel -->
+  <div class="reviews-carousel-wrap rev">
+    <div class="reviews-carousel-header">
+      <div class="reviews-carousel-label">Client Reviews</div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" id="rvPrev" onclick="carouselPrev()">←</button>
+        <button class="carousel-btn" id="rvNext" onclick="carouselNext()">→</button>
+      </div>
+    </div>
+    <div class="reviews-track-outer" id="rvTrackOuter">
+      <div class="reviews-track" id="rvTrack">
+        <div class="reviews-loading">Loading reviews…</div>
+      </div>
+    </div>
+    <div class="carousel-dots" id="rvDots"></div>
+  </div>
+
 </section>
 
 <!-- ════ CONNECT ════ -->
