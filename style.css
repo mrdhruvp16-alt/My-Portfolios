@@ -799,7 +799,7 @@ html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
   z-index: 800;
   align-items: center;
   justify-content: center;
-    padding: 24px;
+  padding: 24px;
   backdrop-filter: blur(8px);
 }
 .lightbox.open { display: flex; }
@@ -817,7 +817,7 @@ html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--sub);
-  background: none;
+    background: none;
   border: 1px solid var(--line);
   padding: 10px 20px;
   cursor: pointer;
@@ -1191,12 +1191,20 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
 /* ── REVIEWS ── */
 #reviews { border-top: 1px solid var(--line); background: var(--bg); }
 
+/* Desktop: form left, stats right stacked above carousel */
 .reviews-top {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(24px, 4vw, 60px);
   align-items: start;
-  margin-bottom: 48px;
+  margin-bottom: 0;
+}
+
+/* On desktop: stats + carousel together on right side */
+.reviews-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .review-form-wrap {
@@ -1272,15 +1280,16 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   color: #22c55e;
 }
 
+/* Stats — compact on mobile */
 .reviews-stats-wrap {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  justify-content: center;
-  padding: 28px;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
   background: var(--s1);
   border: 1px solid var(--line);
   border-radius: 12px;
+  flex-wrap: wrap;
 }
 .reviews-avg-big {
   display: flex;
@@ -1289,12 +1298,12 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
 }
 .reviews-avg-num {
   font-family: var(--font-d);
-  font-size: 72px;
+  font-size: 56px;
   color: var(--accent);
   line-height: 1;
 }
-.reviews-avg-detail { display: flex; flex-direction: column; gap: 4px; }
-.reviews-avg-stars { font-size: 18px; letter-spacing: 3px; color: var(--accent); }
+.reviews-avg-detail { display: flex; flex-direction: column; gap: 3px; }
+.reviews-avg-stars { font-size: 16px; letter-spacing: 2px; color: var(--accent); }
 .reviews-avg-count {
   font-family: var(--font-m);
   font-size: 10px;
@@ -1315,7 +1324,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   outline: none;
   transition: border-color 0.3s;
   appearance: none;
-  width: 100%;
+  margin-left: auto;
 }
 .reviews-sort:focus { border-color: var(--accent); }
 .reviews-sort option { background: var(--s2); }
@@ -1326,7 +1335,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 .reviews-carousel-label {
   font-family: var(--font-m);
@@ -1337,7 +1346,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
 }
 .carousel-nav { display: flex; gap: 8px; }
 .carousel-btn {
-  width: 38px; height: 38px;
+  width: 36px; height: 36px;
   border: 1px solid var(--line);
   background: transparent;
   color: var(--sub);
@@ -1346,8 +1355,9 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 15px;
   transition: all 0.25s;
+  flex-shrink: 0;
 }
 .carousel-btn:hover { border-color: var(--accent); color: var(--accent); }
 .carousel-btn:disabled { opacity: 0.25; cursor: not-allowed; }
@@ -1360,14 +1370,13 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   align-items: flex-start;
 }
 
-/* ONE card at a time - full width */
 .review-card {
   min-width: 100%;
   width: 100%;
   background: var(--s1);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 28px;
+  padding: 24px;
   flex-shrink: 0;
   box-sizing: border-box;
   position: relative;
@@ -1388,24 +1397,24 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
   gap: 8px;
 }
 .review-author { display: flex; align-items: center; gap: 12px; }
 .review-avatar {
-  width: 40px; height: 40px;
+  width: 38px; height: 38px;
   border-radius: 50%;
   background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-d);
-  font-size: 15px;
+  font-size: 14px;
   color: #000;
   flex-shrink: 0;
 }
-.review-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.review-name { font-size: 14px; font-weight: 600; color: var(--text); }
 .review-service {
   font-family: var(--font-m);
   font-size: 9px;
@@ -1414,8 +1423,8 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   color: var(--accent);
   margin-top: 2px;
 }
-.review-stars-row { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
-.review-stars { font-size: 14px; letter-spacing: 2px; color: var(--accent); }
+.review-stars-row { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.review-stars { font-size: 13px; letter-spacing: 2px; color: var(--accent); }
 .review-date {
   font-family: var(--font-m);
   font-size: 9px;
@@ -1423,10 +1432,9 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   color: var(--sub);
 }
 
-/* Text with read more */
 .review-text {
-  font-size: 15px;
-  line-height: 1.85;
+  font-size: 14px;
+  line-height: 1.8;
   color: var(--sub);
   white-space: normal;
   word-wrap: break-word;
@@ -1447,19 +1455,20 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;
-  padding: 8px 0 0;
+  padding: 6px 0 0;
   display: block;
   transition: opacity 0.2s;
 }
 .read-more-btn:hover { opacity: 0.7; }
 
-/* Dots */
+/* Dots — tight margin */
 .carousel-dots {
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 20px;
+  margin-top: 14px;
   flex-wrap: wrap;
+  min-height: 14px;
 }
 .carousel-dot {
   width: 6px; height: 6px;
@@ -1469,12 +1478,13 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   transition: all 0.3s;
   border: none;
   padding: 0;
+  flex-shrink: 0;
 }
 .carousel-dot.active { background: var(--accent); width: 20px; border-radius: 3px; }
 
 .reviews-empty {
   text-align: center;
-  padding: 56px 20px;
+  padding: 40px 20px;
   font-family: var(--font-m);
   font-size: 11px;
   letter-spacing: 2px;
@@ -1482,12 +1492,13 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   color: var(--sub);
   border: 1px dashed var(--line);
   border-radius: 10px;
+  width: 100%;
 }
-.reviews-empty-icon { font-size: 36px; margin-bottom: 14px; opacity: 0.3; }
+.reviews-empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
 
 .reviews-loading {
   text-align: center;
-  padding: 40px 20px;
+  padding: 32px 20px;
   font-family: var(--font-m);
   font-size: 11px;
   letter-spacing: 2px;
@@ -1497,8 +1508,34 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   width: 100%;
 }
 
+/* Desktop: right col has stats + carousel stacked */
+@media (min-width: 961px) {
+  .reviews-top {
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 0;
+  }
+  .reviews-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+/* Mobile: everything stacks, stats compact horizontal */
 @media (max-width: 960px) {
-  .reviews-top { grid-template-columns: 1fr; }
+  .reviews-top {
+    grid-template-columns: 1fr;
+    margin-bottom: 24px;
+  }
+  .reviews-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .reviews-stats-wrap {
+    padding: 16px 20px;
+  }
+  .reviews-avg-num { font-size: 44px; }
 }
 
 /* ── DESIGNER PHOTO ── */
@@ -1586,18 +1623,4 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
     right: 0;
     /* Pull top above section padding + label + title height */
     top: calc(-1 * (clamp(64px, 10vh, 140px) + 16px + clamp(44px, 6.5vw, 92px) * 2 + 56px) + clamp(20px, 3vh, 32px));
-    /* Fill the space to the right of the photo */
-    width: calc(100% - clamp(220px, 38%, 320px) - clamp(20px, 2.8vw, 34px));
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    overflow: hidden;
-    background: var(--s2);
-  }
-  .designer-side-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  }
-                     
+    /* F
