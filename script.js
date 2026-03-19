@@ -294,6 +294,17 @@ function initSwipe() {
   }, {passive: true});
 }
 
+function toggleReadMore(btn) {
+  const textEl = btn.previousElementSibling;
+  if (textEl.classList.contains('expanded')) {
+    textEl.classList.remove('expanded');
+    btn.textContent = 'Read more →';
+  } else {
+    textEl.classList.add('expanded');
+    btn.textContent = '↑ Read less';
+  }
+}
+
 // ── Load & display reviews ──
 async function loadReviews() {
   const list = document.getElementById('rvTrack');
@@ -356,7 +367,8 @@ async function loadReviews() {
               <span class="review-date">${dateStr}</span>
             </div>
           </div>
-          <div class="review-text">${escapeHTML(r.text)}</div>
+          <div class="review-text">${String(r.text).length > 180 ? '' : ''}${escapeHTML(r.text)}</div>
+          ${String(r.text).length > 180 ? '<button class="read-more-btn" onclick="toggleReadMore(this)">Read more →</button>' : ''}
         </div>`;
       }).join('');
     }
