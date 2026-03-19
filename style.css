@@ -833,7 +833,7 @@ html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
   font-size: 22px;
   letter-spacing: 3px;
   color: var(--text);
-}
+  }
 
 /* ── WEBSITE VIEWER ── */
 .site-viewer {
@@ -1629,4 +1629,16 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
     /* Pull top above section padding + label + title height */
     top: calc(-1 * (clamp(64px, 10vh, 140px) + 16px + clamp(44px, 6.5vw, 92px) * 2 + 56px) + clamp(20px, 3vh, 32px));
     /* Fill the space to the right of the photo */
-    width: calc(100% - clamp(220p
+    width: calc(100% - clamp(220px, 38%, 320px) - clamp(20px, 2.8vw, 34px));
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--s2);
+  }
+  .designer-side-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
