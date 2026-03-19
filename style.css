@@ -810,7 +810,7 @@ html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
   border: 1px solid var(--line);
 }
 .lb-close {
-    position: fixed;
+  position: fixed;
   top: 24px; right: 28px;
   font-family: var(--font-m);
   font-size: 11px;
