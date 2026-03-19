@@ -799,7 +799,7 @@ html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
   z-index: 800;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+    padding: 24px;
   backdrop-filter: blur(8px);
 }
 .lightbox.open { display: flex; }
@@ -1191,7 +1191,6 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
 /* ── REVIEWS ── */
 #reviews { border-top: 1px solid var(--line); background: var(--bg); }
 
-/* Top row: form left, stats right */
 .reviews-top {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1200,7 +1199,6 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   margin-bottom: 48px;
 }
 
-/* Write review form */
 .review-form-wrap {
   background: var(--s1);
   border: 1px solid var(--line);
@@ -1224,14 +1222,13 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   border-bottom: 1px solid var(--line);
 }
 
-/* Star picker */
 .star-picker {
   display: flex;
   gap: 4px;
   margin-bottom: 14px;
 }
 .star-picker span {
-  font-size: 24px;
+  font-size: 26px;
   cursor: pointer;
   color: var(--line);
   transition: color 0.2s, transform 0.15s;
@@ -1275,7 +1272,6 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   color: #22c55e;
 }
 
-/* Stats panel */
 .reviews-stats-wrap {
   display: flex;
   flex-direction: column;
@@ -1285,7 +1281,6 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   background: var(--s1);
   border: 1px solid var(--line);
   border-radius: 12px;
-  height: 100%;
 }
 .reviews-avg-big {
   display: flex;
@@ -1326,9 +1321,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
 .reviews-sort option { background: var(--s2); }
 
 /* ── CAROUSEL ── */
-.reviews-carousel-wrap {
-  position: relative;
-}
+.reviews-carousel-wrap { position: relative; }
 .reviews-carousel-header {
   display: flex;
   align-items: center;
@@ -1342,12 +1335,9 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   text-transform: uppercase;
   color: var(--sub);
 }
-.carousel-nav {
-  display: flex;
-  gap: 8px;
-}
+.carousel-nav { display: flex; gap: 8px; }
 .carousel-btn {
-  width: 36px; height: 36px;
+  width: 38px; height: 38px;
   border: 1px solid var(--line);
   background: transparent;
   color: var(--sub);
@@ -1358,70 +1348,64 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   justify-content: center;
   font-size: 16px;
   transition: all 0.25s;
-  flex-shrink: 0;
 }
 .carousel-btn:hover { border-color: var(--accent); color: var(--accent); }
 .carousel-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
-.reviews-track-outer {
-  overflow: hidden;
-  border-radius: 12px;
-}
+.reviews-track-outer { overflow: hidden; border-radius: 12px; }
 .reviews-track {
   display: flex;
-  gap: 16px;
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform;
+  align-items: flex-start;
 }
 
-/* Each card fixed width */
+/* ONE card at a time - full width */
 .review-card {
   min-width: 100%;
+  width: 100%;
   background: var(--s1);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 24px;
+  padding: 28px;
   flex-shrink: 0;
-  transition: border-color 0.3s;
-  position: relative;
-  overflow: hidden;
   box-sizing: border-box;
+  position: relative;
 }
 .review-card::before {
   content: '"';
   position: absolute;
-  top: -10px; right: 16px;
+  top: -10px; right: 20px;
   font-family: var(--font-d);
-  font-size: 100px;
+  font-size: 120px;
   color: var(--accent);
-  opacity: 0.06;
+  opacity: 0.05;
   line-height: 1;
   pointer-events: none;
 }
-.review-card:hover { border-color: rgba(255,69,0,0.3); }
 
 .review-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   flex-wrap: wrap;
   gap: 8px;
 }
-.review-author { display: flex; align-items: center; gap: 10px; }
+.review-author { display: flex; align-items: center; gap: 12px; }
 .review-avatar {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-d);
-  font-size: 14px;
+  font-size: 15px;
   color: #000;
   flex-shrink: 0;
 }
-.review-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.review-name { font-size: 15px; font-weight: 600; color: var(--text); }
 .review-service {
   font-family: var(--font-m);
   font-size: 9px;
@@ -1431,13 +1415,15 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   margin-top: 2px;
 }
 .review-stars-row { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
-.review-stars { font-size: 12px; letter-spacing: 1px; color: var(--accent); }
+.review-stars { font-size: 14px; letter-spacing: 2px; color: var(--accent); }
 .review-date {
   font-family: var(--font-m);
   font-size: 9px;
   letter-spacing: 1px;
   color: var(--sub);
 }
+
+/* Text with read more */
 .review-text {
   font-size: 15px;
   line-height: 1.85;
@@ -1446,6 +1432,26 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+.review-text.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.read-more-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px 0 0;
+  display: block;
+  transition: opacity 0.2s;
+}
+.read-more-btn:hover { opacity: 0.7; }
 
 /* Dots */
 .carousel-dots {
@@ -1453,6 +1459,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   justify-content: center;
   gap: 6px;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 .carousel-dot {
   width: 6px; height: 6px;
@@ -1487,6 +1494,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   text-transform: uppercase;
   color: var(--sub);
   animation: pulse 1.5s ease infinite;
+  width: 100%;
 }
 
 @media (max-width: 960px) {
@@ -1591,4 +1599,5 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
     object-fit: cover;
     display: block;
   }
-}
+  }
+                     
