@@ -214,8 +214,10 @@ function toggleMenu() {
 
 // ════════════════════════════════════════════════
 //  REVIEWS — Google Sheets via Apps Script
-// ═════════════════════════════════════
+// ════════════════════════════════════════════════
+
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzaxojC8cTbtQrjhiERIkbj18ary_fCpkiPX4uoyNBcAvBhARdIA2P0jIRNbyMsQ1f/exec';
+
 let selectedStars = 0;
 let carouselIndex = 0;
 let carouselReviews = [];
@@ -293,39 +295,25 @@ function initSwipe() {
 }
 
 // ── Load & display reviews ──
-function loadReviews() {
-  const list = document.getElementById('rvTrack');
-  const dotsWrap = document.getElementById('rvDots');
-  if (list) list.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
-
-  // Use JSONP to bypass CORS on GitHub Pages
-  const callbackName = 'reviewsCallback_' + Date.now();
-  const script = document.createElement('script');
-  script.src = APPS_SCRIPT_URL + '?action=get&callback=' + callbackName;
-
-  window[callbackName] = function(data) {
-    delete window[callbackName];
-    document.body.removeChild(script);
-    handleReviewsData(data);
-  };
-
-  script.onerror = function() {
-    delete window[callbackName];
-    document.body.removeChild(script);
-    if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">!</div>Could not load reviews.</div>';
-  };
-
-  document.body.appendChild(script);
-}
-
-function handleReviewsData(data) {
+async function loadReviews() {
   const list = document.getElementById('rvTrack');
   const avgNum = document.getElementById('rvAvgNum');
   const avgStars = document.getElementById('rvAvgStars');
   const avgCount = document.getElementById('rvAvgCount');
   const dotsWrap = document.getElementById('rvDots');
+  if (list) list.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
 
   try {
+    const res = await fetch(APPS_SCRIPT_URL + '?action=get');
+    const text = await res.text();
+    // Strip JSONP wrapper if present
+    let data;
+    const match = text.match(/^[^(]+\((.+)\)$/s);
+    if (match) {
+      data = JSON.parse(match[1]);
+    } else {
+      data = JSON.parse(text);
+    }
 
     if (!data.reviews || data.reviews.length === 0) {
       if (avgNum) avgNum.textContent = '—';
