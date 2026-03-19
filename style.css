@@ -1329,6 +1329,12 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   align-items: center;
   justify-content: space-between;
   margin-bottom: 14px;
+  padding: 0 2px;
+}
+.carousel-nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 .reviews-carousel-label {
   font-family: var(--font-m);
@@ -1373,6 +1379,12 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   flex-shrink: 0;
   box-sizing: border-box;
   position: relative;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+.review-card .review-text {
+  flex: 1;
 }
 .review-card::before {
   content: '"';
