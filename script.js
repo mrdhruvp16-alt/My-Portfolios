@@ -216,7 +216,7 @@ function toggleMenu() {
 //  REVIEWS — Google Sheets via Apps Script
 // ════════════════════════════════════════════════
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstYKeZMiZhYpjyenVKdJZdSHjSCAeZwFsIvKMfNkv0Kh3pUyFEJdxyAjGj0a5zMk/exec';
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
 let selectedStars = 0;
 let carouselIndex = 0;
@@ -276,8 +276,7 @@ function carouselPrev() {
 }
 
 function carouselNext() {
-  const visible = getVisibleCount();
-  const max = Math.max(0, carouselReviews.length - visible);
+  const max = Math.max(0, carouselReviews.length - 1);
   if (carouselIndex < max) { carouselIndex++; updateCarousel(); }
 }
 
