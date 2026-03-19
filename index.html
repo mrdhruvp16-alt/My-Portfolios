@@ -311,7 +311,7 @@
   <div class="s-label rev">005 Reviews</div>
   <h2 class="s-title rev">WHAT THEY<br>SAY.</h2>
 
-  <!-- Top row: form left | stats+carousel right -->
+  <!-- Top row: form + stats -->
   <div class="reviews-top rev">
 
     <!-- Write a review -->
@@ -347,26 +347,26 @@
       <div class="review-success" id="rvSuccess">✓ Review posted — thank you!</div>
     </div>
 
-    <!-- Right col: stats + carousel -->
-    <div class="reviews-right-col">
-
-      <div class="reviews-stats-wrap">
-        <div class="reviews-avg-big">
-          <div class="reviews-avg-num" id="rvAvgNum">—</div>
-          <div class="reviews-avg-detail">
-            <div class="reviews-avg-stars" id="rvAvgStars"></div>
-            <div class="reviews-avg-count" id="rvAvgCount">No reviews yet</div>
-          </div>
+    <!-- Stats -->
+    <div class="reviews-stats-wrap">
+      <div class="reviews-avg-big">
+        <div class="reviews-avg-num" id="rvAvgNum">—</div>
+        <div class="reviews-avg-detail">
+          <div class="reviews-avg-stars" id="rvAvgStars"></div>
+          <div class="reviews-avg-count" id="rvAvgCount">No reviews yet</div>
         </div>
-        <select class="reviews-sort" id="rvSort" onchange="loadReviews()">
-          <option value="newest">Newest first</option>
-          <option value="highest">Highest rated</option>
-          <option value="lowest">Lowest rated</option>
-        </select>
       </div>
+      <select class="reviews-sort" id="rvSort" onchange="loadReviews()">
+        <option value="newest">Newest first</option>
+        <option value="highest">Highest rated</option>
+        <option value="lowest">Lowest rated</option>
+      </select>
+    </div>
 
-      <!-- Carousel -->
-      <div class="reviews-carousel-wrap">
+  </div>
+
+  <!-- Carousel -->
+  <div class="reviews-carousel-wrap rev">
     <div class="reviews-carousel-header">
       <div class="reviews-carousel-label">Client Reviews</div>
       <div class="carousel-nav">
@@ -379,12 +379,8 @@
         <div class="reviews-loading">Loading reviews…</div>
       </div>
     </div>
-      <div class="carousel-dots" id="rvDots"></div>
-      </div><!-- /reviews-carousel-wrap -->
-
-    </div><!-- /reviews-right-col -->
-
-  </div><!-- /reviews-top -->
+    <div class="carousel-dots" id="rvDots"></div>
+  </div>
 
 </section>
 
