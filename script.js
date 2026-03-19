@@ -216,7 +216,7 @@ function toggleMenu() {
 //  REVIEWS — Google Sheets via Apps Script
 // ════════════════════════════════════════════════
 
-const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstYKeZMiZhYpjyenVKdJZdSHjSCAeZwFsIvKMfNkv0Kh3pUyFEJdxyAjGj0a5zMk/exec';
 
 let selectedStars = 0;
 let carouselIndex = 0;
