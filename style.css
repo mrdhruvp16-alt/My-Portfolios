@@ -810,14 +810,14 @@ html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
   border: 1px solid var(--line);
 }
 .lb-close {
-  position: fixed;
+    position: fixed;
   top: 24px; right: 28px;
   font-family: var(--font-m);
   font-size: 11px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--sub);
-    background: none;
+  background: none;
   border: 1px solid var(--line);
   padding: 10px 20px;
   cursor: pointer;
@@ -1191,22 +1191,21 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
 /* ── REVIEWS ── */
 #reviews { border-top: 1px solid var(--line); background: var(--bg); }
 
-/* Desktop: form left, stats right stacked above carousel */
+/* Desktop: form left, right-col (stats+carousel) right */
 .reviews-top {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(24px, 4vw, 60px);
   align-items: start;
-  margin-bottom: 0;
 }
 
-/* On desktop: stats + carousel together on right side */
 .reviews-right-col {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
+/* ── Form ── */
 .review-form-wrap {
   background: var(--s1);
   border: 1px solid var(--line);
@@ -1229,7 +1228,6 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   padding-bottom: 14px;
   border-bottom: 1px solid var(--line);
 }
-
 .star-picker {
   display: flex;
   gap: 4px;
@@ -1268,7 +1266,6 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
 }
 .review-submit-btn:hover { opacity: 0.88; transform: translateY(-1px); }
 .review-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
 .review-success {
   display: none;
   text-align: center;
@@ -1280,30 +1277,26 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   color: #22c55e;
 }
 
-/* Stats — compact on mobile */
+/* ── Stats ── */
 .reviews-stats-wrap {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 20px 24px;
+  gap: 16px;
+  padding: 18px 22px;
   background: var(--s1);
   border: 1px solid var(--line);
   border-radius: 12px;
   flex-wrap: wrap;
 }
-.reviews-avg-big {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
+.reviews-avg-big { display: flex; align-items: baseline; gap: 10px; }
 .reviews-avg-num {
   font-family: var(--font-d);
-  font-size: 56px;
+  font-size: 52px;
   color: var(--accent);
   line-height: 1;
 }
 .reviews-avg-detail { display: flex; flex-direction: column; gap: 3px; }
-.reviews-avg-stars { font-size: 16px; letter-spacing: 2px; color: var(--accent); }
+.reviews-avg-stars { font-size: 15px; letter-spacing: 2px; color: var(--accent); }
 .reviews-avg-count {
   font-family: var(--font-m);
   font-size: 10px;
@@ -1318,7 +1311,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   font-family: var(--font-m);
   font-size: 10px;
   letter-spacing: 1px;
-  padding: 10px 14px;
+  padding: 9px 13px;
   border-radius: 6px;
   cursor: pointer;
   outline: none;
@@ -1329,13 +1322,13 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
 .reviews-sort:focus { border-color: var(--accent); }
 .reviews-sort option { background: var(--s2); }
 
-/* ── CAROUSEL ── */
+/* ── Carousel ── */
 .reviews-carousel-wrap { position: relative; }
 .reviews-carousel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 .reviews-carousel-label {
   font-family: var(--font-m);
@@ -1357,7 +1350,6 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   justify-content: center;
   font-size: 15px;
   transition: all 0.25s;
-  flex-shrink: 0;
 }
 .carousel-btn:hover { border-color: var(--accent); color: var(--accent); }
 .carousel-btn:disabled { opacity: 0.25; cursor: not-allowed; }
@@ -1370,6 +1362,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   align-items: flex-start;
 }
 
+/* Fixed height card — all same size */
 .review-card {
   min-width: 100%;
   width: 100%;
@@ -1432,20 +1425,30 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   color: var(--sub);
 }
 
+/* Text clamped to 4 lines by default */
 .review-text {
   font-size: 14px;
   line-height: 1.8;
   color: var(--sub);
-  white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
-}
-.review-text.clamped {
+  /* clamp by default */
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  transition: max-height 0.4s ease;
+  max-height: calc(1.8em * 4 + 4px);
 }
+/* When expanded */
+.review-text.expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+  overflow: visible;
+  max-height: 2000px;
+}
+
 .read-more-btn {
   background: none;
   border: none;
@@ -1455,13 +1458,13 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;
-  padding: 6px 0 0;
+  padding: 8px 0 0;
   display: block;
   transition: opacity 0.2s;
 }
 .read-more-btn:hover { opacity: 0.7; }
 
-/* Dots — tight margin */
+/* Dots */
 .carousel-dots {
   display: flex;
   justify-content: center;
@@ -1493,6 +1496,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   border: 1px dashed var(--line);
   border-radius: 10px;
   width: 100%;
+  box-sizing: border-box;
 }
 .reviews-empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
 
@@ -1506,34 +1510,16 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   color: var(--sub);
   animation: pulse 1.5s ease infinite;
   width: 100%;
+  box-sizing: border-box;
 }
 
-/* Desktop: right col has stats + carousel stacked */
-@media (min-width: 961px) {
-  .reviews-top {
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: 0;
-  }
-  .reviews-right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-}
-
-/* Mobile: everything stacks, stats compact horizontal */
+/* Mobile: stack everything, right-col shows below form */
 @media (max-width: 960px) {
   .reviews-top {
     grid-template-columns: 1fr;
-    margin-bottom: 24px;
-  }
-  .reviews-right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
   }
   .reviews-stats-wrap {
-    padding: 16px 20px;
+    padding: 14px 18px;
   }
   .reviews-avg-num { font-size: 44px; }
 }
@@ -1623,4 +1609,17 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
     right: 0;
     /* Pull top above section padding + label + title height */
     top: calc(-1 * (clamp(64px, 10vh, 140px) + 16px + clamp(44px, 6.5vw, 92px) * 2 + 56px) + clamp(20px, 3vh, 32px));
-    /* F
+    /* Fill the space to the right of the photo */
+    width: calc(100% - clamp(220px, 38%, 320px) - clamp(20px, 2.8vw, 34px));
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--s2);
+  }
+  .designer-side-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
