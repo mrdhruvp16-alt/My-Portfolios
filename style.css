@@ -795,7 +795,7 @@ html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
   display: none;
   position: fixed;
   inset: 0;
-    background: rgba(0,0,0,0.94);
+  background: rgba(0,0,0,0.94);
   z-index: 800;
   align-items: center;
   justify-content: center;
@@ -1591,4 +1591,4 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
     object-fit: cover;
     display: block;
   }
-  }
+}
