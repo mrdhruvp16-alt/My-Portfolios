@@ -214,10 +214,8 @@ function toggleMenu() {
 
 // ════════════════════════════════════════════════
 //  REVIEWS — Google Sheets via Apps Script
-// ════════════════════════════════════════════════
-
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstYKeZMiZhYpjyenVKdJZdSHjSCAeZwFsIvKMfNkv0Kh3pUyFEJdxyAjGj0a5zMk/exec';
-
+// ═════════════════════════════════════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzaxojC8cTbtQrjhiERIkbj18ary_fCpkiPX4uoyNBcAvBhARdIA2P0jIRNbyMsQ1f/exec';
 let selectedStars = 0;
 let carouselIndex = 0;
 let carouselReviews = [];
