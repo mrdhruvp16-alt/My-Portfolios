@@ -833,7 +833,7 @@ html.js-ready .g-item.vis { opacity: 1; transform: scale(1); }
   font-size: 22px;
   letter-spacing: 3px;
   color: var(--text);
-  }
+}
 
 /* ── WEBSITE VIEWER ── */
 .site-viewer {
