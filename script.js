@@ -216,7 +216,7 @@ function toggleMenu() {
 //  REVIEWS — Google Sheets via Apps Script
 // ════════════════════════════════════════════════
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzaxojC8cTbtQrjhiERIkbj18ary_fCpkiPX4uoyNBcAvBhARdIA2P0jIRNbyMsQ1f/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstYKeZMiZhYpjyenVKdJZdSHjSCAeZwFsIvKMfNkv0Kh3pUyFEJdxyAjGj0a5zMk/exec';
 
 let selectedStars = 0;
 let carouselIndex = 0;
@@ -253,19 +253,21 @@ function escapeHTML(str) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Carousel ──
+// ── Carousel controls ──
 function updateCarousel() {
   const track = document.getElementById('rvTrack');
+  const dots = document.querySelectorAll('.carousel-dot');
   const prevBtn = document.getElementById('rvPrev');
   const nextBtn = document.getElementById('rvNext');
-  const dots = document.querySelectorAll('.carousel-dot');
   if (!track) return;
 
-  const w = track.parentElement.offsetWidth;
-  track.style.transform = `translateX(-${carouselIndex * w}px)`;
+  const cardWidth = track.parentElement.offsetWidth;
+  track.style.transform = `translateX(-${carouselIndex * cardWidth}px)`;
 
+  const maxIndex = Math.max(0, carouselReviews.length - 1);
   if (prevBtn) prevBtn.disabled = carouselIndex === 0;
-  if (nextBtn) nextBtn.disabled = carouselIndex >= carouselReviews.length - 1;
+  if (nextBtn) nextBtn.disabled = carouselIndex >= maxIndex;
+
   dots.forEach((d, i) => d.classList.toggle('active', i === carouselIndex));
 }
 
@@ -274,79 +276,72 @@ function carouselPrev() {
 }
 
 function carouselNext() {
-  if (carouselIndex < carouselReviews.length - 1) { carouselIndex++; updateCarousel(); }
+  const max = Math.max(0, carouselReviews.length - 1);
+  if (carouselIndex < max) { carouselIndex++; updateCarousel(); }
 }
 
 window.addEventListener('resize', updateCarousel);
 
+// ── Swipe support ──
 function initSwipe() {
   const outer = document.getElementById('rvTrackOuter');
   if (!outer) return;
   let startX = 0;
-  outer.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+  outer.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: true});
   outer.addEventListener('touchend', e => {
     const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) diff > 0 ? carouselNext() : carouselPrev();
-  }, {passive:true});
+    if (Math.abs(diff) > 40) { diff > 0 ? carouselNext() : carouselPrev(); }
+  }, {passive: true});
 }
 
-function toggleReadMore(btn) {
-  const textEl = btn.previousElementSibling;
-  if (textEl.classList.contains('clamped')) {
-    textEl.classList.remove('clamped');
-    btn.textContent = '↑ Read less';
-  } else {
-    textEl.classList.add('clamped');
-    btn.textContent = 'Read more →';
-  }
-}
-
-// ── Load reviews ──
+// ── Load & display reviews ──
 async function loadReviews() {
-  const track = document.getElementById('rvTrack');
+  const list = document.getElementById('rvTrack');
   const avgNum = document.getElementById('rvAvgNum');
   const avgStars = document.getElementById('rvAvgStars');
   const avgCount = document.getElementById('rvAvgCount');
   const dotsWrap = document.getElementById('rvDots');
-  if (track) track.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
+  if (list) list.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
 
   try {
     const res = await fetch(APPS_SCRIPT_URL + '?action=get');
     const text = await res.text();
+    // Strip JSONP wrapper if present
     let data;
-    try {
+    const match = text.match(/^[^(]+\((.+)\)$/s);
+    if (match) {
+      data = JSON.parse(match[1]);
+    } else {
       data = JSON.parse(text);
-    } catch(_) {
-      const m = text.match(/^[^(]+\((.+)\)$/s);
-      data = m ? JSON.parse(m[1]) : {reviews:[]};
     }
 
     if (!data.reviews || data.reviews.length === 0) {
       if (avgNum) avgNum.textContent = '—';
       if (avgStars) avgStars.textContent = '';
       if (avgCount) avgCount.textContent = 'No reviews yet';
-      if (track) track.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">✦</div>Be the first to leave a review</div>';
+      if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">✦</div>Be the first to leave a review</div>';
       return;
     }
 
-    const sort = document.getElementById('rvSort')?.value || 'newest';
+    const sort = document.getElementById('rvSort') ? document.getElementById('rvSort').value : 'newest';
     carouselReviews = [...data.reviews].sort((a, b) => {
       if (sort === 'highest') return b.stars - a.stars;
       if (sort === 'lowest')  return a.stars - b.stars;
       return new Date(b.date) - new Date(a.date);
     });
 
-    const avg = carouselReviews.reduce((s,r) => s + Number(r.stars), 0) / carouselReviews.length;
+    // Aggregate
+    const avg = carouselReviews.reduce((s, r) => s + Number(r.stars), 0) / carouselReviews.length;
     if (avgNum) avgNum.textContent = avg.toFixed(1);
     if (avgStars) avgStars.textContent = starsHTML(Math.round(avg));
     if (avgCount) avgCount.textContent = `${carouselReviews.length} review${carouselReviews.length > 1 ? 's' : ''}`;
 
-    if (track) {
-      track.innerHTML = carouselReviews.map(r => {
-        const initials = String(r.name).split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    // Build cards
+    if (list) {
+      list.innerHTML = carouselReviews.map(r => {
+        const initials = String(r.name).split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
         const d = new Date(r.date);
-        const dateStr = isNaN(d) ? r.date : d.toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'});
-        const longText = String(r.text).length > 200;
+        const dateStr = isNaN(d) ? r.date : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
         return `<div class="review-card">
           <div class="review-card-top">
             <div class="review-author">
@@ -361,15 +356,15 @@ async function loadReviews() {
               <span class="review-date">${dateStr}</span>
             </div>
           </div>
-          <div class="review-text${longText ? ' clamped' : ''}">${escapeHTML(r.text)}</div>
-          ${longText ? '<button class="read-more-btn" onclick="toggleReadMore(this)">Read more →</button>' : ''}
+          <div class="review-text">${escapeHTML(r.text)}</div>
         </div>`;
       }).join('');
     }
 
+    // Build dots
     if (dotsWrap) {
-      dotsWrap.innerHTML = carouselReviews.map((_,i) =>
-        `<button class="carousel-dot${i===0?' active':''}" onclick="carouselIndex=${i};updateCarousel()"></button>`
+      dotsWrap.innerHTML = carouselReviews.map((_, i) =>
+        `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="carouselIndex=${i};updateCarousel()"></button>`
       ).join('');
     }
 
@@ -377,9 +372,9 @@ async function loadReviews() {
     setTimeout(updateCarousel, 50);
     initSwipe();
 
-  } catch(err) {
-    if (track) track.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">!</div>Could not load reviews.</div>';
-    console.error('Reviews error:', err);
+  } catch (err) {
+    if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">!</div>Could not load reviews.</div>';
+    console.error('Reviews load error:', err);
   }
 }
 
@@ -410,11 +405,12 @@ async function submitReview() {
   btn.textContent = 'Sending…';
 
   try {
+    const payload = { action: 'post', name, service, stars: selectedStars, text, date: new Date().toISOString().slice(0, 10) };
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ name, service, stars: selectedStars, text, date: new Date().toISOString().slice(0,10) })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
 
     document.getElementById('rvName').value = '';
@@ -428,7 +424,7 @@ async function submitReview() {
     setTimeout(() => success.style.display = 'none', 3500);
     setTimeout(loadReviews, 2000);
 
-  } catch(err) {
+  } catch (err) {
     alert('Could not submit. Check your connection.');
   } finally {
     btn.disabled = false;
