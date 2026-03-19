@@ -216,7 +216,7 @@ function toggleMenu() {
 //  REVIEWS — Google Sheets via Apps Script
 // ════════════════════════════════════════════════
 
-const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstYKeZMiZhYpjyenVKdJZdSHjSCAeZwFsIvKMfNkv0Kh3pUyFEJdxyAjGj0a5zMk/exec';
 
 let selectedStars = 0;
 let carouselIndex = 0;
@@ -295,18 +295,39 @@ function initSwipe() {
 }
 
 // ── Load & display reviews ──
-async function loadReviews() {
+function loadReviews() {
+  const list = document.getElementById('rvTrack');
+  const dotsWrap = document.getElementById('rvDots');
+  if (list) list.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
+
+  // Use JSONP to bypass CORS on GitHub Pages
+  const callbackName = 'reviewsCallback_' + Date.now();
+  const script = document.createElement('script');
+  script.src = APPS_SCRIPT_URL + '?action=get&callback=' + callbackName;
+
+  window[callbackName] = function(data) {
+    delete window[callbackName];
+    document.body.removeChild(script);
+    handleReviewsData(data);
+  };
+
+  script.onerror = function() {
+    delete window[callbackName];
+    document.body.removeChild(script);
+    if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">!</div>Could not load reviews.</div>';
+  };
+
+  document.body.appendChild(script);
+}
+
+function handleReviewsData(data) {
   const list = document.getElementById('rvTrack');
   const avgNum = document.getElementById('rvAvgNum');
   const avgStars = document.getElementById('rvAvgStars');
   const avgCount = document.getElementById('rvAvgCount');
   const dotsWrap = document.getElementById('rvDots');
 
-  if (list) list.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
-
   try {
-    const res = await fetch(APPS_SCRIPT_URL + '?action=get', { method: 'GET' });
-    const data = await res.json();
 
     if (!data.reviews || data.reviews.length === 0) {
       if (avgNum) avgNum.textContent = '—';
@@ -366,7 +387,6 @@ async function loadReviews() {
     initSwipe();
 
   } catch (err) {
-    const list = document.getElementById('rvTrack');
     if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">!</div>Could not load reviews.</div>';
     console.error('Reviews load error:', err);
   }
