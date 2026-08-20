@@ -346,14 +346,17 @@ function openVideoModal(item, fallbackTag) {
   if (player) {
     if (yid && isShort) {
       player.style.aspectRatio = '9 / 16';
-      player.style.width = 'min(100%, calc(78vh * 9 / 16))';
+      player.style.width = 'min(100%, calc(58vh * 9 / 16))';
     } else {
       player.style.aspectRatio = '16 / 9';
       player.style.width = '100%';
     }
   }
   if (yid) {
-    player.innerHTML = `<iframe src="https://www.youtube.com/embed/${yid}?autoplay=1&playsinline=1&rel=0" title="${item.title || 'video'}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    // youtube-nocookie.com + modestbranding/rel/iv_load_policy/fs=0/disablekb/enablejsapi=0
+    // minimizes YouTube's own UI (logo, related videos, fullscreen handoff) so the
+    // video plays inline on this page instead of handing off to the YouTube app.
+    player.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${yid}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&fs=0&disablekb=1&enablejsapi=0&controls=1" title="${item.title || 'video'}" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   } else {
     player.innerHTML = `<video src="${item.videoUrl}" controls autoplay playsinline></video>`;
   }
