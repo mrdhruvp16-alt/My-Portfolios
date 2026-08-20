@@ -23,21 +23,6 @@
   </div>
 </div>
 
-<!-- ════════════════ CATEGORY PAGE (Show More → full video list) ════════════════ -->
-<div class="category-page" id="categoryPage">
-  <div class="category-page-inner">
-    <button class="cat-page-back" onclick="closeCategoryPage()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Back
-    </button>
-    <div class="category-page-head">
-      <div class="cat-page-title" id="catPageTitle">Category</div>
-      <div class="cat-page-sub" id="catPageSub"></div>
-    </div>
-    <div class="cat-page-grid" id="catPageGrid"></div>
-  </div>
-</div>
-
 <div id="app">
 
 <!-- ════ NAV ════ -->
@@ -49,7 +34,6 @@
       <li><a href="#work">Work</a></li>
       <li><a href="#message">Message</a></li>
       <li><a href="#services">Services</a></li>
-      <li><a href="#reviews">Reviews</a></li>
       <li><a href="#connect">Connect</a></li>
     </ul>
     <div class="nav-dot"></div>
@@ -65,7 +49,6 @@
   <a href="#work"    onclick="toggleMenu()">Work</a>
   <a href="#message" onclick="toggleMenu()">Message</a>
   <a href="#services"onclick="toggleMenu()">Services</a>
-  <a href="#reviews" onclick="toggleMenu()">Reviews</a>
   <a href="#connect" onclick="toggleMenu()">Connect</a>
 </div>
 
@@ -96,7 +79,7 @@
         DEVELOPER: This is your showreel loop. Replace the src below
         with your own highlight reel (short, muted-friendly, on-brand).
       -->
-      <video autoplay muted loop playsinline id="heroMainImg" src="images/your-video.mp4"></video>
+      <video autoplay muted loop playsinline id="heroMainImg" src="sample-reel.mp4"></video>
       <div class="hero-tag-corner">Showreel 2026</div>
     </div>
   </div>
@@ -134,7 +117,7 @@
   <div class="designer-row">
     <div class="designer-photo-wrap rev">
       <div class="designer-photo-frame">
-        <img id="aboutPhoto" src="images/dhruv.jpg" alt="Dhruv">
+        <img id="aboutPhoto" src="dhruv.jpg" alt="Dhruv">
         <div class="designer-photo-badge">
           <span style="width:6px;height:6px;flex-shrink:0;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s ease infinite;"></span>
           Available
@@ -210,8 +193,24 @@
           <div class="gallery-cat-title" id="galTitle">All Videos</div>
           <div class="gallery-cat-sub" id="galSub">Loading…</div>
         </div>
+        <div class="gallery-nav-controls" id="galNavControls">
+          <div class="gallery-swipe-hint" id="gallerySwipeHint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7"/></svg>
+            <span>Swipe to explore</span>
+          </div>
+          <div class="gallery-nav-btns" id="galNavBtns">
+            <button class="gallery-nav-btn" id="galPrevBtn" aria-label="Previous videos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="gallery-nav-btn" id="galNextBtn" aria-label="Next videos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="video-grid" id="galGrid"></div>
+      <div class="video-grid-outer" id="galGridOuter">
+        <div class="video-grid-track" id="galGridTrack"></div>
+      </div>
     </div>
 
   </div>
@@ -351,86 +350,11 @@
   </div>
 </section>
 
-<!-- ════ REVIEWS ════ -->
-<section id="reviews" class="sec">
-  <div class="s-label rev">005 Reviews</div>
-  <h2 class="s-title rev">WHAT THEY<br>SAY.</h2>
-
-  <!-- Top row: form + stats -->
-  <div class="reviews-top rev">
-
-    <!-- Write a review -->
-    <div class="review-form-wrap">
-      <div class="review-form-title">Leave a Review</div>
-      <div class="review-form-sub">Share your experience</div>
-
-      <input type="text" class="msg-input-field" id="rvName" placeholder="Your name" autocomplete="off" style="margin-bottom:10px;">
-
-      <select class="msg-input-field" id="rvService" style="margin-bottom:10px;">
-        <option value="" disabled selected>Service you used</option>
-        <option value="Short-Form Editing">Short-Form Editing</option>
-        <option value="Long-Form Editing">Long-Form Editing</option>
-        <option value="AI Video">AI Video</option>
-        <option value="Motion Graphics">Motion Graphics</option>
-        <option value="Other">Other</option>
-      </select>
-
-      <div style="margin-bottom:12px;">
-        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">Rating</div>
-        <div class="star-picker" id="starPicker">
-          <span data-v="1">★</span>
-          <span data-v="2">★</span>
-          <span data-v="3">★</span>
-          <span data-v="4">★</span>
-          <span data-v="5">★</span>
-        </div>
-      </div>
-
-      <textarea class="msg-textarea" id="rvText" placeholder="Tell others about your experience..." style="min-height:90px;margin-bottom:10px;"></textarea>
-
-      <button class="review-submit-btn" onclick="submitReview()">✓ Submit Review</button>
-      <div class="review-success" id="rvSuccess">✓ Review posted — thank you!</div>
-    </div>
-
-    <!-- Stats -->
-    <div class="reviews-stats-wrap">
-      <div class="reviews-avg-big">
-        <div class="reviews-avg-num" id="rvAvgNum">—</div>
-        <div class="reviews-avg-detail">
-          <div class="reviews-avg-stars" id="rvAvgStars"></div>
-          <div class="reviews-avg-count" id="rvAvgCount">No reviews yet</div>
-        </div>
-      </div>
-      <select class="reviews-sort" id="rvSort" onchange="loadReviews()">
-        <option value="newest">Newest first</option>
-        <option value="highest">Highest rated</option>
-        <option value="lowest">Lowest rated</option>
-      </select>
-    </div>
-
-  </div>
-
-  <!-- Carousel -->
-  <div class="reviews-carousel-wrap rev">
-    <div class="reviews-carousel-header">
-      <br>
-      <div class="reviews-carousel-label">Client Reviews</div>
-    </div>
-    <div class="reviews-track-outer" id="rvTrackOuter">
-      <div class="reviews-track" id="rvTrack">
-        <div class="reviews-loading">Loading reviews…</div>
-      </div>
-    </div>
-    <div class="carousel-dots" id="rvDots"></div>
-  </div>
-
-</section>
-
 <!-- ════ CONNECT ════ -->
 <section id="connect" class="sec">
   <div class="connect-glow"></div>
   <div class="connect-inner">
-    <div class="s-label rev" style="justify-content:center;">006 Connect</div>
+    <div class="s-label rev" style="justify-content:center;">005 Connect</div>
     <h2 class="s-title rev" style="text-align:center;">LET'S CUT<br>SOMETHING GREAT.</h2>
     <p class="rev" style="color:var(--sub);font-size:16px;max-width:420px;margin:0 auto;line-height:1.8;text-align:center;">
       Want to see more work or reach out for a project? Find me on Instagram.
@@ -452,7 +376,7 @@
           <path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 10v7"/>
         </svg>
         LinkedIn
-      </a> 
+      </a>
       <a href="mailto:hello@example.com" class="social-mini-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -468,7 +392,7 @@
 <footer>
   <div class="f-logo">DHRUV<em>.</em></div>
   <p>© 2026— Video Editing · Visual Storytelling</p>
-  <p>Made with Care @DhruvPanchal</p>
+  <p>Made with @infiniteif.com @DhruvPanchal</p>
 </footer>
 
 </div><!-- /app -->
@@ -476,3 +400,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
