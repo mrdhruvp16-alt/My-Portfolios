@@ -13,7 +13,10 @@ const ICONS = {
 //  object to its `items` array with this shape:
 //
 //  {
-//    title: "Project Name",              // shown on the card
+//    title: "Project Name",              // shown on the card. For YouTube
+//                                          // links you can leave this "" —
+//                                          // it auto-fills from the video's
+//                                          // real YouTube title.
 //    tag: "Instagram Reel",               // small category label
 //    description: "One or two sentences about the edit.",
 //    videoUrl: "videos/my-clip.mp4",      // local file path, OR a
@@ -24,6 +27,12 @@ const ICONS = {
 //                                          //  - YouTube link -> auto thumbnail
 //    tools: ["Premiere Pro", "After Effects"]  // optional, shown as tags
 //  }
+//
+//  FOR A YOUTUBE VIDEO (recommended — no file size limit, full quality):
+//  Upload the video to YouTube as "Unlisted" (not Private), copy its link,
+//  and paste it as videoUrl below. Leave title: "" — thumbnail AND title
+//  both fill in automatically. It plays right here on your site in the
+//  popup player, visitors never leave the page.
 //
 //  Leave videoUrl "" to show a placeholder card reminding you
 //  to fill it in later — nothing breaks, nothing needs redesigning.
@@ -129,6 +138,25 @@ function isLocalVideo(url) {
   return !!url && !getYouTubeId(url);
 }
 
+// ── AUTO-FETCH YOUTUBE TITLE (oEmbed) ──
+// Leave `title: ''` on any YouTube item in VIDEOS and this fills it in
+// automatically from the YouTube link, so you only ever need to paste the URL.
+const ytTitleCache = {};
+async function getYouTubeTitle(url) {
+  const yid = getYouTubeId(url);
+  if (!yid) return null;
+  if (ytTitleCache[yid]) return ytTitleCache[yid];
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    ytTitleCache[yid] = data.title;
+    return data.title;
+  } catch (e) {
+    return null;
+  }
+}
+
 // ── BUILD A SINGLE VIDEO CARD (shared by main grid + full category page) ──
 // Aspect ratio is set dynamically once the real video/image dimensions are known:
 // portrait footage (e.g. Reels/Shorts, ~9:16) gets a tall box, landscape footage
@@ -160,13 +188,26 @@ function buildVideoCard(item, data) {
       ${hasVideo ? `<div class="video-play-btn"><div class="video-play-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>` : ''}
     </div>
     <div class="video-info">
-      <div class="video-title">${item.title}</div>
+      <div class="video-title">${item.title || (hasVideo && getYouTubeId(item.videoUrl) ? 'Loading title…' : '')}</div>
       <div class="video-desc">${item.description || ''}</div>
       ${item.tools && item.tools.length ? `<div class="video-tools">${item.tools.map(t => `<span class="video-tool-tag">${t}</span>`).join('')}</div>` : ''}
     </div>`;
 
   if (hasVideo) {
     el.addEventListener('click', () => openVideoModal(item, data.label));
+  }
+
+  // If it's a YouTube link with no title typed in, fetch the real title
+  // automatically and fill it in once it loads (also caches it onto the
+  // item so the modal shows the correct title without re-fetching).
+  if (hasVideo && getYouTubeId(item.videoUrl) && !item.title) {
+    getYouTubeTitle(item.videoUrl).then(t => {
+      if (t) {
+        item.title = t;
+        const titleEl = el.querySelector('.video-title');
+        if (titleEl) titleEl.textContent = t;
+      }
+    });
   }
 
   // ── DYNAMIC ASPECT RATIO ──
@@ -302,18 +343,28 @@ function openVideoModal(item, fallbackTag) {
 
   const yid = getYouTubeId(item.videoUrl);
   if (yid) {
-    player.innerHTML = `<iframe src="https://www.youtube.com/embed/${yid}?autoplay=1" title="${item.title}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    player.innerHTML = `<iframe src="https://www.youtube.com/embed/${yid}?autoplay=1" title="${item.title || 'video'}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
   } else {
     player.innerHTML = `<video src="${item.videoUrl}" controls autoplay playsinline></video>`;
   }
 
-  title.textContent = item.title;
+  title.textContent = item.title || (yid ? 'Loading title…' : '');
   tag.textContent = item.tag || fallbackTag || '';
   desc.textContent = item.description || '';
   tools.innerHTML = (item.tools || []).map(t => `<span class="video-tool-tag">${t}</span>`).join('');
 
   document.getElementById('videoModal').classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Auto-fill the modal title too if it hasn't been fetched yet
+  if (yid && !item.title) {
+    getYouTubeTitle(item.videoUrl).then(t => {
+      if (t) {
+        item.title = t;
+        title.textContent = t;
+      }
+    });
+  }
 }
 function closeVideoModal(e) {
   if (e) e.stopPropagation();
@@ -463,7 +514,7 @@ function toggleReadMore(btn) {
   const textEl = btn.previousElementSibling;
   if (textEl.classList.contains('expanded')) {
     textEl.classList.remove('expanded');
-    btn.textContent = 'Read more →';
+    btn.textContent = 'Read more→';
   } else {
     textEl.classList.add('expanded');
     btn.textContent = '↑ Read less';
