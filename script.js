@@ -1,59 +1,214 @@
 const ICONS = {
-  tshirt:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>`,
-  website: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
-  book:    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
+  bolt:    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>`,
+  play:    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/><path d="M10.5 8.5l4 2.2-4 2.2v-4.4z"/></svg>`,
+  spark:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9L12 3z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"/></svg>`,
+  clapper: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 7v11a1 1 0 001 1h14a1 1 0 001-1V7M4 7l2-4h12l2 4M9 3v4M15 3v4"/><path d="M9.5 12.5l4 2.2-4 2.2v-4.4z"/></svg>`,
 };
 
 // ════════════════════════════════════════════════
-//  WARDROBE DATA — 6 images per category
+//  VIDEO PORTFOLIO DATA
+//
+//  HOW TO ADD YOUR OWN VIDEOS:
+//  Find the category below (or add a new one) and add an
+//  object to its `items` array with this shape:
+//
+//  {
+//    title: "Project Name",              // shown on the card
+//    tag: "Instagram Reel",               // small category label
+//    description: "One or two sentences about the edit.",
+//    videoUrl: "videos/my-clip.mp4",      // local file path, OR a
+//                                          // full YouTube URL (both work)
+//    thumbnail: "",                       // optional image path.
+//                                          // Leave "" to auto-preview:
+//                                          //  - local mp4 -> silent looping preview
+//                                          //  - YouTube link -> auto thumbnail
+//    tools: ["Premiere Pro", "After Effects"]  // optional, shown as tags
+//  }
+//
+//  Leave videoUrl "" to show a placeholder card reminding you
+//  to fill it in later — nothing breaks, nothing needs redesigning.
+//  New items appear automatically, no other code changes needed.
 // ════════════════════════════════════════════════
-const WARDROBE = {
-  tshirt: {
-    label: 'Clothes', icon: 'tshirt',
-    images: [
-      { src: 'images/dhruv.png', title: 'loveisHate' },
-      { src: 'images/dhruv1.png', title: 'lastRide'},
-      { src: 'images/dhruv2.png', title: 'Void Tee' },
-      { src: 'images/dhruv3.png', title: 'Atlas Fit' },
-      { src: 'images/dhruv4.png', title: 'Night Run' },
-      { src: 'images/dhruv5.png', title: 'Ember Logo' },
+const VIDEOS = {
+  shortform: {
+    label: 'Short-Form & Reels', icon: 'bolt',
+    items: [
+      {
+        title: 'Vertical Showreel Cut',
+        tag: 'Instagram Reel',
+        description: 'A fast-paced vertical edit built for retention — quick cuts, punchy pacing and a beat-synced rhythm.',
+        videoUrl: 'videos/sample-reel.mp4',
+        thumbnail: '',
+        tools: ['Premiere Pro', 'CapCut']
+      },
+      {
+        title: 'Add Your Next Reel',
+        tag: 'YouTube Short',
+        description: 'Add a title, description and video path in script.js — it appears here automatically.',
+        videoUrl: '',
+        thumbnail: '',
+        tools: []
+      },
+      {
+        title: 'Add A Third Reel',
+        tag: 'Instagram Reel',
+        description: 'This card appears after clicking "Show More" — proof the pagination works. Replace or delete it anytime.',
+        videoUrl: '',
+        thumbnail: '',
+        tools: []
+      },
     ]
   },
-  website: {
-    label: 'Website Design', icon: 'website',
-    images: [
-      { src: 'https://picsum.photos/seed/wb1/400/', title: 'Nature Site',      siteUrl: 'subcode/site1-nature-1.html' },
-      { src: 'https://picsum.photos/seed/wb2/400/500', title: 'Perfume Site',  siteUrl: 'subcode/site2-perfume.html' },
-      { src: 'https://picsum.photos/seed/wb3/400/500', title: 'Agency Site',   siteUrl: 'subcode/site3-agency.html' },
-      { src: 'https://picsum.photos/seed/wb4/400/500', title: 'AI Site',       siteUrl: 'subcode/site4-ai.html' },
-      { src: 'https://picsum.photos/seed/wb5/400/500', title: 'Restaurant',    siteUrl: 'subcode/site5-restaurant.html' },
-      { src: 'https://picsum.photos/seed/wb6/400/500', title: 'Fashion Site',  siteUrl: 'subcode/site6-fashion.html' },
+  clipping: {
+    label: 'Clipping', icon: 'play',
+    items: [
+      {
+        title: 'Add Your Clipping Edit',
+        tag: 'Clip',
+        description: 'Highlight clips pulled from longer footage — trimmed, captioned and paced to hook fast.',
+        videoUrl: '',
+        thumbnail: '',
+        tools: []
+      },
+      {
+        title: 'Add Another Clip',
+        tag: 'Clip',
+        description: 'Show off your clipping/editing style — add a title, description and video path in script.js.',
+        videoUrl: '',
+        thumbnail: '',
+        tools: []
+      },
     ]
   },
-  book: {
-    label: 'Book Design', icon: 'book',
-    images: [
-      { src: 'images/book.jpg', title: 'hateyou' },
-      { src: 'images/book2.png', title: 'love4you' },
-      { src: 'images/book3.png', title: 'romu' },
-      { src: 'images/book4.png', title: 'coffee' },
-      { src: 'images/book5.png', title: 'lastnight' },
-      { src: 'images/book6.png', title: 'withyou' },
+  ai: {
+    label: 'AI-Generated & AI-Assisted', icon: 'spark',
+    items: [
+      {
+        title: 'Add Your AI Video',
+        tag: 'AI-Generated',
+        description: 'AI-generated visuals edited and finished into a polished, publish-ready video.',
+        videoUrl: '',
+        thumbnail: '',
+        tools: []
+      },
+    ]
+  },
+  cinematic: {
+    label: 'Cinematic & Promotional', icon: 'clapper',
+    items: [
+      {
+        title: 'Showreel — Cinematic Cut',
+        tag: 'Promo Video',
+        description: 'A cinematic pass on the same source footage — mood-driven pacing, grade and sound design.',
+        videoUrl: 'videos/sample-reel.mp4',
+        thumbnail: '',
+        tools: ['DaVinci Resolve', 'After Effects']
+      },
+      {
+        title: 'Add Your Promo Edit',
+        tag: 'Promotional',
+        description: 'Brand or product promos — motion-forward edits built to sell in seconds.',
+        videoUrl: '',
+        thumbnail: '',
+        tools: []
+      },
     ]
   },
 };
 
-let activeCat = 'tshirt';
+let activeCat = 'shortform';
+const VIDEOS_PER_PAGE = 2; // how many videos show on the main portfolio section before "Show More" opens the full category page
+
+// ── HELPERS: recognize YouTube links, build embed/thumbnail URLs ──
+function getYouTubeId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/);
+  return m ? m[1] : null;
+}
+function isLocalVideo(url) {
+  return !!url && !getYouTubeId(url);
+}
+
+// ── BUILD A SINGLE VIDEO CARD (shared by main grid + full category page) ──
+// Aspect ratio is set dynamically once the real video/image dimensions are known:
+// portrait footage (e.g. Reels/Shorts, ~9:16) gets a tall box, landscape footage
+// (e.g. YouTube/promo, ~16:9) gets a wide box — no fixed/forced crop.
+function buildVideoCard(item, data) {
+  const el = document.createElement('div');
+  const hasVideo = !!(item.videoUrl && item.videoUrl.trim());
+  el.className = 'video-card' + (hasVideo ? '' : ' is-placeholder');
+
+  let thumbInner = '';
+  if (item.thumbnail) {
+    thumbInner = `<img src="${item.thumbnail}" alt="${item.title}" loading="lazy">`;
+  } else if (hasVideo && isLocalVideo(item.videoUrl)) {
+    thumbInner = `<video src="${item.videoUrl}" autoplay muted loop playsinline></video>`;
+  } else if (hasVideo && getYouTubeId(item.videoUrl)) {
+    const yid = getYouTubeId(item.videoUrl);
+    thumbInner = `<img src="https://img.youtube.com/vi/${yid}/hqdefault.jpg" alt="${item.title}" loading="lazy">`;
+  } else {
+    thumbInner = `<div class="video-placeholder">
+        <div class="video-placeholder-icon">${ICONS[data.icon]}</div>
+        <div class="video-placeholder-label">Add video in script.js</div>
+      </div>`;
+  }
+
+  el.innerHTML = `
+    <div class="video-thumb-wrap${hasVideo ? '' : ' is-empty'}">
+      <div class="video-cat-chip">${item.tag || data.label}</div>
+      ${thumbInner}
+      ${hasVideo ? `<div class="video-play-btn"><div class="video-play-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>` : ''}
+    </div>
+    <div class="video-info">
+      <div class="video-title">${item.title}</div>
+      <div class="video-desc">${item.description || ''}</div>
+      ${item.tools && item.tools.length ? `<div class="video-tools">${item.tools.map(t => `<span class="video-tool-tag">${t}</span>`).join('')}</div>` : ''}
+    </div>`;
+
+  if (hasVideo) {
+    el.addEventListener('click', () => openVideoModal(item, data.label));
+  }
+
+  // ── DYNAMIC ASPECT RATIO ──
+  const thumbWrap = el.querySelector('.video-thumb-wrap');
+  const applyRatio = (w, h) => {
+    if (!w || !h || !thumbWrap) return;
+    thumbWrap.style.aspectRatio = (w / h < 1) ? '9 / 16' : '16 / 9';
+  };
+
+  const localVideoEl = el.querySelector('.video-thumb-wrap video');
+  if (localVideoEl) {
+    localVideoEl.addEventListener('loadedmetadata', () => {
+      applyRatio(localVideoEl.videoWidth, localVideoEl.videoHeight);
+    });
+  } else if (item.thumbnail) {
+    const imgEl = el.querySelector('.video-thumb-wrap img');
+    if (imgEl) {
+      if (imgEl.complete && imgEl.naturalWidth) {
+        applyRatio(imgEl.naturalWidth, imgEl.naturalHeight);
+      } else {
+        imgEl.addEventListener('load', () => applyRatio(imgEl.naturalWidth, imgEl.naturalHeight));
+      }
+    }
+  } else if (hasVideo && getYouTubeId(item.videoUrl)) {
+    // YouTube: Shorts links are portrait, regular videos are landscape
+    const isShort = /\/shorts\//.test(item.videoUrl);
+    if (thumbWrap) thumbWrap.style.aspectRatio = isShort ? '9 / 16' : '16 / 9';
+  }
+
+  return el;
+}
 
 // ── BUILD SIDEBAR ──
 function buildSidebar() {
   const sidebar = document.getElementById('workSidebar');
+  sidebar.innerHTML = '';
   const label = document.createElement('div');
   label.className = 'sidebar-label';
   label.textContent = 'Categories';
   sidebar.appendChild(label);
 
-  Object.entries(WARDROBE).forEach(([key, data]) => {
+  Object.entries(VIDEOS).forEach(([key, data]) => {
     const btn = document.createElement('button');
     btn.className = 'cat-btn' + (key === activeCat ? ' active' : '');
     btn.dataset.cat = key;
@@ -61,7 +216,7 @@ function buildSidebar() {
       <span class="cat-icon">${ICONS[data.icon]}</span>
       <span class="cat-info">
         <span class="cat-name">${data.label}</span>
-        <span class="cat-count">${data.images.length} designs</span>
+        <span class="cat-count">${data.items.length} video${data.items.length === 1 ? '' : 's'}</span>
       </span>`;
     btn.addEventListener('click', () => switchCat(key));
     sidebar.appendChild(btn);
@@ -74,92 +229,99 @@ function switchCat(cat) {
   document.querySelectorAll('.cat-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.cat === cat);
   });
-  const data = WARDROBE[cat];
+  const data = VIDEOS[cat];
   document.getElementById('galTitle').textContent = data.label;
-  document.getElementById('galSub').textContent = `Showing ${data.images.length} designs — 3 × 2`;
-  buildGallery(data);
+  document.getElementById('galSub').textContent = `Showing ${Math.min(VIDEOS_PER_PAGE, data.items.length)} of ${data.items.length} video${data.items.length === 1 ? '' : 's'}`;
+  buildVideoGrid(data, cat);
 }
 
-// ── BUILD GALLERY (3×2 = 6 items) ──
-function buildGallery(data) {
+// ── BUILD VIDEO GRID (main portfolio preview, capped at VIDEOS_PER_PAGE) ──
+// This grid — and its Show More button — belongs to whichever category is active.
+// Each category has its own button; switching categories swaps which one is shown.
+function buildVideoGrid(data, cat) {
   const grid = document.getElementById('galGrid');
   grid.innerHTML = '';
 
-  data.images.slice(0, 6).forEach((item, i) => {
-    const el = document.createElement('div');
-    el.className = 'g-item';
+  const itemsToShow = data.items.slice(0, VIDEOS_PER_PAGE);
 
-    const hasImg = item.src && item.src !== '';
-    const isSite = !!item.siteUrl;
-
-    if (isSite) {
-      el.innerHTML = `
-        <div class="g-site-card">
-          <div class="g-site-num">0${i + 1}</div>
-          <div class="g-site-content">
-            <div class="g-site-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2"/>
-                <path d="M8 21h8M12 17v4"/>
-              </svg>
-            </div>
-            <div class="g-site-name">${item.title}</div>
-            <div class="g-site-tag">Website Design</div>
-          </div>
-          <div class="g-site-arrow">↗</div>
-        </div>`;
-      el.addEventListener('click', () => openSiteViewer(item.siteUrl, item.title));
-    } else if (hasImg) {
-      el.innerHTML = `<img class="g-img" src="${item.src}" alt="${item.title}" loading="lazy">
-         <div class="g-overlay">
-           <div class="g-name">${item.title}</div>
-           <div class="g-sub">${data.label}</div>
-         </div>`;
-      el.addEventListener('click', () => openLB(item.src, item.title));
-    } else {
-      el.innerHTML = `<div class="g-ph">
-           <div class="g-ph-icon">${ICONS[data.icon]}</div>
-           <div class="g-ph-label">Design ${i + 1}<br>Add image in code</div>
-         </div>
-         <div class="g-overlay">
-           <div class="g-name">${item.title}</div>
-           <div class="g-sub">${data.label}</div>
-         </div>`;
-    }
-
+  itemsToShow.forEach((item) => {
+    const el = buildVideoCard(item, data);
     grid.appendChild(el);
-
-    // Always mark visible; observer adds class for animated entry if js-ready
     el.classList.add('vis');
     io.observe(el);
   });
+
+  // ── SHOW MORE BUTTON → opens this category's full page ──
+  const hasMore = data.items.length > VIDEOS_PER_PAGE;
+  const oldBtn = document.getElementById('showMoreBtn');
+  if (oldBtn) oldBtn.remove();
+
+  if (hasMore) {
+    const btnWrap = document.createElement('div');
+    btnWrap.className = 'show-more-wrap';
+    btnWrap.id = 'showMoreBtn';
+    btnWrap.innerHTML = `<button class="show-more-btn">Show More ${data.label} ↓</button>`;
+    btnWrap.querySelector('button').addEventListener('click', () => openCategoryPage(cat));
+    grid.insertAdjacentElement('afterend', btnWrap);
+  }
 }
 
-// ── LIGHTBOX ──
-function openLB(src, title) {
-  document.getElementById('lbImg').src = src;
-  document.getElementById('lbTitle').textContent = title;
-  document.getElementById('lightbox').classList.add('open');
+// ── FULL CATEGORY PAGE (2-column, scrollable, own back button, unique per category) ──
+function openCategoryPage(cat) {
+  const data = VIDEOS[cat];
+  const page = document.getElementById('categoryPage');
+
+  document.getElementById('catPageTitle').textContent = data.label;
+  document.getElementById('catPageSub').textContent = `${data.items.length} video${data.items.length === 1 ? '' : 's'}`;
+
+  const grid = document.getElementById('catPageGrid');
+  grid.innerHTML = '';
+  data.items.forEach((item) => {
+    const el = buildVideoCard(item, data);
+    el.classList.add('vis');
+    grid.appendChild(el);
+  });
+
+  page.classList.add('open');
   document.body.style.overflow = 'hidden';
+  page.scrollTop = 0;
 }
-function closeLB() {
-  document.getElementById('lightbox').classList.remove('open');
+
+function closeCategoryPage() {
+  document.getElementById('categoryPage').classList.remove('open');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', e => { if(e.key === 'Escape') { closeLB(); closeSiteViewer(); } });
 
-// ── SITE VIEWER ──
-function openSiteViewer(url, title) {
-  document.getElementById('svIframe').src = url;
-  document.getElementById('svTitle').textContent = title;
-  document.getElementById('siteViewer').classList.add('open');
-  document.getElementById('app').style.overflow = 'hidden';
+// ── VIDEO MODAL (player) ──
+function openVideoModal(item, fallbackTag) {
+  const player = document.getElementById('videoModalPlayer');
+  const title = document.getElementById('videoModalTitle');
+  const tag = document.getElementById('videoModalTag');
+  const desc = document.getElementById('videoModalDesc');
+  const tools = document.getElementById('videoModalTools');
+
+  const yid = getYouTubeId(item.videoUrl);
+  if (yid) {
+    player.innerHTML = `<iframe src="https://www.youtube.com/embed/${yid}?autoplay=1" title="${item.title}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  } else {
+    player.innerHTML = `<video src="${item.videoUrl}" controls autoplay playsinline></video>`;
+  }
+
+  title.textContent = item.title;
+  tag.textContent = item.tag || fallbackTag || '';
+  desc.textContent = item.description || '';
+  tools.innerHTML = (item.tools || []).map(t => `<span class="video-tool-tag">${t}</span>`).join('');
+
+  document.getElementById('videoModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
-function closeSiteViewer() {
-  document.getElementById('siteViewer').classList.remove('open');
-  document.getElementById('svIframe').src = '';
-  document.getElementById('app').style.overflow = '';
+function closeVideoModal(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('videoModal').classList.remove('open');
+  document.getElementById('videoModalPlayer').innerHTML = '';
+  document.body.style.overflow = '';
 }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideoModal(); });
 
 // ── WHATSAPP — formatted message with name + need + message ──
 const WA_NUMBER = '+916367961603';
@@ -196,7 +358,6 @@ Looking forward to hearing from you!`;
   window.open(url, '_blank');
 }
 
-// Allow Ctrl+Enter to send from textarea
 // ── MOBILE MENU ──
 let menuOpen = false;
 function toggleMenu() {
@@ -214,6 +375,10 @@ function toggleMenu() {
 
 // ════════════════════════════════════════════════
 //  REVIEWS — Google Sheets via Apps Script
+//  (Same backend the original site used. If this is your
+//  own Google Sheet, it will keep working as-is. If not,
+//  replace APPS_SCRIPT_URL with your own Apps Script
+//  web-app URL that reads/writes a reviews sheet.)
 // ════════════════════════════════════════════════
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstYKeZMiZhYpjyenVKdJZdSHjSCAeZwFsIvKMfNkv0Kh3pUyFEJdxyAjGj0a5zMk/exec';
@@ -367,7 +532,7 @@ async function loadReviews() {
               <span class="review-date">${dateStr}</span>
             </div>
           </div>
-          <div class="review-text">${String(r.text).length > 180 ? '' : ''}${escapeHTML(r.text)}</div>
+          <div class="review-text">${escapeHTML(r.text)}</div>
           ${String(r.text).length > 180 ? '<button class="read-more-btn" onclick="toggleReadMore(this)">Read more →</button>' : ''}
         </div>`;
       }).join('');
@@ -457,9 +622,9 @@ const io = new IntersectionObserver(entries => {
 document.documentElement.classList.add('js-ready');
 document.querySelectorAll('.rev, .srv-card').forEach(el => io.observe(el));
 
-// Init gallery on load
+// Init video portfolio on load
 buildSidebar();
-switchCat('tshirt');
+switchCat('shortform');
 
 // Init reviews
 document.addEventListener('DOMContentLoaded', () => {
