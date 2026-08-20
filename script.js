@@ -19,12 +19,18 @@ const ICONS = {
 //                                          // real YouTube title.
 //    tag: "Instagram Reel",               // small category label
 //    description: "One or two sentences about the edit.",
-//    videoUrl: "videos/my-clip.mp4",      // local file path, OR a
-//                                          // full YouTube URL (both work)
-//    thumbnail: "",                       // optional image path.
-//                                          // Leave "" to auto-preview:
+//    videoUrl: "videos/my-clip.mp4",      // local file path, a full YouTube
+//                                          // URL, or a Google Drive share link
+//                                          // (all three work)
+//    thumbnail: "",                       // ── THUMBNAIL IMAGE URL / GOOGLE DRIVE LINK ──
+//                                          // Want a specific thumbnail? Paste an image
+//                                          // URL or a Google Drive image share link here
+//                                          // (e.g. https://drive.google.com/file/d/FILE_ID/view?usp=sharing —
+//                                          // just share the image as "Anyone with the link").
+//                                          // Leave "" to auto-preview instead:
 //                                          //  - local mp4 -> silent looping preview
 //                                          //  - YouTube link -> auto thumbnail
+//                                          //  - Drive video link -> auto thumbnail
 //    tools: ["Premiere Pro", "After Effects"]  // optional, shown as tags
 //  }
 //
@@ -34,9 +40,28 @@ const ICONS = {
 //  both fill in automatically. It plays right here on your site in the
 //  popup player, visitors never leave the page.
 //
+//  FOR A GOOGLE DRIVE VIDEO:
+//  Upload the file to Drive, right-click -> Share -> set to "Anyone with
+//  the link" (Viewer), then copy the link and paste it as videoUrl below.
+//  It plays inline in the same popup player. Note: title does NOT
+//  auto-fill from Drive (unlike YouTube) — type it in manually.
+//
+//  TO CHANGE JUST THE THUMBNAIL (no need to touch anything else):
+//  Paste an image URL or Google Drive image share link into the
+//  `thumbnail` field above — the design, sizing and card layout stay
+//  exactly the same, only the picture changes.
+//
 //  Leave videoUrl "" to show a placeholder card reminding you
 //  to fill it in later — nothing breaks, nothing needs redesigning.
 //  New items appear automatically, no other code changes needed.
+//
+//  IF A GOOGLE DRIVE VIDEO LOOKS CROPPED IN THE POPUP:
+//  Add aspectW / aspectH to that item with the video's real dimensions
+//  (e.g. aspectW: 9, aspectH: 16 for a vertical phone video, or
+//  aspectW: 16, aspectH: 9 for landscape). Drive's own preview player
+//  crops instead of fitting when the box guess is even slightly off —
+//  this tells it the exact shape so nothing gets cut off. Not needed
+//  for YouTube links, which always fit correctly on their own.
 // ════════════════════════════════════════════════
 const VIDEOS = {
   shortform: {
@@ -46,23 +71,11 @@ const VIDEOS = {
         title: 'Vertical Showreel Cut',
         tag: 'Instagram Reel',
         description: 'A fast-paced vertical edit built for retention — quick cuts, punchy pacing and a beat-synced rhythm.',
-        videoUrl: 'videos/sample-reel.mp4',
-        thumbnail: '',
-        tools: ['Premiere Pro', 'CapCut']
-      },
-      {
-        title: 'Vertical Showreel Cut',
-        tag: 'Instagram Reel',
-        description: 'A fast-paced vertical edit built for retention — quick cuts, punchy pacing and a beat-synced rhythm.',
-        videoUrl: 'videos/sample-reel.mp4',
-        thumbnail: '',
-        tools: ['Premiere Pro', 'CapCut']
-      },
-      {
-        title: '',
-        tag: 'Instagram Reel',
-        description: 'A fast-paced vertical edit built for retention — quick cuts, punchy pacing and a beat-synced rhythm.',
-        videoUrl: 'https://youtube.com/shorts/fqKNqs_Ei4o?si=8-7UmwlkcU51osFV',
+        videoUrl: 'https://drive.google.com/file/d/1RD-pS7RwvB3JuCeKIBlPNIrcR6v7UMAM/view?usp=drivesdk',
+        // Most phones don't actually shoot true 9:16 — they shoot taller
+        // (9:19.5 or 9:20), even though everyone calls it "9:16" by habit.
+        // If this still crops, try aspectW: 9, aspectH: 20 next.
+        aspectW: 9, aspectH: 19.5,
         thumbnail: '',
         tools: ['Premiere Pro', 'CapCut']
       },
@@ -70,7 +83,8 @@ const VIDEOS = {
         title: 'Add Your Next Reel',
         tag: 'YouTube Short',
         description: 'Add a title, description and video path in script.js — it appears here automatically.',
-        videoUrl: '',
+        videoUrl: 'https://drive.google.com/file/d/1KtWIpcxaFUJdsAUx01fAZ3WwZksdpojC/view?usp=drivesdk',
+        aspectW: 9, aspectH: 19.5, // try aspectW: 9, aspectH: 20 if this still crops
         thumbnail: '',
         tools: []
       },
@@ -142,35 +156,73 @@ const VIDEOS = {
 };
 
 let activeCat = 'shortform';
-const VIDEOS_PER_PAGE = 2; // how many videos show on the main portfolio section before "Show More" opens the full category page
 
-// ── HELPERS: recognize YouTube links, build embed/thumbnail URLs ──
+// Videos shown per carousel "page" — 2 on mobile/tablet, 3 on desktop (matches
+// the .video-grid column-count breakpoint at 960px used elsewhere on the page).
+function getPerPage() {
+  return window.innerWidth > 960 ? 3 : 2;
+}
+let galleryPerPage = getPerPage();
+
+// ── HELPERS: recognize YouTube / Google Drive links, build embed/thumbnail URLs ──
 function getYouTubeId(url) {
   if (!url) return null;
   const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/);
   return m ? m[1] : null;
 }
+function getDriveId(url) {
+  if (!url) return null;
+  // Matches both share-link formats:
+  //  https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  //  https://drive.google.com/open?id=FILE_ID
+  const m = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([A-Za-z0-9_-]{10,})/);
+  return m ? m[1] : null;
+}
 function isLocalVideo(url) {
-  return !!url && !getYouTubeId(url);
+  return !!url && !getYouTubeId(url) && !getDriveId(url);
 }
 
-// ── AUTO-FETCH YOUTUBE TITLE (oEmbed) ──
+// Lets the `thumbnail` field accept a plain Google Drive share link
+// (e.g. https://drive.google.com/file/d/FILE_ID/view?usp=sharing) and turns
+// it into a directly-viewable image URL. Any other URL (local path or
+// external image link) is used exactly as pasted.
+function resolveThumbnail(url) {
+  if (!url) return url;
+  const did = getDriveId(url);
+  return did ? `https://drive.google.com/thumbnail?id=${did}&sz=w1000` : url;
+}
+
+// ── AUTO-FETCH YOUTUBE TITLE + REAL ASPECT RATIO (oEmbed) ──
 // Leave `title: ''` on any YouTube item in VIDEOS and this fills it in
 // automatically from the YouTube link, so you only ever need to paste the URL.
-const ytTitleCache = {};
-async function getYouTubeTitle(url) {
+// oEmbed also returns the real embed width/height, which gives an accurate
+// aspect ratio (portrait Shorts vs. landscape videos) instead of guessing from the URL.
+const ytMetaCache = {};
+async function getYouTubeMeta(url) {
   const yid = getYouTubeId(url);
   if (!yid) return null;
-  if (ytTitleCache[yid]) return ytTitleCache[yid];
+  if (ytMetaCache[yid]) return ytMetaCache[yid];
   try {
     const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
     if (!res.ok) return null;
     const data = await res.json();
-    ytTitleCache[yid] = data.title;
-    return data.title;
+    const meta = { title: data.title, width: data.width, height: data.height };
+    ytMetaCache[yid] = meta;
+    return meta;
   } catch (e) {
     return null;
   }
+}
+
+// ── REAL VIDEO ASPECT RATIO CACHE ──
+// Captures each video's true width/height (from its own file, its YouTube
+// oEmbed data, or its Drive-generated thumbnail frame) so the popup player
+// can size itself to the exact original shape — vertical stays vertical,
+// horizontal stays horizontal, nothing is cropped or force-fit.
+const videoRatioCache = {};
+function cacheRatio(url, w, h) {
+  if (!url || !w || !h) return;
+  videoRatioCache[url] = { w, h };
 }
 
 // ── BUILD A SINGLE VIDEO CARD (shared by main grid + full category page) ──
@@ -184,12 +236,15 @@ function buildVideoCard(item, data) {
 
   let thumbInner = '';
   if (item.thumbnail) {
-    thumbInner = `<img src="${item.thumbnail}" alt="${item.title}" loading="lazy">`;
+    thumbInner = `<img src="${resolveThumbnail(item.thumbnail)}" alt="${item.title}" loading="lazy">`;
   } else if (hasVideo && isLocalVideo(item.videoUrl)) {
     thumbInner = `<video src="${item.videoUrl}" autoplay muted loop playsinline></video>`;
   } else if (hasVideo && getYouTubeId(item.videoUrl)) {
     const yid = getYouTubeId(item.videoUrl);
     thumbInner = `<img src="https://img.youtube.com/vi/${yid}/hqdefault.jpg" alt="${item.title}" loading="lazy">`;
+  } else if (hasVideo && getDriveId(item.videoUrl)) {
+    const did = getDriveId(item.videoUrl);
+    thumbInner = `<img src="https://drive.google.com/thumbnail?id=${did}&sz=w640" alt="${item.title}" loading="lazy">`;
   } else {
     thumbInner = `<div class="video-placeholder">
         <div class="video-placeholder-icon">${ICONS[data.icon]}</div>
@@ -201,7 +256,6 @@ function buildVideoCard(item, data) {
     <div class="video-thumb-wrap${hasVideo ? '' : ' is-empty'}">
       <div class="video-cat-chip">${item.tag || data.label}</div>
       ${thumbInner}
-      ${hasVideo ? `<div class="video-play-btn"><div class="video-play-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>` : ''}
     </div>
     <div class="video-info">
       <div class="video-title">${item.title || (hasVideo && getYouTubeId(item.videoUrl) ? 'Loading title…' : '')}</div>
@@ -210,27 +264,47 @@ function buildVideoCard(item, data) {
     </div>`;
 
   if (hasVideo) {
-    el.addEventListener('click', () => openVideoModal(item, data.label));
+    el.addEventListener('click', () => {
+      // Drive's embedded preview player crops non-standard aspect ratios no
+      // matter what box size we give it — there's no reliable fix for that
+      // from our side. So Drive videos open directly on drive.google.com in
+      // a new tab instead, where Google's own full player shows them correctly.
+      const did = getDriveId(item.videoUrl);
+      if (did) {
+        window.open(`https://drive.google.com/file/d/${did}/view`, '_blank', 'noopener');
+        return;
+      }
+      openVideoModal(item, data.label);
+    });
   }
 
-  // If it's a YouTube link with no title typed in, fetch the real title
-  // automatically and fill it in once it loads (also caches it onto the
-  // item so the modal shows the correct title without re-fetching).
-  if (hasVideo && getYouTubeId(item.videoUrl) && !item.title) {
-    getYouTubeTitle(item.videoUrl).then(t => {
-      if (t) {
-        item.title = t;
+  // If it's a YouTube link with no title typed in, fetch the real title +
+  // real aspect ratio automatically (also caches both onto the item so the
+  // modal shows the correct title/shape without re-fetching).
+  if (hasVideo && getYouTubeId(item.videoUrl)) {
+    getYouTubeMeta(item.videoUrl).then(meta => {
+      if (!meta) return;
+      if (meta.title && !item.title) {
+        item.title = meta.title;
         const titleEl = el.querySelector('.video-title');
-        if (titleEl) titleEl.textContent = t;
+        if (titleEl) titleEl.textContent = meta.title;
+      }
+      if (meta.width && meta.height) {
+        cacheRatio(item.videoUrl, meta.width, meta.height);
+        applyRatio(meta.width, meta.height);
       }
     });
   }
 
   // ── DYNAMIC ASPECT RATIO ──
+  // Reads the real width/height once known and sizes the thumbnail box to
+  // match — vertical (9:16-ish) footage gets a tall box, horizontal
+  // (16:9-ish) footage gets a wide box. Also cached for the popup player.
   const thumbWrap = el.querySelector('.video-thumb-wrap');
   const applyRatio = (w, h) => {
     if (!w || !h || !thumbWrap) return;
-    thumbWrap.style.aspectRatio = (w / h < 1) ? '9 / 16' : '16 / 9';
+    thumbWrap.style.aspectRatio = `${w} / ${h}`;
+    if (hasVideo) cacheRatio(item.videoUrl, w, h);
   };
 
   const localVideoEl = el.querySelector('.video-thumb-wrap video');
@@ -247,10 +321,17 @@ function buildVideoCard(item, data) {
         imgEl.addEventListener('load', () => applyRatio(imgEl.naturalWidth, imgEl.naturalHeight));
       }
     }
-  } else if (hasVideo && getYouTubeId(item.videoUrl)) {
-    // YouTube: Shorts links are portrait, regular videos are landscape
-    const isShort = /\/shorts\//.test(item.videoUrl);
-    if (thumbWrap) thumbWrap.style.aspectRatio = isShort ? '9 / 16' : '16 / 9';
+  } else if (hasVideo && getDriveId(item.videoUrl)) {
+    // Drive thumbnail is a real frame from the video, so its natural size
+    // (portrait or landscape) accurately reflects the video's own shape.
+    const driveImgEl = el.querySelector('.video-thumb-wrap img');
+    if (driveImgEl) {
+      if (driveImgEl.complete && driveImgEl.naturalWidth) {
+        applyRatio(driveImgEl.naturalWidth, driveImgEl.naturalHeight);
+      } else {
+        driveImgEl.addEventListener('load', () => applyRatio(driveImgEl.naturalWidth, driveImgEl.naturalHeight));
+      }
+    }
   }
 
   return el;
@@ -288,68 +369,175 @@ function switchCat(cat) {
   });
   const data = VIDEOS[cat];
   document.getElementById('galTitle').textContent = data.label;
-  document.getElementById('galSub').textContent = `Showing ${Math.min(VIDEOS_PER_PAGE, data.items.length)} of ${data.items.length} video${data.items.length === 1 ? '' : 's'}`;
+  document.getElementById('galSub').textContent = data.items.length > galleryPerPage
+    ? `${data.items.length} videos — swipe for more`
+    : `${data.items.length} video${data.items.length === 1 ? '' : 's'}`;
   buildVideoGrid(data, cat);
 }
 
-// ── BUILD VIDEO GRID (main portfolio preview, capped at VIDEOS_PER_PAGE) ──
-// This grid — and its Show More button — belongs to whichever category is active.
-// Each category has its own button; switching categories swaps which one is shown.
+// ── BUILD VIDEO GRID as a swipeable carousel of pages ──
+// 2 videos per page on mobile/tablet, 3 per page on desktop (getPerPage()).
+// Replaces the old "Show More" pagination: every video in the category is
+// still here, just reached by swiping (mobile) or the arrow buttons (desktop).
+let galleryIndex = 0;
+let galleryPageCount = 1;
+
 function buildVideoGrid(data, cat) {
-  const grid = document.getElementById('galGrid');
-  grid.innerHTML = '';
+  const track = document.getElementById('galGridTrack');
+  track.innerHTML = '';
 
-  const itemsToShow = data.items.slice(0, VIDEOS_PER_PAGE);
+  galleryPerPage = getPerPage();
+  const pages = [];
+  for (let i = 0; i < data.items.length; i += galleryPerPage) {
+    pages.push(data.items.slice(i, i + galleryPerPage));
+  }
+  if (pages.length === 0) pages.push([]);
 
-  itemsToShow.forEach((item) => {
-    const el = buildVideoCard(item, data);
-    grid.appendChild(el);
-    el.classList.add('vis');
-    io.observe(el);
+  pages.forEach((pageItems) => {
+    const pageEl = document.createElement('div');
+    pageEl.className = 'video-grid-page video-grid';
+    pageItems.forEach((item) => {
+      const el = buildVideoCard(item, data);
+      pageEl.appendChild(el);
+      el.classList.add('vis');
+      io.observe(el);
+    });
+    track.appendChild(pageEl);
   });
 
-  // ── SHOW MORE BUTTON → opens this category's full page ──
-  const hasMore = data.items.length > VIDEOS_PER_PAGE;
-  const oldBtn = document.getElementById('showMoreBtn');
-  if (oldBtn) oldBtn.remove();
+  galleryPageCount = pages.length;
+  galleryIndex = 0;
 
-  if (hasMore) {
-    const btnWrap = document.createElement('div');
-    btnWrap.className = 'show-more-wrap';
-    btnWrap.id = 'showMoreBtn';
-    btnWrap.innerHTML = `<button class="show-more-btn">Show More ${data.label} ↓</button>`;
-    btnWrap.querySelector('button').addEventListener('click', () => openCategoryPage(cat));
-    grid.insertAdjacentElement('afterend', btnWrap);
+  const navControls = document.getElementById('galNavControls');
+  if (navControls) navControls.style.display = galleryPageCount > 1 ? 'flex' : 'none';
+
+  updateGalleryTrack();
+}
+
+// ── SWIPEABLE / CLICKABLE CAROUSEL CONTROLS ──
+function updateGalleryTrack() {
+  const track = document.getElementById('galGridTrack');
+  const outer = document.getElementById('galGridOuter');
+  if (!track || !outer) return;
+  track.style.transform = `translateX(-${galleryIndex * outer.offsetWidth}px)`;
+
+  const prevBtn = document.getElementById('galPrevBtn');
+  const nextBtn = document.getElementById('galNextBtn');
+  if (prevBtn) prevBtn.disabled = galleryIndex === 0;
+  if (nextBtn) nextBtn.disabled = galleryIndex >= galleryPageCount - 1;
+}
+
+function galleryNext() {
+  if (galleryIndex < galleryPageCount - 1) {
+    galleryIndex++;
+    updateGalleryTrack();
+  } else {
+    galleryEdgeBounce('end');
   }
 }
 
-// ── FULL CATEGORY PAGE (2-column, scrollable, own back button, unique per category) ──
-function openCategoryPage(cat) {
-  const data = VIDEOS[cat];
-  const page = document.getElementById('categoryPage');
+function galleryPrev() {
+  if (galleryIndex > 0) {
+    galleryIndex--;
+    updateGalleryTrack();
+  } else {
+    galleryEdgeBounce('start');
+  }
+}
 
-  document.getElementById('catPageTitle').textContent = data.label;
-  document.getElementById('catPageSub').textContent = `${data.items.length} video${data.items.length === 1 ? '' : 's'}`;
+// Subtle "can't go further" feedback at the first/last page instead of breaking the layout
+function galleryEdgeBounce(dir) {
+  const track = document.getElementById('galGridTrack');
+  const outer = document.getElementById('galGridOuter');
+  if (!track || !outer) return;
+  const base = -galleryIndex * outer.offsetWidth;
+  const nudge = dir === 'end' ? -16 : 16;
+  track.style.transform = `translateX(${base + nudge}px)`;
+  setTimeout(() => { track.style.transform = `translateX(${base}px)`; }, 180);
+}
 
-  const grid = document.getElementById('catPageGrid');
-  grid.innerHTML = '';
-  data.items.forEach((item) => {
-    const el = buildVideoCard(item, data);
-    el.classList.add('vis');
-    grid.appendChild(el);
+// ── SWIPE / TOUCH SUPPORT (bound once — the outer element persists across category switches) ──
+function initGallerySwipe() {
+  const outer = document.getElementById('galGridOuter');
+  if (!outer || outer.dataset.swipeInit) return;
+  outer.dataset.swipeInit = '1';
+  let startX = 0, startY = 0, tracking = false;
+
+  outer.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+
+  outer.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+    const diffX = startX - e.changedTouches[0].clientX;
+    const diffY = startY - e.changedTouches[0].clientY;
+    if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+      diffX > 0 ? galleryNext() : galleryPrev();
+    }
+  }, { passive: true });
+}
+
+// ── DESKTOP PREV/NEXT ARROW BUTTONS (bound once) ──
+function initGalleryNav() {
+  const prevBtn = document.getElementById('galPrevBtn');
+  const nextBtn = document.getElementById('galNextBtn');
+  if (prevBtn && !prevBtn.dataset.navInit) {
+    prevBtn.dataset.navInit = '1';
+    prevBtn.addEventListener('click', galleryPrev);
+  }
+  if (nextBtn && !nextBtn.dataset.navInit) {
+    nextBtn.dataset.navInit = '1';
+    nextBtn.addEventListener('click', galleryNext);
+  }
+}
+
+// On resize: if crossing the mobile/desktop breakpoint changes how many
+// videos fit per page (2 vs 3), rebuild the pages; otherwise just reposition.
+let galleryResizeRAF = null;
+window.addEventListener('resize', () => {
+  if (galleryResizeRAF) return;
+  galleryResizeRAF = requestAnimationFrame(() => {
+    galleryResizeRAF = null;
+    if (getPerPage() !== galleryPerPage) {
+      buildVideoGrid(VIDEOS[activeCat], activeCat);
+    } else {
+      updateGalleryTrack();
+    }
   });
-
-  page.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  page.scrollTop = 0;
-}
-
-function closeCategoryPage() {
-  document.getElementById('categoryPage').classList.remove('open');
-  document.body.style.overflow = '';
-}
+});
 
 // ── VIDEO MODAL (player) ──
+// Sizes the player box to the video's real aspect ratio — using cached
+// dimensions when known (from the card's own preview), refining them once
+// the exact source confirms it (YouTube oEmbed / Drive thumbnail frame /
+// the local <video> element's own metadata). Nothing is cropped or forced
+// into a fixed shape: vertical stays vertical, horizontal stays horizontal.
+function sizeModalPlayer(w, h) {
+  const player = document.getElementById('videoModalPlayer');
+  if (!player || !w || !h) return;
+  const maxW = Math.min(560, window.innerWidth * 0.88);
+  const maxH = window.innerHeight * 0.58;
+  let width = maxW;
+  let height = width * (h / w);
+  if (height > maxH) {
+    height = maxH;
+    width = height * (w / h);
+  }
+  player.style.width = width + 'px';
+  player.style.height = height + 'px';
+  player.style.aspectRatio = `${w} / ${h}`;
+}
+
+let modalRatio = null;
+window.addEventListener('resize', () => {
+  if (modalRatio && document.getElementById('videoModal').classList.contains('open')) {
+    sizeModalPlayer(modalRatio.w, modalRatio.h);
+  }
+});
+
 function openVideoModal(item, fallbackTag) {
   const player = document.getElementById('videoModalPlayer');
   const title = document.getElementById('videoModalTitle');
@@ -358,23 +546,75 @@ function openVideoModal(item, fallbackTag) {
   const tools = document.getElementById('videoModalTools');
 
   const yid = getYouTubeId(item.videoUrl);
-  const isShort = /\/shorts\//.test(item.videoUrl);
-  if (player) {
-    if (yid && isShort) {
-      player.style.aspectRatio = '9 / 16';
-      player.style.width = 'min(100%, calc(58vh * 9 / 16))';
-    } else {
-      player.style.aspectRatio = '16 / 9';
-      player.style.width = '100%';
-    }
-  }
+  const did = getDriveId(item.videoUrl);
+
+  // Start from whatever ratio is already known (from the card thumbnail),
+  // then refine it once the exact source confirms the real dimensions.
+  const cached = videoRatioCache[item.videoUrl];
+  modalRatio = cached || { w: 16, h: 9 };
+  sizeModalPlayer(modalRatio.w, modalRatio.h);
+
   if (yid) {
     // youtube-nocookie.com + modestbranding/rel/iv_load_policy/fs=0/disablekb/enablejsapi=0
     // minimizes YouTube's own UI (logo, related videos, fullscreen handoff) so the
     // video plays inline on this page instead of handing off to the YouTube app.
     player.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${yid}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&fs=0&disablekb=1&enablejsapi=0&controls=1" title="${item.title || 'video'}" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    if (!cached) {
+      getYouTubeMeta(item.videoUrl).then(meta => {
+        if (meta && meta.width && meta.height) {
+          cacheRatio(item.videoUrl, meta.width, meta.height);
+          modalRatio = { w: meta.width, h: meta.height };
+          sizeModalPlayer(meta.width, meta.height);
+        }
+      });
+    }
+  } else if (did) {
+    // Google Drive's own inline player — requires the file to be shared as
+    // "Anyone with the link can view", otherwise it shows an access-denied screen.
+    //
+    // IMPORTANT: unlike YouTube, Drive's preview player does NOT letterbox —
+    // if the box we give it doesn't exactly match the video's real shape, it
+    // crops the picture to fill instead of fitting it. Drive's own thumbnail
+    // endpoint isn't reliable for detecting that real shape, so if you see
+    // cropping, set `aspectW`/`aspectH` on the video item in VIDEOS (below)
+    // to the video's true dimensions (e.g. aspectW: 9, aspectH: 16 for a
+    // vertical phone-shot clip) and that will be used instead of guessing.
+    player.innerHTML = `<iframe src="https://drive.google.com/file/d/${did}/preview" title="${item.title || 'video'}" allow="autoplay" allowfullscreen></iframe>`;
+    if (item.aspectW && item.aspectH) {
+      cacheRatio(item.videoUrl, item.aspectW, item.aspectH);
+      modalRatio = { w: item.aspectW, h: item.aspectH };
+      sizeModalPlayer(item.aspectW, item.aspectH);
+    } else if (!cached) {
+      // Probe the Drive-generated thumbnail frame to learn the video's real shape.
+      // Best-effort only — see note above if this guesses wrong.
+      const probe = new Image();
+      probe.onload = () => {
+        if (!probe.naturalWidth || !probe.naturalHeight) return;
+        cacheRatio(item.videoUrl, probe.naturalWidth, probe.naturalHeight);
+        modalRatio = { w: probe.naturalWidth, h: probe.naturalHeight };
+        sizeModalPlayer(probe.naturalWidth, probe.naturalHeight);
+      };
+      probe.onerror = () => {
+        // Thumbnail probe failed — fall back to a safe vertical-reel guess
+        // rather than leaving the wrong default 16:9 box (which is what
+        // causes the worst cropping for portrait Shorts/Reels clips).
+        cacheRatio(item.videoUrl, 9, 16);
+        modalRatio = { w: 9, h: 16 };
+        sizeModalPlayer(9, 16);
+      };
+      probe.src = `https://drive.google.com/thumbnail?id=${did}&sz=w1000`;
+    }
   } else {
     player.innerHTML = `<video src="${item.videoUrl}" controls autoplay playsinline></video>`;
+    const vEl = player.querySelector('video');
+    if (vEl && !cached) {
+      vEl.addEventListener('loadedmetadata', () => {
+        if (!vEl.videoWidth || !vEl.videoHeight) return;
+        cacheRatio(item.videoUrl, vEl.videoWidth, vEl.videoHeight);
+        modalRatio = { w: vEl.videoWidth, h: vEl.videoHeight };
+        sizeModalPlayer(vEl.videoWidth, vEl.videoHeight);
+      });
+    }
   }
 
   title.textContent = item.title || (yid ? 'Loading title…' : '');
@@ -387,10 +627,10 @@ function openVideoModal(item, fallbackTag) {
 
   // Auto-fill the modal title too if it hasn't been fetched yet
   if (yid && !item.title) {
-    getYouTubeTitle(item.videoUrl).then(t => {
-      if (t) {
-        item.title = t;
-        title.textContent = t;
+    getYouTubeMeta(item.videoUrl).then(meta => {
+      if (meta && meta.title) {
+        item.title = meta.title;
+        title.textContent = meta.title;
       }
     });
   }
@@ -453,247 +693,6 @@ function toggleMenu() {
   }
 }
 
-// ════════════════════════════════════════════════
-//  REVIEWS — Google Sheets via Apps Script
-//  (Same backend the original site used. If this is your
-//  own Google Sheet, it will keep working as-is. If not,
-//  replace APPS_SCRIPT_URL with your own Apps Script
-//  web-app URL that reads/writes a reviews sheet.)
-// ════════════════════════════════════════════════
-
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstYKeZMiZhYpjyenVKdJZdSHjSCAeZwFsIvKMfNkv0Kh3pUyFEJdxyAjGj0a5zMk/exec';
-
-let selectedStars = 0;
-let carouselIndex = 0;
-let carouselReviews = [];
-
-// ── Star picker ──
-function initStarPicker() {
-  const stars = document.querySelectorAll('#starPicker span');
-  stars.forEach(s => {
-    s.addEventListener('click', () => {
-      selectedStars = parseInt(s.dataset.v);
-      updateStarDisplay();
-    });
-    s.addEventListener('mouseenter', () => {
-      const v = parseInt(s.dataset.v);
-      stars.forEach(x => x.style.color = parseInt(x.dataset.v) <= v ? '#ff4500' : 'var(--line)');
-    });
-    s.addEventListener('mouseleave', updateStarDisplay);
-  });
-}
-
-function updateStarDisplay() {
-  document.querySelectorAll('#starPicker span').forEach(x => {
-    x.classList.toggle('active', parseInt(x.dataset.v) <= selectedStars);
-    x.style.color = '';
-  });
-}
-
-function starsHTML(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
-
-function escapeHTML(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── Carousel controls ──
-function updateCarousel() {
-  const track = document.getElementById('rvTrack');
-  const dots = document.querySelectorAll('.carousel-dot');
-  const prevBtn = document.getElementById('rvPrev');
-  const nextBtn = document.getElementById('rvNext');
-  if (!track) return;
-
-  const cardWidth = track.parentElement.offsetWidth;
-  track.style.transform = `translateX(-${carouselIndex * cardWidth}px)`;
-
-  const maxIndex = Math.max(0, carouselReviews.length - 1);
-  if (prevBtn) prevBtn.disabled = carouselIndex === 0;
-  if (nextBtn) nextBtn.disabled = carouselIndex >= maxIndex;
-
-  dots.forEach((d, i) => d.classList.toggle('active', i === carouselIndex));
-}
-
-function carouselPrev() {
-  if (carouselIndex > 0) { carouselIndex--; updateCarousel(); }
-}
-
-function carouselNext() {
-  const max = Math.max(0, carouselReviews.length - 1);
-  if (carouselIndex < max) { carouselIndex++; updateCarousel(); }
-}
-
-window.addEventListener('resize', updateCarousel);
-
-// ── Swipe support ──
-function initSwipe() {
-  const outer = document.getElementById('rvTrackOuter');
-  if (!outer) return;
-  let startX = 0;
-  outer.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: true});
-  outer.addEventListener('touchend', e => {
-    const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) { diff > 0 ? carouselNext() : carouselPrev(); }
-  }, {passive: true});
-}
-
-function toggleReadMore(btn) {
-  const textEl = btn.previousElementSibling;
-  if (textEl.classList.contains('expanded')) {
-    textEl.classList.remove('expanded');
-    btn.textContent = 'Read more →';
-  } else {
-    textEl.classList.add('expanded');
-    btn.textContent = '↑ Read less';
-  }
-}
-
-// ── Load & display reviews ──
-async function loadReviews() {
-  const list = document.getElementById('rvTrack');
-  const avgNum = document.getElementById('rvAvgNum');
-  const avgStars = document.getElementById('rvAvgStars');
-  const avgCount = document.getElementById('rvAvgCount');
-  const dotsWrap = document.getElementById('rvDots');
-  if (list) list.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
-
-  try {
-    const res = await fetch(APPS_SCRIPT_URL + '?action=get');
-    const text = await res.text();
-    // Strip JSONP wrapper if present
-    let data;
-    const match = text.match(/^[^(]+\((.+)\)$/s);
-    if (match) {
-      data = JSON.parse(match[1]);
-    } else {
-      data = JSON.parse(text);
-    }
-
-    if (!data.reviews || data.reviews.length === 0) {
-      if (avgNum) avgNum.textContent = '—';
-      if (avgStars) avgStars.textContent = '';
-      if (avgCount) avgCount.textContent = 'No reviews yet';
-      if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">✦</div>Be the first to leave a review</div>';
-      return;
-    }
-
-    const sort = document.getElementById('rvSort') ? document.getElementById('rvSort').value : 'newest';
-    carouselReviews = [...data.reviews].sort((a, b) => {
-      if (sort === 'highest') return b.stars - a.stars;
-      if (sort === 'lowest')  return a.stars - b.stars;
-      return new Date(b.date) - new Date(a.date);
-    });
-
-    // Aggregate
-    const avg = carouselReviews.reduce((s, r) => s + Number(r.stars), 0) / carouselReviews.length;
-    if (avgNum) avgNum.textContent = avg.toFixed(1);
-    if (avgStars) avgStars.textContent = starsHTML(Math.round(avg));
-    if (avgCount) avgCount.textContent = `${carouselReviews.length} review${carouselReviews.length > 1 ? 's' : ''}`;
-
-    // Build cards
-    if (list) {
-      list.innerHTML = carouselReviews.map(r => {
-        const initials = String(r.name).split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-        const d = new Date(r.date);
-        const dateStr = isNaN(d) ? r.date : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-        return `<div class="review-card">
-          <div class="review-card-top">
-            <div class="review-author">
-              <div class="review-avatar">${initials}</div>
-              <div>
-                <div class="review-name">${escapeHTML(r.name)}</div>
-                <div class="review-service">${escapeHTML(r.service)}</div>
-              </div>
-            </div>
-            <div class="review-stars-row">
-              <span class="review-stars">${starsHTML(Number(r.stars))}</span>
-              <span class="review-date">${dateStr}</span>
-            </div>
-          </div>
-          <div class="review-text">${escapeHTML(r.text)}</div>
-          ${String(r.text).length > 180 ? '<button class="read-more-btn" onclick="toggleReadMore(this)">Read more →</button>' : ''}
-        </div>`;
-      }).join('');
-    }
-
-    // Build dots
-    if (dotsWrap) {
-      dotsWrap.innerHTML = carouselReviews.map((_, i) =>
-        `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="carouselIndex=${i};updateCarousel()"></button>`
-      ).join('');
-    }
-
-    carouselIndex = 0;
-    setTimeout(updateCarousel, 50);
-    initSwipe();
-
-  } catch (err) {
-    if (list) list.innerHTML = '<div class="reviews-empty"><div class="reviews-empty-icon">!</div>Could not load reviews.</div>';
-    console.error('Reviews load error:', err);
-  }
-}
-
-// ── Submit review ──
-async function submitReview() {
-  const name    = document.getElementById('rvName').value.trim();
-  const service = document.getElementById('rvService').value;
-  const text    = document.getElementById('rvText').value.trim();
-
-  const highlight = el => {
-    el.style.borderColor = 'var(--accent)';
-    setTimeout(() => el.style.borderColor = '', 1400);
-  };
-
-  if (!name)    { highlight(document.getElementById('rvName'));    return; }
-  if (!service) { highlight(document.getElementById('rvService')); return; }
-  if (selectedStars === 0) {
-    document.querySelectorAll('#starPicker span').forEach(s => {
-      s.style.color = 'var(--accent)';
-      setTimeout(() => { s.style.color = ''; updateStarDisplay(); }, 900);
-    });
-    return;
-  }
-  if (!text) { highlight(document.getElementById('rvText')); return; }
-
-  const btn = document.querySelector('.review-submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
-
-  try {
-    const payload = { action: 'post', name, service, stars: selectedStars, text, date: new Date().toISOString().slice(0, 10) };
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    document.getElementById('rvName').value = '';
-    document.getElementById('rvService').value = '';
-    document.getElementById('rvText').value = '';
-    selectedStars = 0;
-    updateStarDisplay();
-
-    const success = document.getElementById('rvSuccess');
-    success.style.display = 'block';
-    setTimeout(() => success.style.display = 'none', 3500);
-    setTimeout(loadReviews, 2000);
-
-  } catch (err) {
-    alert('Could not submit. Check your connection.');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '✓ Submit Review';
-  }
-}
-
-function initReviews() {
-  initStarPicker();
-  loadReviews();
-}
-
 // ── INTERSECTION OBSERVER (scroll reveal) ──
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
@@ -705,11 +704,12 @@ document.querySelectorAll('.rev, .srv-card').forEach(el => io.observe(el));
 // Init video portfolio on load
 buildSidebar();
 switchCat('shortform');
+initGallerySwipe();
+initGalleryNav();
 
-// Init reviews
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('msgInput').addEventListener('keydown', e => {
     if (e.key === 'Enter' && e.ctrlKey) sendWhatsApp();
   });
-  initReviews();
 });
+
