@@ -3,26 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dhruv — Clothing Design</title>
+<title>Dhruv — Video Editor</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="filestyle.css">
 </head>
 <body>
 
-<!-- ════════════════ LIGHTBOX ════════════════ -->
-<div class="lightbox" id="lightbox" onclick="closeLB()">
-  <button class="lb-close" onclick="closeLB()">✕ Close</button>
-  <img class="lb-img" id="lbImg" src="" alt="">
-  <div class="lb-title" id="lbTitle"></div>
+<!-- ════════════════ VIDEO MODAL (portfolio player) ════════════════ -->
+<div class="video-modal" id="videoModal" onclick="closeVideoModal(event)">
+  <button class="lb-close" onclick="closeVideoModal(event)">✕ Close</button>
+  <div class="video-modal-inner" onclick="event.stopPropagation()">
+    <div class="video-modal-player" id="videoModalPlayer"></div>
+    <div class="video-modal-meta">
+      <div class="video-modal-title" id="videoModalTitle"></div>
+      <div class="video-modal-tag" id="videoModalTag"></div>
+      <p class="video-modal-desc" id="videoModalDesc"></p>
+      <div class="video-modal-tools" id="videoModalTools"></div>
+    </div>
+  </div>
 </div>
 
-<!-- ════════════════ WEBSITE VIEWER ════════════════ -->
-<div class="site-viewer" id="siteViewer">
-  <div class="sv-bar">
-    <div class="sv-title" id="svTitle"></div>
-    <button class="sv-close" onclick="closeSiteViewer()">✕ Close</button>
+<!-- ════════════════ CATEGORY PAGE (Show More → full video list) ════════════════ -->
+<div class="category-page" id="categoryPage">
+  <div class="category-page-inner">
+    <button class="cat-page-back" onclick="closeCategoryPage()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+    <div class="category-page-head">
+      <div class="cat-page-title" id="catPageTitle">Category</div>
+      <div class="cat-page-sub" id="catPageSub"></div>
+    </div>
+    <div class="cat-page-grid" id="catPageGrid"></div>
   </div>
-  <iframe class="sv-iframe" id="svIframe" src="" frameborder="0"></iframe>
 </div>
 
 <div id="app">
@@ -60,15 +73,15 @@
 <section id="hero">
   <div class="hero-left">
     <div class="hero-eyebrow">
-      <span>Clothing &nbsp;·&nbsp; Websites &nbsp;·&nbsp; Book Design</span>
+      <span>Video Editor &nbsp;·&nbsp; Visual Storyteller</span>
     </div>
     <h1 class="hero-name">
       DHRUV
-      <span class="outline">DESIGNS</span>
-      <span class="red">IT ALL.</span>
+      <span class="outline">EDITS</span>
+      <span class="red">EVERY STORY.</span>
     </h1>
     <p class="hero-desc">
-      Creating <strong>clothing, websites and book designs</strong> that make brands look seriously good. Based in India, working worldwide.
+      Crafting <strong>short-form, long-form and AI-powered video content</strong> that keeps people watching. Based in India, working with creators and brands worldwide.
     </p>
     <div class="hero-actions">
       <a href="#work"    class="btn btn-fill">View Work ↓</a>
@@ -80,12 +93,11 @@
     <div class="hero-img-wrap">
       <div class="hero-grid-bg"></div>
       <!--
-        DEVELOPER: To show your photo, replace the div below with:
-        <img id="heroMainImg" src="your-photo.jpg" alt="Dhruv">
-        And remove the .hero-ph div entirely.
+        DEVELOPER: This is your showreel loop. Replace the src below
+        with your own highlight reel (short, muted-friendly, on-brand).
       -->
-     <video autoplay muted loop playsinline id="heroMainImg" src="images/your-video.mp4"></video>
-      <div class="hero-tag-corner">Portfolio 2025</div>
+      <video autoplay muted loop playsinline id="heroMainImg" src="sample-reel.mp4"></video>
+      <div class="hero-tag-corner">Showreel 2026</div>
     </div>
   </div>
 
@@ -98,31 +110,31 @@
 <!-- ════ TICKER ════ -->
 <div class="ticker">
   <div class="ticker-track">
-    <span class="ticker-item">Clothing Design <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Website Design <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Book Design <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Apparel Graphics <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Brand Identity <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Landing Pages <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Clothing Design <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Website Design <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Book Design <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Apparel Graphics <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Brand Identity <span class="ticker-sep">✦</span></span>
-    <span class="ticker-item">Landing Pages <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Short-Form Reels <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">YouTube Shorts <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Long-Form Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">AI Video Creation <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Cinematic Edits <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Motion Graphics <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Short-Form Reels <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">YouTube Shorts <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Long-Form Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">AI Video Creation <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Cinematic Edits <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Motion Graphics <span class="ticker-sep">✦</span></span>
   </div>
 </div>
 
 <!-- ════ ABOUT ════ -->
 <section id="about" class="sec">
   <div class="s-label rev">001 About</div>
-  <h2 class="s-title rev">THE<br>DESIGNER.</h2>
+  <h2 class="s-title rev">THE<br>EDITOR.</h2>
 
   <!-- Designer photo + side image row -->
   <div class="designer-row">
     <div class="designer-photo-wrap rev">
       <div class="designer-photo-frame">
-        <img id="heroMainImg" src="images/dhruv.jpg" alt="Dhruv">
+        <img id="aboutPhoto" src="dhruv.jpg" alt="Dhruv">
         <div class="designer-photo-badge">
           <span style="width:6px;height:6px;flex-shrink:0;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s ease infinite;"></span>
           Available
@@ -132,39 +144,39 @@
 
     <!-- Side image: visible on tablet/desktop only -->
     <div class="designer-side-image">
-      <img src="images/dhruvside.jpg" alt="Designer editorial photo">
+      <img src="dhruvside.jpg" alt="Dhruv editorial photo">
     </div>
   </div>
 
   <div class="about-grid">
     <div>
       <div class="about-body rev">
-        <p>I'm <strong>Dhruv</strong>, a designer from India with over <strong>3 years of experience</strong> in clothing, web and book design. Worked with <strong>5 startups and companies</strong> along the way, which taught me a lot about delivering good work under real conditions.</p>
-        <p>Clothes, landing pages, book covers. I handle the whole thing myself so you don't have to coordinate between three different people. Quick turnaround, straight communication, and results you actually want to show off.</p>
+        <p>I'm <strong>Dhruv</strong>, a video editor from India with over <strong>3 years of experience</strong> cutting short-form, long-form and AI-assisted content. Worked with <strong>5 creators and companies</strong> along the way, which taught me a lot about editing under real deadlines.</p>
+        <p>Reels, YouTube uploads, podcast clips. I handle the whole edit myself — pacing, sound, color, motion — so the final cut is ready to publish, not just ready to review. Quick turnaround, straight communication, and cuts you're proud to post.</p>
       </div>
       <div class="skills-row rev d1">
-        <span class="skill-tag">Clothing Design</span>
-        <span class="skill-tag">Website Design</span>
-        <span class="skill-tag">Book Design</span>
-        <span class="skill-tag">Figma</span>
-        <span class="skill-tag">Apparel Mockups</span>
-        <span class="skill-tag">Canva</span>
-        <span class="skill-tag">Brand Identity</span>
+        <span class="skill-tag">Premiere Pro</span>
+        <span class="skill-tag">DaVinci Resolve</span>
+        <span class="skill-tag">After Effects</span>
+        <span class="skill-tag">CapCut</span>
+        <span class="skill-tag">AI Video Tools</span>
+        <span class="skill-tag">Motion Graphics</span>
+        <span class="skill-tag">Color Grading</span>
       </div>
     </div>
     <div class="rev d2">
       <div class="stat-stack">
         <div class="stat-item">
-          <div class="stat-n">2<span class="stat-plus">yr+</span></div>
-          <div class="stat-l">Design<br>Experience</div>
+          <div class="stat-n">3<span class="stat-plus">yr+</span></div>
+          <div class="stat-l">Editing<br>Experience</div>
         </div>
         <div class="stat-item">
-          <div class="stat-n">10<span class="stat-plus">+</span></div>
-          <div class="stat-l">Designs<br>Delivered</div>
+          <div class="stat-n">150<span class="stat-plus">+</span></div>
+          <div class="stat-l">Videos<br>Edited</div>
         </div>
         <div class="stat-item">
-          <div class="stat-n">1</div>
-          <div class="stat-l">Startups &amp;<br>Companies</div>
+          <div class="stat-n">5</div>
+          <div class="stat-l">Creators &amp;<br>Brands</div>
         </div>
       </div>
       <div class="avail-box">
@@ -174,14 +186,13 @@
     </div>
   </div>
 
-
 </section>
 
-<!-- ════ WORK / WARDROBE ════ -->
+<!-- ════ WORK / VIDEO PORTFOLIO ════ -->
 <section id="work">
   <div class="work-header">
-    <div class="s-label rev">002 Work</div>
-    <h2 class="s-title rev" style="margin-bottom:0;">THE<br>WORK.</h2>
+    <div class="s-label rev">002 Portfolio</div>
+    <h2 class="s-title rev" style="margin-bottom:0;">VIDEO<br>PORTFOLIO.</h2>
   </div>
 
   <div class="work-body">
@@ -192,15 +203,15 @@
       <!-- Category buttons are injected by JS -->
     </div>
 
-    <!-- GALLERY: 3×3 grid -->
+    <!-- GALLERY: video cards for the active category -->
     <div class="work-gallery-area">
       <div class="gallery-heading">
         <div>
-          <div class="gallery-cat-title" id="galTitle">All Designs</div>
-          <div class="gallery-cat-sub" id="galSub">Showing 6 items</div>
+          <div class="gallery-cat-title" id="galTitle">All Videos</div>
+          <div class="gallery-cat-sub" id="galSub">Loading…</div>
         </div>
       </div>
-      <div class="gallery-grid" id="galGrid"></div>
+      <div class="video-grid" id="galGrid"></div>
     </div>
 
   </div>
@@ -213,8 +224,8 @@
 
   <div class="msg-wrap">
     <div class="msg-left rev">
-      <p>Got a project? Fill in your name and what you need, then drop your message. Hit send and it opens straight in <strong>WhatsApp</strong> with everything ready.</p>
-      <p style="margin-top:20px;">I respond fast. Let's get something going.</p>
+      <p>Got footage that needs a great edit? Fill in your name and what kind of video you need, then drop your message. Hit send and it opens straight in <strong>WhatsApp</strong> with everything ready.</p>
+      <p style="margin-top:20px;">I respond fast. Let's get something cut.</p>
     </div>
 
     <div class="msg-right rev d1">
@@ -240,10 +251,10 @@
       <!-- Need / service dropdown -->
       <select class="msg-input-field" id="msgNeed">
         <option value="" disabled selected>What do you need?</option>
-        <option value="Clothing Design">Clothing Design</option>
-        <option value="Website Design">Website Design</option>
-        <option value="Book Design">Book Design</option>
-        <option value="Brand Identity">Brand Identity</option>
+        <option value="Short-Form Video">Short-Form Video</option>
+        <option value="Long-Form Video">Long-Form Video</option>
+        <option value="AI Video">AI Video</option>
+        <option value="Social Media Content">Social Media Content</option>
         <option value="Something Else">Something Else</option>
       </select>
 
@@ -275,33 +286,67 @@
       <div class="srv-n">01</div>
       <span class="srv-icon">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/>
+          <path d="M4 7h16M4 7v11a1 1 0 001 1h14a1 1 0 001-1V7M4 7l2-4h12l2 4M9 3v4M15 3v4"/>
+          <path d="M9.5 12.5l4 2.2-4 2.2v-4.4z"/>
         </svg>
       </span>
-      <div class="srv-name">Clothing Design</div>
-      <div class="srv-desc">Custom t-shirt graphics, hoodie prints and full apparel mockups. PNG and print-ready delivery.</div>
+      <div class="srv-name">Video Editing</div>
+      <div class="srv-desc">Short-form, long-form and social-media editing, cut and paced for the platform it's built for.</div>
     </div>
     <div class="srv-card">
       <div class="srv-n">02</div>
       <span class="srv-icon">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="3" width="20" height="14" rx="2"/>
-          <path d="M8 21h8M12 17v4"/>
+          <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9L12 3z"/>
+          <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"/>
         </svg>
       </span>
-      <div class="srv-name">Website Design</div>
-      <div class="srv-desc">Landing pages, portfolio sites and brand websites that look sharp and actually work for you.</div>
+      <div class="srv-name">AI Video Creation</div>
+      <div class="srv-desc">Creating and editing AI-generated visual content for modern, attention-grabbing campaigns.</div>
     </div>
     <div class="srv-card">
       <div class="srv-n">03</div>
       <span class="srv-icon">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 2a14.5 14.5 0 010 20M2 12h20"/>
+          <rect x="7" y="2" width="10" height="20" rx="2.5"/>
+          <path d="M11 18h2"/>
         </svg>
       </span>
-      <div class="srv-name">Brand Identity</div>
-      <div class="srv-desc">Logo, color palette and visual identity for brands starting from scratch. Full kit delivery.</div>
+      <div class="srv-name">Short-Form Content</div>
+      <div class="srv-desc">Reels, Shorts and highly engaging social-media clips built to stop the scroll.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">04</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 18v3"/>
+          <path d="M10.5 8.5l4 2.2-4 2.2v-4.4z"/>
+        </svg>
+      </span>
+      <div class="srv-name">Long-Form Editing</div>
+      <div class="srv-desc">YouTube videos, podcasts, interviews and long-form content, cut for pacing and retention.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">05</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>
+        </svg>
+      </span>
+      <div class="srv-name">Motion &amp; Visual Effects</div>
+      <div class="srv-desc">Transitions, motion elements, effects and dynamic visuals that add polish without the noise.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">06</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l9 5-9 5-9-5 9-5z"/>
+          <path d="M3 12l9 5 9-5M3 17l9 5 9-5"/>
+        </svg>
+      </span>
+      <div class="srv-name">Content Repurposing</div>
+      <div class="srv-desc">Turning long-form content into multiple short, engaging clips built for every platform.</div>
     </div>
   </div>
 </section>
@@ -323,10 +368,10 @@
 
       <select class="msg-input-field" id="rvService" style="margin-bottom:10px;">
         <option value="" disabled selected>Service you used</option>
-        <option value="Clothing Design">Clothing Design</option>
-        <option value="Website Design">Website Design</option>
-        <option value="Book Design">Book Design</option>
-        <option value="Brand Identity">Brand Identity</option>
+        <option value="Short-Form Editing">Short-Form Editing</option>
+        <option value="Long-Form Editing">Long-Form Editing</option>
+        <option value="AI Video">AI Video</option>
+        <option value="Motion Graphics">Motion Graphics</option>
         <option value="Other">Other</option>
       </select>
 
@@ -370,7 +415,6 @@
     <div class="reviews-carousel-header">
       <br>
       <div class="reviews-carousel-label">Client Reviews</div>
-      
     </div>
     <div class="reviews-track-outer" id="rvTrackOuter">
       <div class="reviews-track" id="rvTrack">
@@ -387,9 +431,9 @@
   <div class="connect-glow"></div>
   <div class="connect-inner">
     <div class="s-label rev" style="justify-content:center;">006 Connect</div>
-    <h2 class="s-title rev" style="text-align:center;">LET'S BUILD<br>SOMETHING REAL.</h2>
+    <h2 class="s-title rev" style="text-align:center;">LET'S CUT<br>SOMETHING GREAT.</h2>
     <p class="rev" style="color:var(--sub);font-size:16px;max-width:420px;margin:0 auto;line-height:1.8;text-align:center;">
-      Want to see more work or reach out for a collab? Find me on Instagram.
+      Want to see more work or reach out for a project? Find me on Instagram.
     </p>
     <a href="https://instagram.com/my_namedhruv" target="_blank" class="big-link rev">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
@@ -408,8 +452,8 @@
           <path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 10v7"/>
         </svg>
         LinkedIn
-      </a>
-      <a href="/cdn-cgi/l/email-protection#711c035f151903040701404731161c10181d5f121e1c" class="social-mini-btn">
+      </a> 
+      <a href="mailto:hello@example.com" class="social-mini-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="4" width="20" height="16" rx="2"/>
           <polyline points="2,4 12,13 22,4"/>
@@ -423,15 +467,12 @@
 <!-- ════ FOOTER ════ -->
 <footer>
   <div class="f-logo">DHRUV<em>.</em></div>
-  <p>© 2026— Clothing · Websites · Book Design</p>
-  <p>Made with @infiniteif.com @DhruvPanchal</p>
+  <p>© 2026— Video Editing · Visual Storytelling</p>
+  <p>Made with Care @DhruvPanchal</p>
 </footer>
 
 </div><!-- /app -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-<script src="script.js"></script>
+<script src="filescript.js"></script>
 </body>
 </html>
