@@ -66,6 +66,14 @@ const VIDEOS = {
         thumbnail: '',
         tools: []
       },
+      {
+       title: '',                              // खाली छोड़ दें — auto-fill हो जाएगा
+       tag: 'YouTube Short',
+       description: 'यहाँ 1-2 line description लिखें',
+       videoUrl: 'https://youtube.com/shorts/5VHdWbplWz4?feature=share',   // अपना link यहाँ paste करें
+       thumbnail: '',
+       tools: ['Premiere Pro']
+      }
     ]
   },
   clipping: {
