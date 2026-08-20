@@ -69,7 +69,7 @@ const VIDEOS = {
     items: [
       {
         title: 'Vertical Showreel Cut',
-        tag: 'Instagram Reel',
+        tag: 'Reel',
         description: 'A fast-paced vertical edit built for retention — quick cuts, punchy pacing and a beat-synced rhythm.',
         videoUrl: 'https://drive.google.com/file/d/1RD-pS7RwvB3JuCeKIBlPNIrcR6v7UMAM/view?usp=drivesdk',
         // Most phones don't actually shoot true 9:16 — they shoot taller
@@ -91,9 +91,9 @@ const VIDEOS = {
       {
         title: 'Add A Third Reel',
         tag: 'Instagram Reel',
-        description: 'This card appears after clicking "Show More" — proof the pagination works. Replace or delete it anytime.',
-        videoUrl: '',
-        thumbnail: '',
+        description: 'Text based Edit.',
+        videoUrl: 'https://drive.google.com/file/d/1FI2q1yUEaKKkzoeUq_DIEmAkOQs2ZG2h/view?usp=drivesdk',
+        thumbnail: 'https://www.google.com/search?client=ms-android-oppo-terr1-rso2&hs=bUoV&sca_esv=6aa6f5dc69016758&sxsrf=APpeQnvtbw3uAIFHSGdd_EM5gpXI9omDpA:1787227693165&udm=2&fbs=ABfTbFXXq5_lq1-qc-RNbCT-iVCv1pqpzFbsklS6H69T2lad0GTf_QfkL84T_NcuUjCLgDAs53QEgFyJhuWxr8ttbKuoLmizMeGu6nWFjYHWYBm95Aynq_fp8pQaLI_dYOchf36_lBqhkOLQHQv-4gRoTnF2QGf7uGcFTpZgQfA7A-IahiPf6RzIPNb4Dr8HjRMIB878qVPQ9NYvm4xBDY4y0_OzfRCgohSjlQN3EktZITbKr-FkgYI&q=real+estate+reel+thumbnail&sa=X&ved=2ahUKEwjP9Z3-la-WAxWxXmwGHRCcFDwQtKgLegQIFRAB',
         tools: []
       },
     ]
