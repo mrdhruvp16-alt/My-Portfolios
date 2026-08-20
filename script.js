@@ -108,6 +108,30 @@ const VIDEOS = {
         thumbnail: '',
         tools: []
       },
+      {
+        title: 'Add Your AI Video',
+        tag: 'AI-Generated',
+        description: 'AI-generated visuals edited and finished into a polished, publish-ready video.',
+        videoUrl: 'https://youtube.com/shorts/5VHdWbplWz4?feature=share',
+        thumbnail: '',
+        tools: []
+      },
+      {
+        title: 'Add Your AI Video',
+        tag: 'AI-Generated',
+        description: 'AI-generated visuals edited and finished into a polished, publish-ready video.',
+        videoUrl: 'https://youtube.com/shorts/5VHdWbplWz4?feature=share',
+        thumbnail: '',
+        tools: []
+      },
+      {
+        title: 'Add Your AI Video',
+        tag: 'AI-Generated',
+        description: 'AI-generated visuals edited and finished into a polished, publish-ready video.',
+        videoUrl: 'https://youtube.com/shorts/5VHdWbplWz4?feature=share',
+        thumbnail: '',
+        tools: []
+      },
     ]
   },
   cinematic: {
