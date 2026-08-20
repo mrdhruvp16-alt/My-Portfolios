@@ -51,6 +51,22 @@ const VIDEOS = {
         tools: ['Premiere Pro', 'CapCut']
       },
       {
+        title: 'Vertical Showreel Cut',
+        tag: 'Instagram Reel',
+        description: 'A fast-paced vertical edit built for retention — quick cuts, punchy pacing and a beat-synced rhythm.',
+        videoUrl: 'videos/sample-reel.mp4',
+        thumbnail: '',
+        tools: ['Premiere Pro', 'CapCut']
+      },
+      {
+        title: '',
+        tag: 'Instagram Reel',
+        description: 'A fast-paced vertical edit built for retention — quick cuts, punchy pacing and a beat-synced rhythm.',
+        videoUrl: 'https://youtube.com/shorts/fqKNqs_Ei4o?si=8-7UmwlkcU51osFV',
+        thumbnail: '',
+        tools: ['Premiere Pro', 'CapCut']
+      },
+      {
         title: 'Add Your Next Reel',
         tag: 'YouTube Short',
         description: 'Add a title, description and video path in script.js — it appears here automatically.',
