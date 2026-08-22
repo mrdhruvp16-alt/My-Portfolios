@@ -88,6 +88,15 @@ const VIDEOS = {
         thumbnail: 'https://drive.google.com/file/d/1bp5hLWXO_07-FxiwpyjYfUKskaWJLxMw/view?usp=drivesdk',
         tools: []
       },
+       {
+        title: 'A video for Real State',
+        tag: 'Real States',
+        description: 'A proffesional style reel for Clear Deals',
+        videoUrl: 'https://drive.google.com/file/d/1FI2q1yUEaKKkzoeUq_DIEmAkOQs2ZG2h/view?usp=drivesdk',
+        aspectW: 9, aspectH: 19.5, // try aspectW: 9, aspectH: 20 if this still crops
+        thumbnail: 'https://drive.google.com/file/d/1bp5hLWXO_07-FxiwpyjYfUKskaWJLxMw/view?usp=drivesdk',
+        tools: []
+      },
       {
         title: 'Add A Third Reel',
         tag: 'Instagram Reel',
