@@ -376,14 +376,16 @@ function buildVideoCard(item, data) {
     });
   }
 
-  // ── DYNAMIC ASPECT RATIO ──
-  // Reads the real width/height once known and sizes the thumbnail box to
-  // match — vertical (9:16-ish) footage gets a tall box, horizontal
-  // (16:9-ish) footage gets a wide box. Also cached for the popup player.
+  // ── ASPECT RATIO CACHING (for the popup player only) ──
+  // The grid thumbnail box now stays a fixed, standard shape (set in CSS —
+  // same ratio for every card) so the grid always looks uniform. We still
+  // read each video's real width/height here, but only to cache it for the
+  // popup player, which DOES size itself to the video's true shape when
+  // opened (see sizeModalPlayer). The thumbnail box itself is no longer
+  // resized per video.
   const thumbWrap = el.querySelector('.video-thumb-wrap');
   const applyRatio = (w, h) => {
-    if (!w || !h || !thumbWrap) return;
-    thumbWrap.style.aspectRatio = `${w} / ${h}`;
+    if (!w || !h) return;
     if (hasVideo) cacheRatio(item.videoUrl, w, h);
   };
 
@@ -793,4 +795,3 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter' && e.ctrlKey) sendWhatsApp();
   });
 });
-
