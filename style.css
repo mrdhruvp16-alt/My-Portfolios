@@ -1202,17 +1202,16 @@ html.js-ready .video-card.vis { opacity: 1; transform: translateY(0); }
   box-shadow: none;
 }
 
+/* Standard card shape — same portrait ratio as Short-Form & Reels,
+   applied to every card (Cinematic, Promo, etc.) at every screen size,
+   so the grid always shows a uniform, consistent height. No per-video
+   dynamic sizing here anymore — that's what caused mismatched card
+   heights and the empty gap on desktop. */
 .video-thumb-wrap {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 9 / 16;
   overflow: hidden;
   background: #000;
-}
-@media (min-width: 821px) { 
-  .video-thumb-wrap { 
-    aspect-ratio: unset !important;
-    width: 100%;
-    height: 420px; }
 }
 .video-thumb-wrap img,
 .video-thumb-wrap video {
@@ -1448,4 +1447,3 @@ html.js-ready .video-card.vis { opacity: 1; transform: translateY(0); }
   .video-tools { gap: 5px; }
   .video-tool-tag { font-size: 8px; padding: 3px 7px; }
 }
-
