@@ -1039,7 +1039,7 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   border-radius: 16px;
 }
 .designer-photo-frame img,
-.designer-photo-frame img.designer-photo-img { width:100%; height:100%; object-fit:cover; object-position: 38% 22%; display:block; }
+.designer-photo-frame img.designer-photo-img { width:100%; height:100%; object-fit:cover; object-position: 38% 22%; display:block;object-position: center 20%}
 .designer-ph {
   width:100%; height:100%;
   display:flex; flex-direction:column;
