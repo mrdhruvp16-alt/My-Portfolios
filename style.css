@@ -1208,8 +1208,11 @@ html.js-ready .video-card.vis { opacity: 1; transform: translateY(0); }
   overflow: hidden;
   background: #000;
 }
-@media (min-width: 821px) {
-  .video-thumb-wrap { max-height: 420px; }
+@media (min-width: 821px) { 
+  .video-thumb-wrap { 
+    aspect-ratio: unset !important;
+    width: 100%;
+    height: 420px; }
 }
 .video-thumb-wrap img,
 .video-thumb-wrap video {
