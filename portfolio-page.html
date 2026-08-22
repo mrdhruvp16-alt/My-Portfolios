@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhruv — Video Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ════════════════ VIDEO MODAL (portfolio player) ════════════════ -->
+<div class="video-modal" id="videoModal" onclick="closeVideoModal(event)">
+  <button class="lb-close" onclick="closeVideoModal(event)">✕ Close</button>
+  <div class="video-modal-inner" onclick="event.stopPropagation()">
+    <div class="video-modal-player" id="videoModalPlayer"></div>
+    <div class="video-modal-meta">
+      <div class="video-modal-title" id="videoModalTitle"></div>
+      <div class="video-modal-tag" id="videoModalTag"></div>
+      <p class="video-modal-desc" id="videoModalDesc"></p>
+      <div class="video-modal-tools" id="videoModalTools"></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+<!-- ════ NAV ════ -->
+<nav>
+  <a href="#hero" class="nav-logo">DHRUV<em>.</em></a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#message">Message</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+    <div class="nav-dot"></div>
+    <div class="burger" id="burger" onclick="toggleMenu()">
+      <span id="b1"></span><span id="b2"></span><span id="b3"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#about"   onclick="toggleMenu()">About</a>
+  <a href="#work"    onclick="toggleMenu()">Work</a>
+  <a href="#message" onclick="toggleMenu()">Message</a>
+  <a href="#services"onclick="toggleMenu()">Services</a>
+  <a href="#connect" onclick="toggleMenu()">Connect</a>
+</div>
+
+<!-- ════ HERO ════ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span>Video Editor &nbsp;·&nbsp; Visual Storyteller</span>
+    </div>
+    <h1 class="hero-name">
+      DHRUV
+      <span class="outline">EDITS</span>
+      <span class="red">EVERY STORY.</span>
+    </h1>
+    <p class="hero-desc">
+      Crafting <strong>short-form, long-form and AI-powered video content</strong> that keeps people watching. Based in India, working with creators and brands worldwide.
+    </p>
+    <div class="hero-actions">
+      <a href="#work"    class="btn btn-fill">View Work ↓</a>
+      <a href="#message" class="btn btn-ghost">Message Me</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-img-wrap">
+      <div class="hero-grid-bg"></div>
+      <!--
+        DEVELOPER: This is your showreel loop. Replace the src below
+        with your own highlight reel (short, muted-friendly, on-brand).
+      -->
+      <video autoplay muted loop playsinline id="heroMainImg" src="images/your-video.mp4"></video>
+      <div class="hero-tag-corner">Showreel 2026</div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="scroll-circle">↓</div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- ════ TICKER ════ -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">Short-Form Reels <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">YouTube Shorts <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Long-Form Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">AI Video Creation <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Cinematic Edits <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Motion Graphics <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Short-Form Reels <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">YouTube Shorts <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Long-Form Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">AI Video Creation <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Cinematic Edits <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Motion Graphics <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- ════ ABOUT ════ -->
+<section id="about" class="sec">
+  <div class="s-label rev">001 About</div>
+  <h2 class="s-title rev">THE<br>EDITOR.</h2>
+
+  <!-- Designer photo + side image row -->
+  <div class="designer-row">
+    <div class="designer-photo-wrap rev">
+      <div class="designer-photo-frame">
+        <img id="aboutPhoto" src="images/dhruv.jpg" alt="Dhruv">
+        <div class="designer-photo-badge">
+          <span style="width:6px;height:6px;flex-shrink:0;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s ease infinite;"></span>
+          Available
+        </div>
+      </div>
+    </div>
+
+    <!-- Side image: visible on tablet/desktop only -->
+    <div class="designer-side-image">
+      <img src="images/dhruvside.jpg" alt="Dhruv editorial photo">
+    </div>
+  </div>
+
+  <div class="about-grid">
+    <div>
+      <div class="about-body rev">
+        <p>I'm <strong>Dhruv</strong>, a video editor from India with over <strong>3 years of experience</strong> cutting short-form, long-form and AI-assisted content. Worked with <strong>5 creators and companies</strong> along the way, which taught me a lot about editing under real deadlines.</p>
+        <p>Reels, YouTube uploads, podcast clips. I handle the whole edit myself — pacing, sound, color, motion — so the final cut is ready to publish, not just ready to review. Quick turnaround, straight communication, and cuts you're proud to post.</p>
+      </div>
+      <div class="skills-row rev d1">
+        <span class="skill-tag">CapCut</span>
+        <span class="skill-tag">AI Video Tools</span>
+        <span class="skill-tag">Motion Graphics</span>
+        <span class="skill-tag">Color Grading</span>
+      </div>
+    </div>
+    <div class="rev d2">
+      <div class="stat-stack">
+        <div class="stat-item">
+          <div class="stat-n">3<span class="stat-plus">yr+</span></div>
+          <div class="stat-l">Editing<br>Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-n">150<span class="stat-plus">+</span></div>
+          <div class="stat-l">Videos<br>Edited</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-n">5</div>
+          <div class="stat-l">Creators &amp;<br>Brands</div>
+        </div>
+      </div>
+      <div class="avail-box">
+        <div class="avail-dot"></div>
+        <div class="avail-text">Available for new projects</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════ WORK / VIDEO PORTFOLIO ════ -->
+<section id="work">
+  <div class="work-header">
+    <div class="s-label rev">002 Portfolio</div>
+    <h2 class="s-title rev" style="margin-bottom:0;">VIDEO<br>PORTFOLIO.</h2>
+  </div>
+
+  <div class="work-body">
+
+    <!-- SIDEBAR: category list, sticky & scrollable -->
+    <div class="work-sidebar" id="workSidebar">
+      <div class="sidebar-label">Categories</div>
+      <!-- Category buttons are injected by JS -->
+    </div>
+
+    <!-- GALLERY: video cards for the active category -->
+    <div class="work-gallery-area">
+      <div class="gallery-heading">
+        <div>
+          <div class="gallery-cat-title" id="galTitle">All Videos</div>
+          <div class="gallery-cat-sub" id="galSub">Loading…</div>
+        </div>
+        <div class="gallery-nav-controls" id="galNavControls">
+          <div class="gallery-swipe-hint" id="gallerySwipeHint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7"/></svg>
+            <span>Swipe to explore</span>
+          </div>
+          <div class="gallery-nav-btns" id="galNavBtns">
+            <button class="gallery-nav-btn" id="galPrevBtn" aria-label="Previous videos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="gallery-nav-btn" id="galNextBtn" aria-label="Next videos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="video-grid-outer" id="galGridOuter">
+        <div class="video-grid-track" id="galGridTrack"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ MESSAGE / WHATSAPP ════ -->
+<section id="message" class="sec">
+  <div class="s-label rev">003 Contact</div>
+  <h2 class="s-title rev">TEXT<br>ME.</h2>
+
+  <div class="msg-wrap">
+    <div class="msg-left rev">
+      <p>Got footage that needs a great edit? Fill in your name and what kind of video you need, then drop your message. Hit send and it opens straight in <strong>WhatsApp</strong> with everything ready.</p>
+      <p style="margin-top:20px;">I respond fast. Let's get something cut.</p>
+    </div>
+
+    <div class="msg-right rev d1">
+      <div class="msg-box-head">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#25d366">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <div class="msg-box-head-text">
+          <strong>Send a WhatsApp Message</strong>
+          <span>Opens WhatsApp with your message ready</span>
+        </div>
+      </div>
+
+      <!-- Name field -->
+      <input
+        type="text"
+        class="msg-input-field"
+        id="msgName"
+        placeholder="Your name"
+        autocomplete="off"
+      />
+
+      <!-- Need / service dropdown -->
+      <select class="msg-input-field" id="msgNeed">
+        <option value="" disabled selected>What do you need?</option>
+        <option value="Short-Form Video">Short-Form Video</option>
+        <option value="Long-Form Video">Long-Form Video</option>
+        <option value="AI Video">AI Video</option>
+        <option value="Social Media Content">Social Media Content</option>
+        <option value="Something Else">Something Else</option>
+      </select>
+
+      <!-- Message -->
+      <textarea
+        class="msg-textarea"
+        id="msgInput"
+        placeholder="Tell me more about your project..."
+      ></textarea>
+
+      <button class="msg-send-btn" onclick="sendWhatsApp()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
+        </svg>
+        Send on WhatsApp
+      </button>
+
+      <p class="msg-note">Your message opens in WhatsApp — nothing is stored here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ SERVICES ════ -->
+<section id="services" class="sec">
+  <div class="s-label rev">004 Services</div>
+  <h2 class="s-title rev">WHAT I<br>OFFER.</h2>
+  <div class="srv-grid">
+    <div class="srv-card">
+      <div class="srv-n">01</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7h16M4 7v11a1 1 0 001 1h14a1 1 0 001-1V7M4 7l2-4h12l2 4M9 3v4M15 3v4"/>
+          <path d="M9.5 12.5l4 2.2-4 2.2v-4.4z"/>
+        </svg>
+      </span>
+      <div class="srv-name">Video Editing</div>
+      <div class="srv-desc">Short-form, long-form and social-media editing, cut and paced for the platform it's built for.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">02</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9L12 3z"/>
+          <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"/>
+        </svg>
+      </span>
+      <div class="srv-name">AI Video Creation</div>
+      <div class="srv-desc">Creating and editing AI-generated visual content for modern, attention-grabbing campaigns.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">03</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="7" y="2" width="10" height="20" rx="2.5"/>
+          <path d="M11 18h2"/>
+        </svg>
+      </span>
+      <div class="srv-name">Short-Form Content</div>
+      <div class="srv-desc">Reels, Shorts and highly engaging social-media clips built to stop the scroll.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">04</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 18v3"/>
+          <path d="M10.5 8.5l4 2.2-4 2.2v-4.4z"/>
+        </svg>
+      </span>
+      <div class="srv-name">Long-Form Editing</div>
+      <div class="srv-desc">YouTube videos, podcasts, interviews and long-form content, cut for pacing and retention.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">05</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>
+        </svg>
+      </span>
+      <div class="srv-name">Motion &amp; Visual Effects</div>
+      <div class="srv-desc">Transitions, motion elements, effects and dynamic visuals that add polish without the noise.</div>
+    </div>
+    <div class="srv-card">
+      <div class="srv-n">06</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l9 5-9 5-9-5 9-5z"/>
+          <path d="M3 12l9 5 9-5M3 17l9 5 9-5"/>
+        </svg>
+      </span>
+      <div class="srv-name">Content Repurposing</div>
+      <div class="srv-desc">Turning long-form content into multiple short, engaging clips built for every platform.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CONNECT ════ -->
+<section id="connect" class="sec">
+  <div class="connect-glow"></div>
+  <div class="connect-inner">
+    <div class="s-label rev" style="justify-content:center;">005 Connect</div>
+    <h2 class="s-title rev" style="text-align:center;">LET'S CUT<br>SOMETHING GREAT.</h2>
+    <p class="rev" style="color:var(--sub);font-size:16px;max-width:420px;margin:0 auto;line-height:1.8;text-align:center;">
+      Want to see more work or reach out for a project? Find me on Instagram.
+    </p>
+    <a href="https://instagram.com/my_namedhruv" target="_blank" class="big-link rev">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <rect x="2" y="2" width="20" height="20" rx="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+      </svg>
+      Instagram
+    </a>
+    <p class="connect-sub rev">DM for collabs · custom projects · pricing</p>
+
+    <div class="social-mini rev">
+      <a href="https://www.linkedin.com/in/dhruv-panchal-91ab80212?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="social-mini-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="4"/>
+          <path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 10v7"/>
+        </svg>
+        LinkedIn
+      </a>
+      <a href="mailto:hello@example.com" class="social-mini-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <polyline points="2,4 12,13 22,4"/>
+        </svg>
+        Email
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div class="f-logo">DHRUV<em>.</em></div>
+  <p>© 2026— Video Editing · Visual Storytelling</p>
+  <p>Made with @infiniteif.com @DhruvPanchal</p>
+</footer>
+
+</div><!-- /app -->
+
+<script src="script.js"></script>
+</body>
+</html>
+
