@@ -148,8 +148,8 @@ const VIDEOS = {
         title: 'Showreel — Cinematic Cut',
         tag: 'Promo Video',
         description: 'A cinematic pass on the same source footage — mood-driven pacing, grade and sound design.',
-        videoUrl: 'videos/sample-reel.mp4',
-        thumbnail: '',
+        videoUrl: 'https://drive.google.com/file/d/1FI2q1yUEaKKkzoeUq_DIEmAkOQs2ZG2h/view?usp=drivesdk',
+        thumbnail: 'https://drive.google.com/file/d/1UmPYDm9g5U8Hto3Pxt-yHfHOUUlmK72S/view?usp=drivesdk',
         tools: ['DaVinci Resolve', 'After Effects']
       },
       {
