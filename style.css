@@ -1149,6 +1149,12 @@ html.js-ready .rev.vis { opacity: 1; transform: translateY(0); }
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 22px;
+  /* Without this, grid items stretch to match the tallest card in their
+     row by default. Placeholder cards (like "Add Your Promo Edit") are
+     taller than real video cards because they have an extra text block
+     below the thumbnail — that stretch was leaving blank space under
+     shorter video cards. Cards should only be as tall as their own content. */
+  align-items: start;
 }
 /* 3-column layout is reserved for genuinely large/wide screens — this keeps
    it in step with getPerPage() in script.js (also >1200px), so the grid
@@ -1447,4 +1453,3 @@ html.js-ready .video-card.vis { opacity: 1; transform: translateY(0); }
   .video-tools { gap: 5px; }
   .video-tool-tag { font-size: 8px; padding: 3px 7px; }
 }
-
