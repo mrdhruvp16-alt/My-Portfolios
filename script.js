@@ -69,7 +69,7 @@ const VIDEOS = {
     items: [
       {
         title: 'Vertical Showreel Cut',
-        tag: 'Reel',
+        tag: 'Real States',
         description: 'A fast-paced vertical edit built for retention — quick cuts, punchy pacing and a beat-synced rhythm.',
         videoUrl: 'https://drive.google.com/file/d/1RD-pS7RwvB3JuCeKIBlPNIrcR6v7UMAM/view?usp=drivesdk',
         // Most phones don't actually shoot true 9:16 — they shoot taller
@@ -80,12 +80,12 @@ const VIDEOS = {
         tools: ['Premiere Pro', 'CapCut']
       },
       {
-        title: 'Add Your Next Reel',
-        tag: 'YouTube Short',
-        description: 'Add a title, description and video path in script.js — it appears here automatically.',
-        videoUrl: 'https://drive.google.com/file/d/1KtWIpcxaFUJdsAUx01fAZ3WwZksdpojC/view?usp=drivesdk',
+        title: 'A video for Real State',
+        tag: 'Real States',
+        description: 'A proffesional style reel for Clear Deals',
+        videoUrl: 'https://drive.google.com/file/d/1FI2q1yUEaKKkzoeUq_DIEmAkOQs2ZG2h/view?usp=drivesdk',
         aspectW: 9, aspectH: 19.5, // try aspectW: 9, aspectH: 20 if this still crops
-        thumbnail: '',
+        thumbnail: 'https://drive.google.com/file/d/1bp5hLWXO_07-FxiwpyjYfUKskaWJLxMw/view?usp=drivesdk',
         tools: []
       },
       {
